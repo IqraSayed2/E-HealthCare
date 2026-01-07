@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% block title %}Patient Dashboard{% endblock %}
+
+{% block content %}
+
+<style>
+    /* ============================
+   PATIENT DASHBOARD PAGE
+============================ */
+
+.patient-dashboard {
+    padding: 2rem;
+}
+
+.pd-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.pd-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.pd-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.pd-stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.pd-stat-card i {
+    font-size: 2rem;
+    color: #3b82f6;
+    margin-bottom: 0.5rem;
+}
+
+.pd-stat-card h3 {
+    font-size: 1.8rem;
+}
+
+.pd-quick-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.pd-action-btn {
+    background: #3b82f6;
+    color: white;
+    padding: 0.8rem 1.4rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.2s;
+}
+
+.pd-action-btn.logout {
+    background: #ef4444;
+}
+
+.pd-action-btn:hover {
+    opacity: 0.85;
+}
+
+/* APPOINTMENTS LIST */
+.pd-appt-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+    margin-bottom: 1rem;
+}
+
+.pd-appt-icon i {
+    font-size: 2rem;
+    color: #3b82f6;
+}
+
+.pd-appt-info h4 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.status-pending {
+    background: #fde047;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.status-accepted {
+    background: #86efac;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.status-completed {
+    background: #93c5fd;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.pd-empty {
+    text-align: center;
+    color: #666;
+}
+
+</style>
+
+<div class="patient-dashboard">
+
+    <!-- Patient Header -->
+    <div class="pd-header">
+        <h2>Welcome, {{ current_user.name }}</h2>
+        <p>Your complete healthcare hub</p>
+    </div>
+
+    <!-- Stats Section (Dynamic) -->
+    <div class="pd-stats-grid">
+
+        <div class="pd-stat-card">
+            <i class="fas fa-calendar-check"></i>
+            <h3>{{ upcoming_count }}</h3>
+            <p>Upcoming Appointments</p>
+        </div>
+
+        <div class="pd-stat-card">
+            <i class="fas fa-user-md"></i>
+            <h3>{{ total_doctors }}</h3>
+            <p>Available Doctors</p>
+        </div>
+
+        <div class="pd-stat-card">
+            <i class="fas fa-notes-medical"></i>
+            <h3>{{ total_consultations }}</h3>
+            <p>Past Consultations</p>
+        </div>
+
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="pd-quick-actions">
+        <a href="{{ url_for('patient.find_doctor') }}" class="pd-action-btn">
+            <i class="fas fa-search"></i> Find a Doctor
+        </a>
+
+        <a href="{{ url_for('patient.my_appointments') }}" class="pd-action-btn">
+            <i class="fas fa-calendar-alt"></i> My Appointments
+        </a>
+
+        <a href="{{ url_for('auth.logout') }}" class="pd-action-btn logout">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+
+    <!-- Upcoming Appointments -->
+    <div class="pd-section">
+        <h3 class="pd-section-title">Upcoming Appointments</h3>
+
+        {% if upcoming %}
+            <div class="pd-appointments-list">
+
+                {% for appt in upcoming %}
+                <div class="pd-appt-card">
+                    <div class="pd-appt-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+
+                    <div class="pd-appt-info">
+                        <h4>Dr. {{ appt.doctor.user.name }}</h4>
+                        <p>{{ appt.date }} at {{ appt.time }}</p>
+                    </div>
+
+                    <div class="pd-appt-status">
+                        <span class="status-{{ appt.status }}">{{ appt.status|capitalize }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+            <p class="pd-empty">No upcoming appointments.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Doctor Profile{% endblock %}
+{% block content %}
+
+<div class="ehc-profile-wrapper">
+
+  <!-- Back -->
+  <button class="ehc-back-button" onclick="history.back()">
+    <i class="fas fa-arrow-left"></i> Back to Search
+  </button>
+
+  <!-- Header -->
+  <div class="ehc-profile-header">
+    <div class="ehc-profile-top">
+
+      <div class="ehc-doctor-image">
+        <i class="fas fa-user-md"></i>
+      </div>
+
+      <div class="ehc-doctor-main-info">
+        <div class="ehc-verified-badge">
+          <i class="fas fa-check-circle"></i> Verified Doctor
+        </div>
+
+        <h1 class="ehc-doctor-name">
+          Dr. {{ doctor.user.name }}
+        </h1>
+
+        <div class="ehc-doctor-specialty">
+          {{ doctor.specialization }}
+        </div>
+
+        <div class="ehc-doctor-meta">
+          <div class="ehc-meta-item">
+            <i class="fas fa-briefcase"></i>
+            <span>{{ doctor.experience }} Years Experience</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div class="ehc-profile-grid">
+
+    <!-- LEFT -->
+    <div>
+
+      <!-- About -->
+      <div class="ehc-profile-section">
+        <h2 class="ehc-section-title">
+          <i class="fas fa-user"></i> About Doctor
+        </h2>
+
+        <p class="ehc-about-text">
+          {{ doctor.about or "No description provided." }}
+        </p>
+      </div>
+
+      <!-- Available Slots -->
+      <div class="ehc-profile-section">
+        <h2 class="ehc-section-title">
+          <i class="far fa-calendar-check"></i> Available Slots
+        </h2>
+
+        {% if availability %}
+        {% for slot in availability %}
+        <form
+            method="POST"
+            action="{{ url_for('patient.book', doctor_id=doctor.id) }}"
+            class="d-inline"
+        >
+            <input type="hidden" name="date" value="{{ slot.date }}">
+            <input type="hidden" name="time" value="{{ slot.time }}">
+
+            <button type="submit" class="ehc-time-slot">
+            {{ slot.date }} <br> {{ slot.time }}
+            </button>
+        </form>
+        {% else %}
+        <p class="text-muted">No slots available</p>
+        {% endfor %}
+
+        {% else %}
+          <p class="text-muted">No slots available</p>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="ehc-sticky-sidebar">
+
+      <div class="ehc-fee-card">
+        <div class="ehc-fee-label">Consultation Fee</div>
+        <div class="ehc-fee-amount">₹{{ doctor.fees }}</div>
+        <div class="ehc-fee-note">Pay after appointment</div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+{% block title %}Find Doctor{% endblock %}
+{% block content %}
+
+    <style>
+      .docfinder-wrapper {
+        background: #f8f9fa;
+        min-height: 100vh;
+        padding: 40px 20px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .docfinder-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      .docfinder-header {
+        text-align: center;
+        margin-bottom: 15px;
+      }
+
+      .docfinder-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      .docfinder-subtitle {
+        color: #7f8c8d;
+        font-size: 1rem;
+        margin-bottom: 30px;
+      }
+
+      .docfinder-search-section {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 40px;
+      }
+
+      .docfinder-filter-label {
+        font-weight: 600;
+        color: #34495e;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+      }
+
+      .docfinder-input,
+      .docfinder-select {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 12px 15px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+      }
+
+      .docfinder-input:focus,
+      .docfinder-select:focus {
+        border-color: #16a2b8;
+        box-shadow: 0 0 0 0.2rem rgba(22, 162, 184, 0.15);
+        outline: none;
+      }
+
+      .docfinder-search-btn {
+        background: #16a2b8;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 40px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 20px;
+      }
+
+      .docfinder-search-btn:hover {
+        background: #138496;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(22, 162, 184, 0.3);
+      }
+
+      .docfinder-results-header {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 25px;
+      }
+
+      .docfinder-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        margin-bottom: 25px;
+        border: 1px solid #e8e8e8;
+      }
+
+      .docfinder-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      }
+
+      .docfinder-card-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .docfinder-card-body {
+        padding: 20px;
+      }
+
+      .docfinder-doctor-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 5px;
+      }
+
+      .docfinder-rating {
+        color: #f39c12;
+        font-size: 0.95rem;
+        margin-bottom: 8px;
+      }
+
+      .docfinder-specialty {
+        color: #16a2b8;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        display: block;
+      }
+
+      .docfinder-description {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .docfinder-profile-btn {
+        background: white;
+        color: #16a2b8;
+        border: 2px solid #16a2b8;
+        border-radius: 8px;
+        padding: 10px 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .docfinder-profile-btn:hover {
+        background: #16a2b8;
+        color: white;
+        text-decoration: none;
+      }
+
+      @media (max-width: 768px) {
+        .docfinder-container {
+          padding: 25px;
+        }
+
+        .docfinder-title {
+          font-size: 2rem;
+        }
+
+        .docfinder-search-section {
+          padding: 20px;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .docfinder-wrapper {
+          padding: 20px 10px;
+        }
+
+        .docfinder-container {
+          padding: 20px;
+          border-radius: 15px;
+        }
+
+        .docfinder-title {
+          font-size: 1.75rem;
+        }
+
+        .docfinder-card-img {
+          height: 180px;
+        }
+      }
+    </style>
+
+<div class="docfinder-wrapper">
+  <div class="docfinder-container">
+
+    <!-- Header -->
+    <div class="docfinder-header">
+      <h1 class="docfinder-title">Find Your Doctor</h1>
+      <p class="docfinder-subtitle">
+        Search specialists and book appointments easily
+      </p>
+    </div>
+
+    <!-- Search -->
+    <form method="GET" class="docfinder-search-section">
+      <div class="row">
+        <div class="col-md-8 mb-3">
+          <label class="docfinder-filter-label">
+            Search by name or specialization
+          </label>
+          <input
+            type="text"
+            name="search"
+            value="{{ search or '' }}"
+            class="form-control docfinder-input"
+            placeholder="e.g. Cardiologist, Dr. John"
+          />
+        </div>
+
+        <div class="col-md-4 mb-3 d-flex align-items-end">
+          <button class="docfinder-search-btn">Search</button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Results -->
+    <h2 class="docfinder-results-header">
+      Showing {{ doctors|length }} results
+    </h2>
+
+    <div class="row">
+      {% for doctor in doctors %}
+      <div class="col-lg-4 col-md-6">
+        <div class="docfinder-card">
+
+          <div class="docfinder-card-img"></div>
+
+          <div class="docfinder-card-body">
+            <h3 class="docfinder-doctor-name">
+              Dr. {{ doctor.user.name }}
+            </h3>
+
+            <span class="docfinder-specialty">
+              {{ doctor.specialization or "General Physician" }}
+            </span>
+
+            <p class="docfinder-description">
+              {{ doctor.about or "Experienced doctor providing quality healthcare." }}
+            </p>
+
+            <p class="text-muted mb-2">
+              Experience: {{ doctor.experience or 0 }} years
+            </p>
+
+            <p class="text-muted mb-3">
+              Fees: ₹{{ doctor.fees or "N/A" }}
+            </p>
+
+            <a
+              href="{{ url_for('patient.doctor_preview', id=doctor.id) }}"
+              class="docfinder-profile-btn"
+            >
+              View Profile
+            </a>
+          </div>
+
+        </div>
+      </div>
+      {% else %}
+      <p class="text-center text-muted">No doctors found.</p>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
