@@ -35,15 +35,15 @@
                     {% else %}
                         {# Authenticated users: branch by role #}
                         {% if current_user.role == 'patient' %}
-                            <li><a href="{{ url_for('patient.dashboard') }}" class="ehome-nav-link">Dashboard</a></li>
+                            <li><a href="{{ url_for('patient.dashboard') }}" class="ehome-nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                             <li><a href="{{ url_for('patient.find_doctor') }}" class="ehome-nav-link"><i class="fas fa-search"></i> Find a Doctor</a></li>
-                            <li><a href="{{ url_for('patient.my_appointments') }}" class="ehome-nav-link">My Appointments</a></li>
-                            <li><a href="{{ url_for('patient.my_appointments') }}" class="ehome-nav-link">Consultation</a></li>
+                            <li><a href="{{ url_for('patient.my_appointments') }}" class="ehome-nav-link"><i class="fas fa-calendar"></i> My Appointments</a></li>
+                            <li><a href="{{ url_for('patient.my_appointments') }}" class="ehome-nav-link"><i class="fas fa-comment"></i> Consultation</a></li>
                         {% elif current_user.role == 'doctor' %}
-                            <li><a href="{{ url_for('doctor.dashboard') }}" class="ehome-nav-link">Dashboard</a></li>
-                            <li><a href="{{ url_for('doctor.appointments') }}" class="ehome-nav-link">Appointment</a></li>
-                            <li><a href="{{ url_for('doctor.availability') }}" class="ehome-nav-link">Availability</a></li>
-                            <li><a href="{{ url_for('doctor.appointments') }}" class="ehome-nav-link">Consultation</a></li>
+                            <li><a href="{{ url_for('doctor.dashboard') }}" class="ehome-nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                            <li><a href="{{ url_for('doctor.appointments') }}" class="ehome-nav-link"><i class="fas fa-calendar"></i> Appointment</a></li>
+                            <li><a href="{{ url_for('doctor.availability') }}" class="ehome-nav-link"><i class="fas fa-clock"></i> Availability</a></li>
+                            <li><a href="{{ url_for('doctor.appointments') }}" class="ehome-nav-link"><i class="fas fa-comment"></i> Consultation</a></li>
                         {% else %}
                             <li><a href="{{ url_for('main.home') }}" class="ehome-nav-link">Home</a></li>
                         {% endif %}
@@ -54,8 +54,10 @@
                     {% if not current_user.is_authenticated %}
                         <a href="{{ url_for('auth.login_signup') }}" class="ehome-btn-primary">Get Started</a>
                     {% else %}
-                        <span class="ehome-username">Hi, {{ current_user.name }}</span>
-                        <a href="{{ url_for('auth.logout') }}" class="ehome-btn-secondary">Logout</a>
+                        <a href="{% if current_user.role == 'patient' %}{{ url_for('patient.profile') }}{% else %}{{ url_for('doctor.profile') }}{% endif %}" class="profile-link">
+                            <div class="profile-avatar">{{ current_user.name[:2].upper() }}</div>
+                        </a>
+                        <a href="{{ url_for('auth.logout') }}" class="ehome-nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
                     {% endif %}
                     <button class="ehome-mobile-menu-btn" onclick="toggleMobileMenu()">
                         <i class="fas fa-bars"></i>
@@ -87,17 +89,17 @@
                 <li><a href="{{ url_for('auth.login_signup') }}" class="ehome-btn-primary" style="display: inline-block; margin-top: 1rem">Get Started</a></li>
             {% else %}
                 {% if current_user.role == 'patient' %}
-                    <li><a href="{{ url_for('patient.dashboard') }}" class="ehome-nav-link">Dashboard</a></li>
+                    <li><a href="{{ url_for('patient.dashboard') }}" class="ehome-nav-link"><i class="fas fa-user"></i> Dashboard</a></li>
                     <li><a href="{{ url_for('patient.find_doctor') }}" class="ehome-nav-link"><i class="fas fa-search"></i> Find a Doctor</a></li>
-                    <li><a href="{{ url_for('patient.my_appointments') }}" class="ehome-nav-link">My Appointments</a></li>
-                    <li><a href="{{ url_for('patient.my_appointments') }}" class="ehome-nav-link">Consultation</a></li>
-                    <li><a href="{{ url_for('auth.logout') }}" class="ehome-nav-link">Logout</a></li>
+                    <li><a href="{{ url_for('patient.my_appointments') }}" class="ehome-nav-link"><i class="fas fa-calendar"></i> My Appointments</a></li>
+                    <li><a href="{{ url_for('patient.my_appointments') }}" class="ehome-nav-link"><i class="fas fa-comment"></i> Consultation</a></li>
+                    <li><a href="{{ url_for('auth.logout') }}" class="ehome-nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 {% elif current_user.role == 'doctor' %}
-                    <li><a href="{{ url_for('doctor.dashboard') }}" class="ehome-nav-link">Dashboard</a></li>
-                    <li><a href="{{ url_for('doctor.appointments') }}" class="ehome-nav-link">Appointment</a></li>
-                    <li><a href="{{ url_for('doctor.availability') }}" class="ehome-nav-link">Availability</a></li>
-                    <li><a href="{{ url_for('doctor.appointments') }}" class="ehome-nav-link">Consultation</a></li>
-                    <li><a href="{{ url_for('auth.logout') }}" class="ehome-nav-link">Logout</a></li>
+                    <li><a href="{{ url_for('doctor.dashboard') }}" class="ehome-nav-link"><i class="fas fa-user"></i> Dashboard</a></li>
+                    <li><a href="{{ url_for('doctor.appointments') }}" class="ehome-nav-link"><i class="fas fa-calendar"></i> Appointment</a></li>
+                    <li><a href="{{ url_for('doctor.availability') }}" class="ehome-nav-link"><i class="fas fa-clock"></i> Availability</a></li>
+                    <li><a href="{{ url_for('doctor.appointments') }}" class="ehome-nav-link"><i class="fas fa-comment"></i> Consultation</a></li>
+                    <li><a href="{{ url_for('auth.logout') }}" class="ehome-nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 {% else %}
                     <li><a href="{{ url_for('main.home') }}" class="ehome-nav-link">Home</a></li>
                 {% endif %}

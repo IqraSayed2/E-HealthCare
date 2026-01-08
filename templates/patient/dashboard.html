@@ -1,207 +1,652 @@
 {% extends "base.html" %}
 {% block title %}Patient Dashboard{% endblock %}
-
 {% block content %}
 
-<style>
-    /* ============================
-   PATIENT DASHBOARD PAGE
-============================ */
 
-.patient-dashboard {
-    padding: 2rem;
-}
+    <style>
+      /* Dashboard Layout */
+      .edash-container {
+        max-width: 1400px;
+        margin: 40px auto;
+        padding: 0 40px;
+      }
 
-.pd-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
+      .edash-layout {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 2rem;
+      }
 
-.pd-header h2 {
-    font-size: 2rem;
-    font-weight: 700;
-}
+      /* Sidebar */
+      .edash-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
 
-.pd-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
+      .edash-profile-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2.5rem 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        text-align: center;
+      }
 
-.pd-stat-card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 16px;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
-    text-align: center;
-}
+      .edash-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: #d4f1f4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: #16a2b8;
+        margin: 0 auto 1.5rem;
+      }
 
-.pd-stat-card i {
-    font-size: 2rem;
-    color: #3b82f6;
-    margin-bottom: 0.5rem;
-}
+      .edash-profile-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #2c2c2c;
+        margin-bottom: 0.25rem;
+      }
 
-.pd-stat-card h3 {
-    font-size: 1.8rem;
-}
+      .edash-profile-id {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-bottom: 1.5rem;
+      }
 
-.pd-quick-actions {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-}
+      .edash-profile-buttons {
+        display: flex;
+        gap: 0.75rem;
+      }
 
-.pd-action-btn {
-    background: #3b82f6;
-    color: white;
-    padding: 0.8rem 1.4rem;
-    border-radius: 12px;
-    text-decoration: none;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: 0.2s;
-}
+      .edash-btn-outline {
+        flex: 1;
+        padding: 0.625rem;
+        border: 1.5px solid #dee2e6;
+        background: white;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #495057;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
 
-.pd-action-btn.logout {
-    background: #ef4444;
-}
+      .edash-btn-outline:hover {
+        border-color: #16a2b8;
+        color: #16a2b8;
+      }
 
-.pd-action-btn:hover {
-    opacity: 0.85;
-}
+      .edash-emergency-card {
+        background: linear-gradient(135deg, #16a2b8 0%, #138496 100%);
+        border-radius: 12px;
+        padding: 2rem;
+        color: white;
+        box-shadow: 0 4px 12px rgba(22, 162, 184, 0.25);
+      }
 
-/* APPOINTMENTS LIST */
-.pd-appt-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.2rem;
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
-    margin-bottom: 1rem;
-}
+      .edash-emergency-title {
+        font-size: 1.375rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+      }
 
-.pd-appt-icon i {
-    font-size: 2rem;
-    color: #3b82f6;
-}
+      .edash-emergency-text {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        opacity: 0.95;
+      }
 
-.pd-appt-info h4 {
-    margin: 0;
-    font-weight: 600;
-}
+      .edash-emergency-btn {
+        width: 100%;
+        padding: 0.875rem;
+        background: white;
+        color: #16a2b8;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
 
-.status-pending {
-    background: #fde047;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-weight: 600;
-}
+      .edash-emergency-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
 
-.status-accepted {
-    background: #86efac;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-weight: 600;
-}
+      /* Main Content */
+      .edash-main {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
 
-.status-completed {
-    background: #93c5fd;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-weight: 600;
-}
+      .edash-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
 
-.pd-empty {
-    text-align: center;
-    color: #666;
-}
+      .edash-header-text h1 {
+        font-size: 1.875rem;
+        font-weight: 600;
+        color: #2c2c2c;
+        margin-bottom: 0.25rem;
+      }
 
-</style>
+      .edash-header-text p {
+        font-size: 0.9375rem;
+        color: #6c757d;
+        margin: 0;
+      }
 
-<div class="patient-dashboard">
+      .edash-book-btn {
+        padding: 0.75rem 1.5rem;
+        background: #16a2b8;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(22, 162, 184, 0.25);
+        text-decoration: none;
+      }
 
-    <!-- Patient Header -->
-    <div class="pd-header">
-        <h2>Welcome, {{ current_user.name }}</h2>
-        <p>Your complete healthcare hub</p>
-    </div>
+      .edash-book-btn:hover {
+        background: #138496;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(22, 162, 184, 0.3);
+      }
 
-    <!-- Stats Section (Dynamic) -->
-    <div class="pd-stats-grid">
+      /* Stats Grid */
+      .edash-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+      }
 
-        <div class="pd-stat-card">
-            <i class="fas fa-calendar-check"></i>
-            <h3>{{ upcoming_count }}</h3>
-            <p>Upcoming Appointments</p>
+      .edash-stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        transition: all 0.3s;
+      }
+
+      .edash-stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .edash-stat-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin: 0 auto 1rem;
+      }
+
+      .edash-icon-green {
+        background: #e6fff0;
+        color: #27ae60;
+      }
+
+      .edash-icon-blue {
+        background: #e7f3ff;
+        color: #4a90e2;
+      }
+
+      .edash-icon-purple {
+        background: #f3e6ff;
+        color: #9b59b6;
+      }
+
+      .edash-icon-orange {
+        background: #fff3e6;
+        color: #ff8c42;
+      }
+
+      .edash-stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2c2c2c;
+        margin-bottom: 0.25rem;
+      }
+
+      .edash-stat-label {
+        font-size: 0.8125rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+      }
+
+      /* Appointments Section */
+      .edash-appointments {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+
+      .edash-tabs {
+        display: flex;
+        gap: 2rem;
+        border-bottom: 1px solid #e0e0e0;
+        margin-bottom: 2rem;
+      }
+
+      .edash-tab {
+        padding: 0.75rem 0;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        color: #6c757d;
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.2s;
+        position: relative;
+        bottom: -1px;
+      }
+
+      .edash-tab.edash-active {
+        color: #16a2b8;
+        border-bottom-color: #16a2b8;
+      }
+
+      .edash-appointment-card {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        border: 1.5px solid #e0e0e0;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        transition: all 0.2s;
+      }
+
+      .edash-appointment-card:hover {
+        border-color: #16a2b8;
+        box-shadow: 0 2px 8px rgba(22, 162, 184, 0.1);
+      }
+
+      .edash-doctor-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+
+      .edash-doctor-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .edash-appointment-info {
+        flex: 1;
+      }
+
+      .edash-doctor-name {
+        font-size: 1.0625rem;
+        font-weight: 600;
+        color: #2c2c2c;
+        margin-bottom: 0.25rem;
+      }
+
+      .edash-doctor-specialty {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-bottom: 0.75rem;
+      }
+
+      .edash-appointment-details {
+        display: flex;
+        gap: 1.5rem;
+        font-size: 0.875rem;
+        color: #495057;
+      }
+
+      .edash-appointment-details span {
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+      }
+
+      .edash-appointment-details i {
+        color: #6c757d;
+      }
+
+      .edash-appointment-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-end;
+      }
+
+      .edash-status-badge {
+        padding: 0.375rem 0.875rem;
+        border-radius: 6px;
+        font-size: 0.8125rem;
+        font-weight: 500;
+      }
+
+      .edash-badge-upcoming {
+        background: #e6f7f9;
+        color: #16a2b8;
+      }
+
+      .edash-badge-confirmed {
+        background: #e6fff0;
+        color: #27ae60;
+      }
+
+      .edash-action-buttons {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .edash-btn-action {
+        padding: 0.5rem 1rem;
+        border: 1.5px solid #dee2e6;
+        background: white;
+        border-radius: 6px;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .edash-btn-primary {
+        background: #e7f3ff;
+        border-color: #4a90e2;
+        color: #4a90e2;
+      }
+
+      .edash-btn-primary:hover {
+        background: #4a90e2;
+        color: white;
+      }
+
+      .edash-btn-cancel {
+        color: #dc3545;
+        border-color: #dee2e6;
+      }
+
+      .edash-btn-cancel:hover {
+        background: #fff5f5;
+        border-color: #dc3545;
+      }
+
+      /* Mobile Menu */
+      .edash-mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #495057;
+        cursor: pointer;
+      }
+
+      /* Responsive */
+      @media (max-width: 1200px) {
+        .edash-stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 992px) {
+        .edash-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .edash-sidebar {
+          display: none;
+        }
+
+        .edash-nav-menu {
+          display: none;
+        }
+
+        .edash-mobile-menu-btn {
+          display: block;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .edash-stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .edash-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .edash-book-btn {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .edash-appointment-card {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .edash-appointment-actions {
+          align-items: center;
+          width: 100%;
+        }
+
+        .edash-action-buttons {
+          width: 100%;
+        }
+
+        .edash-btn-action {
+          flex: 1;
+        }
+
+        .edash-tabs {
+          gap: 1rem;
+          overflow-x: auto;
+        }
+
+        .edash-tab {
+          white-space: nowrap;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .edash-container {
+          padding: 1.5rem 1rem;
+        }
+
+        .edash-appointments {
+          padding: 1.5rem 1rem;
+        }
+
+        .edash-appointment-details {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+      }
+    </style>
+
+<div class="edash-container">
+  <div class="edash-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="edash-sidebar">
+
+      <!-- Profile Card -->
+      <div class="edash-profile-card">
+        <div class="edash-avatar">
+          {{ current_user.name[:2]|upper }}
         </div>
 
-        <div class="pd-stat-card">
+        <div class="edash-profile-name">
+          {{ current_user.name }}
+        </div>
+
+        <div class="edash-profile-id">
+          Patient ID: #{{ current_user.patient_profile.id }}
+        </div>
+
+        <div class="edash-profile-buttons">
+          <button class="edash-btn-outline">Edit Profile</button>
+          <button class="edash-btn-outline">Settings</button>
+        </div>
+      </div>
+
+      <!-- Emergency Card -->
+      <div class="edash-emergency-card">
+        <h3 class="edash-emergency-title">Emergency?</h3>
+        <p class="edash-emergency-text">
+          Find nearest hospitals or call ambulance immediately.
+        </p>
+        <button class="edash-emergency-btn">Call 911</button>
+      </div>
+
+    </aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="edash-main">
+
+      <!-- Header -->
+      <div class="edash-header">
+        <div class="edash-header-text">
+          <h1>Dashboard</h1>
+          <p>Welcome back, here’s your health overview.</p>
+        </div>
+
+        <a href="{{ url_for('patient.find_doctor') }}" class="edash-book-btn">
+          <i class="fas fa-plus"></i>
+          Book Appointment
+        </a>
+      </div>
+
+      <!-- ================= STATS GRID ================= -->
+      <div class="edash-stats-grid">
+
+        <div class="edash-stat-card">
+          <div class="edash-stat-icon edash-icon-green">
+            <i class="fas fa-heartbeat"></i>
+          </div>
+          <div class="edash-stat-value">{{ total_consultations }}</div>
+          <div class="edash-stat-label">Consultations</div>
+        </div>
+
+        <div class="edash-stat-card">
+          <div class="edash-stat-icon edash-icon-blue">
+            <i class="far fa-calendar"></i>
+          </div>
+          <div class="edash-stat-value">{{ upcoming_count }}</div>
+          <div class="edash-stat-label">Upcoming</div>
+        </div>
+
+        <div class="edash-stat-card">
+          <div class="edash-stat-icon edash-icon-purple">
             <i class="fas fa-user-md"></i>
-            <h3>{{ total_doctors }}</h3>
-            <p>Available Doctors</p>
+          </div>
+          <div class="edash-stat-value">{{ total_doctors }}</div>
+          <div class="edash-stat-label">Doctors</div>
         </div>
 
-        <div class="pd-stat-card">
-            <i class="fas fa-notes-medical"></i>
-            <h3>{{ total_consultations }}</h3>
-            <p>Past Consultations</p>
+        <div class="edash-stat-card">
+          <div class="edash-stat-icon edash-icon-orange">
+            <i class="fas fa-video"></i>
+          </div>
+          <div class="edash-stat-value">{{ upcoming|length }}</div>
+          <div class="edash-stat-label">Sessions</div>
         </div>
 
-    </div>
+      </div>
 
-    <!-- Quick Actions -->
-    <div class="pd-quick-actions">
-        <a href="{{ url_for('patient.find_doctor') }}" class="pd-action-btn">
-            <i class="fas fa-search"></i> Find a Doctor
-        </a>
+      <!-- ================= APPOINTMENTS ================= -->
+      <div class="edash-appointments">
 
-        <a href="{{ url_for('patient.my_appointments') }}" class="pd-action-btn">
-            <i class="fas fa-calendar-alt"></i> My Appointments
-        </a>
-
-        <a href="{{ url_for('auth.logout') }}" class="pd-action-btn logout">
-            <i class="fas fa-sign-out-alt"></i> Logout
-        </a>
-    </div>
-
-    <!-- Upcoming Appointments -->
-    <div class="pd-section">
-        <h3 class="pd-section-title">Upcoming Appointments</h3>
+        <div class="edash-tabs">
+          <button class="edash-tab edash-active">
+            Upcoming Appointments
+          </button>
+          <button class="edash-tab">Medical History</button>
+          <button class="edash-tab">Prescriptions</button>
+        </div>
 
         {% if upcoming %}
-            <div class="pd-appointments-list">
+          {% for appt in upcoming %}
+          <div class="edash-appointment-card">
 
-                {% for appt in upcoming %}
-                <div class="pd-appt-card">
-                    <div class="pd-appt-icon">
-                        <i class="fas fa-user-md"></i>
-                    </div>
-
-                    <div class="pd-appt-info">
-                        <h4>Dr. {{ appt.doctor.user.name }}</h4>
-                        <p>{{ appt.date }} at {{ appt.time }}</p>
-                    </div>
-
-                    <div class="pd-appt-status">
-                        <span class="status-{{ appt.status }}">{{ appt.status|capitalize }}</span>
-                    </div>
-                </div>
-                {% endfor %}
-
+            <div class="edash-doctor-avatar">
+              <i class="fas fa-user-md"></i>
             </div>
 
-        {% else %}
-            <p class="pd-empty">No upcoming appointments.</p>
-        {% endif %}
-    </div>
+            <div class="edash-appointment-info">
+              <div class="edash-doctor-name">
+                Dr. {{ appt.doctor.user.name }}
+              </div>
 
+              <div class="edash-doctor-specialty">
+                {{ appt.doctor.specialization or "General Physician" }}
+              </div>
+
+              <div class="edash-appointment-details">
+                <span>
+                  <i class="far fa-calendar"></i>
+                  {{ appt.date }} at {{ appt.time }}
+                </span>
+                <span>
+                  <i class="fas fa-video"></i>
+                  Online Consultation
+                </span>
+              </div>
+            </div>
+
+            <div class="edash-appointment-actions">
+              <span class="edash-status-badge edash-badge-upcoming">
+                {{ appt.status|capitalize }}
+              </span>
+
+              <div class="edash-action-buttons">
+                <a href="#" class="edash-btn-action edash-btn-primary">
+                  Join Call
+                </a>
+                <a href="#" class="edash-btn-action edash-btn-cancel">
+                  Cancel
+                </a>
+              </div>
+            </div>
+
+          </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-muted">No upcoming appointments.</p>
+        {% endif %}
+
+      </div>
+
+    </main>
+  </div>
 </div>
 
 {% endblock %}

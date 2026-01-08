@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Doctor Profile{% endblock %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>My Profile</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <div class="profile-avatar-large">{{ current_user.name[:2].upper() }}</div>
+                            <button class="btn btn-primary mt-3">Change Picture</button>
+                        </div>
+                        <div class="col-md-8">
+                            <h4>{{ current_user.name }}</h4>
+                            <p class="text-muted">{{ current_user.doctor_profile.specialization }}</p>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <strong>Email:</strong><br>
+                                    {{ current_user.email }}
+                                </div>
+                                <div class="col-sm-6">
+                                    <strong>Fees:</strong><br>
+                                    ${{ current_user.doctor_profile.fees }}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <strong>Experience:</strong><br>
+                                    {{ current_user.doctor_profile.experience }} years
+                                </div>
+                                <div class="col-sm-6">
+                                    <strong>Specialization:</strong><br>
+                                    {{ current_user.doctor_profile.specialization }}
+                                </div>
+                            </div>
+                            <hr>
+                            <div>
+                                <strong>About:</strong><br>
+                                {{ current_user.doctor_profile.about or 'No description available' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-secondary">Edit Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

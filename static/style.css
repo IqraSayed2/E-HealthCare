@@ -86,6 +86,42 @@ body {
   color: #dc3545;
 }
 
+.profile-link {
+  text-decoration: none;
+}
+
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #16a2b8;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.profile-avatar:hover {
+  background: #138496;
+}
+
+.profile-avatar-large {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #16a2b8;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 3rem;
+  margin: 0 auto 1rem;
+}
+
 /* Hero Section */
 .ehome-hero {
   padding: 4rem 0;

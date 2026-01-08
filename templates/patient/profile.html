@@ -1,0 +1,817 @@
+{% extends "base.html" %}
+{% block title %}Patient Profile{% endblock %}
+{% block content %}
+
+    <style>
+      /* Header Styles */
+      .ehp-header {
+        background: white;
+        padding: 15px 30px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .ehp-header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .ehp-logo-section {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .ehp-logo {
+        width: 35px;
+        height: 35px;
+        background: #16a2b8;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+      }
+
+      .ehp-platform-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+
+      .ehp-nav {
+        display: flex;
+        gap: 30px;
+        align-items: center;
+      }
+
+      .ehp-nav-link {
+        color: #6c757d;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+      }
+
+      .ehp-nav-link:hover,
+      .ehp-nav-link.ehp-active {
+        color: #16a2b8;
+      }
+
+      .ehp-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .ehp-icon-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #f5f5f5;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #495057;
+        transition: all 0.3s ease;
+      }
+
+      .ehp-icon-btn:hover {
+        background: #e0e0e0;
+      }
+
+      .ehp-user-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        cursor: pointer;
+      }
+
+      /* Main Layout */
+      .ehp-container {
+        max-width: 1400px;
+        margin: 30px auto;
+        padding: 0 30px;
+        display: flex;
+        gap: 25px;
+      }
+
+      /* Sidebar */
+      .ehp-sidebar {
+        width: 280px;
+        flex-shrink: 0;
+      }
+
+      .ehp-profile-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        margin-bottom: 20px;
+      }
+
+      .ehp-profile-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .ehp-profile-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #16a2b8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 1.5rem;
+      }
+
+      .ehp-profile-info {
+        flex: 1;
+      }
+
+      .ehp-profile-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 3px;
+      }
+
+      .ehp-profile-id {
+        font-size: 0.85rem;
+        color: #6c757d;
+      }
+
+      .ehp-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .ehp-menu-item {
+        margin-bottom: 8px;
+      }
+
+      .ehp-menu-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 15px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #495057;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .ehp-menu-link:hover {
+        background: #f5f6fa;
+        color: #1a1a1a;
+      }
+
+      .ehp-menu-link.ehp-active {
+        background: #e3f2fd;
+        color: #1976d2;
+      }
+
+      .ehp-menu-icon {
+        font-size: 1.1rem;
+        width: 20px;
+      }
+
+      .ehp-logout-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 15px;
+        border-radius: 8px;
+        background: white;
+        border: none;
+        color: #dc3545;
+        font-weight: 500;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s ease;
+      }
+
+      .ehp-logout-btn:hover {
+        background: #fff5f5;
+      }
+
+      /* Main Content */
+      .ehp-main-content {
+        flex: 1;
+        background: white;
+        border-radius: 12px;
+        padding: 35px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+
+      .ehp-content-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .ehp-page-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1a1a1a;
+      }
+
+      .ehp-edit-btn {
+        padding: 10px 25px;
+        background: #f5f5f5;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        color: #495057;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .ehp-edit-btn:hover {
+        background: #e0e0e0;
+      }
+
+      .ehp-last-updated {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-bottom: 30px;
+      }
+
+      .ehp-section {
+        margin-bottom: 40px;
+      }
+
+      .ehp-section-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f0f0f0;
+      }
+
+      .ehp-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+      }
+
+      .ehp-info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .ehp-info-label {
+        font-size: 0.85rem;
+        color: #6c757d;
+        font-weight: 500;
+      }
+
+      .ehp-info-value {
+        font-size: 1rem;
+        color: #1a1a1a;
+        font-weight: 600;
+      }
+
+      /* Mobile Menu Toggle */
+      .ehp-mobile-toggle {
+        display: none;
+        background: #f5f5f5;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-right: 15px;
+      }
+
+      /* Responsive */
+      @media (max-width: 992px) {
+        .ehp-nav {
+          display: none;
+        }
+
+        .ehp-container {
+          flex-direction: column;
+        }
+
+        .ehp-sidebar {
+          width: 100%;
+          position: fixed;
+          left: -100%;
+          top: 0;
+          height: 100vh;
+          z-index: 2000;
+          background: white;
+          transition: left 0.3s ease;
+          overflow-y: auto;
+          padding: 20px;
+        }
+
+        .ehp-sidebar.ehp-sidebar-open {
+          left: 0;
+        }
+
+        .ehp-mobile-overlay {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 1999;
+        }
+
+        .ehp-mobile-overlay.ehp-active {
+          display: block;
+        }
+
+        .ehp-mobile-toggle {
+          display: block;
+        }
+
+        .ehp-sidebar-close {
+          display: flex;
+          justify-content: flex-end;
+          margin-bottom: 20px;
+        }
+
+        .ehp-close-btn {
+          background: none;
+          border: none;
+          font-size: 1.5rem;
+          cursor: pointer;
+          color: #495057;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .ehp-header {
+          padding: 12px 20px;
+        }
+
+        .ehp-container {
+          margin: 20px auto;
+          padding: 0 15px;
+        }
+
+        .ehp-main-content {
+          padding: 25px 20px;
+        }
+
+        .ehp-page-title {
+          font-size: 1.5rem;
+        }
+
+        .ehp-info-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .ehp-nav-link {
+          display: none;
+        }
+
+        .ehp-platform-name {
+          font-size: 0.95rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .ehp-header-actions {
+          gap: 8px;
+        }
+
+        .ehp-icon-btn {
+          width: 35px;
+          height: 35px;
+        }
+
+        .ehp-main-content {
+          padding: 20px 15px;
+        }
+
+        .ehp-content-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 15px;
+        }
+
+        .ehp-edit-btn {
+          width: 100%;
+        }
+      }
+
+      .ehp-hide-mobile {
+        display: block;
+      }
+
+      @media (max-width: 992px) {
+        .ehp-hide-mobile {
+          display: none;
+        }
+      }
+
+      .ehp-input,
+      .ehp-textarea {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+
+      .ehp-input:focus,
+      .ehp-textarea:focus {
+        outline: none;
+        border-color: #16a2b8;
+      }
+
+      .ehp-save-btn {
+        padding: 10px 25px;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .ehp-save-btn:hover {
+        background: #218838;
+      }
+    </style>
+
+<form method="POST" id="profileForm">
+
+<div class="ehp-container">
+
+  <!-- SIDEBAR (UNCHANGED UI) -->
+  <aside class="ehp-sidebar">
+    <div class="ehp-profile-card">
+      <div class="ehp-profile-header">
+        <div class="ehp-profile-avatar">{{ current_user.name[:2].upper() }}</div>
+        <div class="ehp-profile-info">
+          <div class="ehp-profile-name">{{ current_user.name }}</div>
+          <div class="ehp-profile-id">ID: {{ current_user.patient_profile.id }}</div>
+        </div>
+      </div>
+
+      <ul class="ehp-menu">
+        <li class="ehp-menu-item">
+          <a href="#" class="ehp-menu-link ehp-active" data-section="personal">
+            <i class="fas fa-user ehp-menu-icon"></i>
+            <span>Personal Information</span>
+          </a>
+        </li>
+        <li class="ehp-menu-item">
+          <a href="#" class="ehp-menu-link" data-section="medical">
+            <i class="fas fa-briefcase-medical ehp-menu-icon"></i>
+            <span>Medical History</span>
+          </a>
+        </li>
+        <li class="ehp-menu-item">
+          <a href="#" class="ehp-menu-link" data-section="contact">
+            <i class="fas fa-address-book ehp-menu-icon"></i>
+            <span>Contact & Address</span>
+          </a>
+        </li>
+        <li class="ehp-menu-item">
+          <a href="#" class="ehp-menu-link" data-section="account">
+            <i class="fas fa-sliders-h ehp-menu-icon"></i>
+            <span>Account Settings</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <button class="ehp-logout-btn">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Log Out</span>
+    </button>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="ehp-main-content">
+
+    <!-- PERSONAL -->
+    <section class="ehp-content-section" id="personalSection">
+      <div class="ehp-content-header">
+        <h1 class="ehp-page-title">Personal Information</h1>
+        <button type="button" class="ehp-edit-btn">Edit</button>
+      </div>
+
+      <p class="ehp-last-updated">Last updated: {{ current_user.patient_profile.updated_at.strftime('%B %d, %Y') if current_user.patient_profile.updated_at else 'Never' }}</p>
+
+      <div class="ehp-section">
+        <div class="ehp-info-grid editable">
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Full Name</span>
+            <span class="ehp-info-value">{{ current_user.name }}</span>
+          </div>
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Date of Birth</span>
+            <span class="ehp-info-value">{{ current_user.patient_profile.date_of_birth or 'Not provided' }}</span>
+          </div>
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Gender</span>
+            <span class="ehp-info-value">{{ current_user.patient_profile.gender or 'Not provided' }}</span>
+          </div>
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Blood Type</span>
+            <span class="ehp-info-value">{{ current_user.patient_profile.blood_group or 'Not provided' }}</span>
+          </div>
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Contact Number</span>
+            <span class="ehp-info-value">{{ current_user.patient_profile.phone or 'Not provided' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ehp-section">
+        <h2 class="ehp-section-title">Allergies and Conditions</h2>
+        <div class="ehp-info-grid editable">
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Allergies</span>
+            <span class="ehp-info-value">{{ current_user.patient_profile.allergies or 'None' }}</span>
+          </div>
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Chronic Conditions</span>
+            <span class="ehp-info-value">{{ current_user.patient_profile.conditions or 'None' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ehp-section">
+        <h2 class="ehp-section-title">Current Medications</h2>
+        <div class="ehp-info-item editable">
+          <span class="ehp-info-label">Medication List</span>
+          <span class="ehp-info-value">{{ current_user.patient_profile.medications or 'None' }}</span>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- MEDICAL -->
+    <section class="ehp-content-section" id="medicalSection" style="display:none">
+      <div class="ehp-content-header">
+        <h1 class="ehp-page-title">Medical History</h1>
+        <button type="button" class="ehp-edit-btn">Edit</button>
+      </div>
+
+      <p class="ehp-last-updated">Last updated: {{ current_user.patient_profile.updated_at.strftime('%B %d, %Y') if current_user.patient_profile.updated_at else 'Never' }}</p>
+
+      <div class="ehp-section">
+        <h2 class="ehp-section-title">Previous Conditions</h2>
+        <div class="ehp-info-item editable">
+          <span class="ehp-info-label">Conditions</span>
+          <span class="ehp-info-value">{{ current_user.patient_profile.previous_conditions or 'None' }}</span>
+
+        </div>
+      </div>
+
+      <div class="ehp-section">
+        <h2 class="ehp-section-title">Surgeries</h2>
+        <div class="ehp-info-item editable">
+          <span class="ehp-info-label">Surgeries</span>
+          <span class="ehp-info-value">{{ current_user.patient_profile.surgeries or 'None' }}</span>
+
+        </div>
+      </div>
+
+      <div class="ehp-section">
+        <h2 class="ehp-section-title">Family Medical History</h2>
+        <div class="ehp-info-grid editable">
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Father's Medical History</span>
+            <span class="ehp-info-value">{{ current_user.patient_profile.father_history or 'None' }}</span>
+          </div>
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Mother's Medical History</span>
+            <span class="ehp-info-value">{{ current_user.patient_profile.mother_history or 'None' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ehp-section">
+        <h2 class="ehp-section-title">Immunizations</h2>
+        <div class="ehp-info-item editable">
+          <span class="ehp-info-label">Immunizations</span>
+          <span class="ehp-info-value">{{ current_user.patient_profile.immunizations or 'None' }}</span>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="ehp-content-section" id="contactSection" style="display:none">
+      <div class="ehp-content-header">
+        <h1 class="ehp-page-title">Contact</h1>
+        <button type="button" class="ehp-edit-btn">Edit</button>
+      </div>
+
+      <p class="ehp-last-updated">Last updated: {{ current_user.patient_profile.updated_at.strftime('%B %d, %Y') if current_user.patient_profile.updated_at else 'Never' }}</p>
+
+      <div class="ehp-section">
+        <h2 class="ehp-section-title">Contact Information</h2>
+        <div class="ehp-info-grid editable">
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Primary Phone</span>
+            <span class="ehp-info-value">{{ current_user.patient_profile.phone or 'Not provided' }}</span>
+          </div>
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Secondary Phone</span>
+            <span class="ehp-info-value">{{ current_user.patient_profile.emergency_contact_phone or 'Not provided' }}</span>
+          </div>
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Email Address</span>
+            <span class="ehp-info-value">{{ current_user.email }}</span>
+          </div>
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Preferred Contact Method</span>
+            <span class="ehp-info-value">Phone Call</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCOUNT -->
+    <section class="ehp-content-section" id="accountSection" style="display:none">
+      <div class="ehp-content-header">
+        <h1 class="ehp-page-title">Account Settings</h1>
+        <button type="button" class="ehp-edit-btn">Edit</button>
+      </div>
+
+      <p class="ehp-last-updated">Last updated: {{ current_user.patient_profile.updated_at.strftime('%B %d, %Y') if current_user.patient_profile.updated_at else 'Never' }}</p>
+
+      <div class="ehp-section">
+        <h2 class="ehp-section-title">Login Information</h2>
+        <div class="ehp-info-grid">
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Username</span>
+            <span class="ehp-info-value">{{ current_user.name }}</span>
+          </div>
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Email</span>
+            <span class="ehp-info-value">{{ current_user.email }}</span>
+          </div>
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Password</span>
+            <span class="ehp-info-value">••••••••</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ehp-section">
+        <h2 class="ehp-section-title">Notification Preferences</h2>
+        <div class="ehp-info-grid">
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Email Notifications</span>
+            <span class="ehp-info-value">Enabled</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <button type="submit" id="saveBtn" style="display:none" class="ehp-save-btn">
+      Save Changes
+    </button>
+
+  </main>
+</div>
+
+</form>
+
+<script>
+document.querySelectorAll('.ehp-edit-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const section = this.closest('.ehp-content-section');
+    section.classList.add('editing');
+    section.querySelectorAll('.ehp-info-item').forEach(item => {
+      const label = item.querySelector('.ehp-info-label').textContent;
+      const valueSpan = item.querySelector('.ehp-info-value');
+      const currentValue = valueSpan.textContent;
+
+      let input;
+      if (label === 'Date of Birth') {
+        input = document.createElement('input');
+        input.type = 'date';
+        input.className = 'ehp-input';
+        input.value = currentValue === 'Not provided' ? '' : currentValue;
+      } else if (label === 'Gender') {
+        input = document.createElement('select');
+        input.className = 'ehp-input';
+        ['Male', 'Female', 'Other'].forEach(option => {
+          const opt = document.createElement('option');
+          opt.value = option;
+          opt.textContent = option;
+          if (currentValue === option) opt.selected = true;
+          input.appendChild(opt);
+        });
+      } else if (label === 'Blood Type') {
+        input = document.createElement('select');
+        input.className = 'ehp-input';
+        ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].forEach(option => {
+          const opt = document.createElement('option');
+          opt.value = option;
+          opt.textContent = option;
+          if (currentValue === option) opt.selected = true;
+          input.appendChild(opt);
+        });
+      } else if (label === 'Medication List' || label === 'Conditions' || label === 'Surgeries' || label === 'Family History' || label === 'Immunizations') {
+        input = document.createElement('textarea');
+        input.className = 'ehp-textarea';
+        input.value = currentValue === 'None' ? '' : currentValue;
+      } else {
+        input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'ehp-input';
+        input.value = currentValue === 'Not provided' ? '' : currentValue;
+      }
+
+      valueSpan.style.display = 'none';
+      item.appendChild(input);
+    });
+    this.style.display = 'none';
+    document.getElementById('saveBtn').style.display = 'inline-block';
+  });
+});
+
+document.getElementById('saveBtn').addEventListener('click', function() {
+  const form = document.getElementById('profileForm');
+  const allSections = document.querySelectorAll('.ehp-content-section');
+
+  allSections.forEach(section => {
+    section.querySelectorAll('.ehp-info-item').forEach(item => {
+      const label = item.querySelector('.ehp-info-label').textContent;
+      const valueSpan = item.querySelector('.ehp-info-value');
+      const input = item.querySelector('.ehp-input') || item.querySelector('.ehp-textarea');
+      let value;
+
+      if (input) {
+        // If there's an input (editing), use its value
+        value = input.value.trim() || 'Not provided';
+        valueSpan.textContent = value;
+        valueSpan.style.display = 'block';
+        input.remove();
+      } else {
+        // If no input (not editing), use the current span value
+        value = valueSpan.textContent === 'Not provided' ? '' : valueSpan.textContent;
+      }
+
+      // Create hidden input for form submission
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = label.toLowerCase().replace(/[^a-z0-9]/g, '_');
+      hiddenInput.value = value;
+      form.appendChild(hiddenInput);
+    });
+    section.classList.remove('editing');
+  });
+
+  this.style.display = 'none';
+  document.querySelectorAll('.ehp-edit-btn').forEach(btn => btn.style.display = 'inline-block');
+  form.submit();
+});
+
+// Section navigation
+const menuLinks = document.querySelectorAll('.ehp-menu-link');
+const contentSections = document.querySelectorAll('.ehp-content-section');
+
+menuLinks.forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    const targetSection = this.getAttribute('data-section');
+
+    menuLinks.forEach(l => l.classList.remove('ehp-active'));
+    this.classList.add('ehp-active');
+
+    contentSections.forEach(section => {
+      section.style.display = 'none';
+    });
+
+    const sectionId = targetSection + 'Section';
+    document.getElementById(sectionId).style.display = 'block';
+  });
+});
+</script>
+
+{% endblock %}

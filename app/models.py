@@ -1,6 +1,8 @@
 from .extensions import db
 from flask_login import UserMixin
 from datetime import datetime
+from .extensions import login_manager
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -8,19 +10,47 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(255))
     role = db.Column(db.String(20))    # "patient" or "doctor"
-
     # Use back_populates to avoid duplicate/conflicting backrefs
     doctor_profile = db.relationship("DoctorProfile", back_populates="user", uselist=False)
     patient_profile = db.relationship("PatientProfile", back_populates="user", uselist=False)
 
+
 ### Patient Profile ###
 class PatientProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    # Personal
     age = db.Column(db.Integer)
     gender = db.Column(db.String(10))
+    blood_group = db.Column(db.String(10))
+    date_of_birth = db.Column(db.String(20))
+    emergency_contact_name = db.Column(db.String(100))
+    emergency_contact_phone = db.Column(db.String(20))
+    # Contact
     phone = db.Column(db.String(20))
+    address = db.Column(db.Text)
+    city = db.Column(db.String(50))
+    state = db.Column(db.String(50))
+    country = db.Column(db.String(50))
+    zip_code = db.Column(db.String(20))
+    # Medical
+    allergies = db.Column(db.Text)
+    conditions = db.Column(db.Text)
+    medications = db.Column(db.Text)
+    previous_conditions = db.Column(db.Text)
+    surgeries = db.Column(db.Text)
+    family_history = db.Column(db.Text)
+    father_history = db.Column(db.Text)
+    mother_history = db.Column(db.Text)
+    immunizations = db.Column(db.Text)
+    # Insurance
+    insurance_provider = db.Column(db.String(100))
+    policy_number = db.Column(db.String(50))
+    group_number = db.Column(db.String(50))
+    coverage_type = db.Column(db.String(50))
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship("User", back_populates="patient_profile", uselist=False)
+
 
 ### Doctor Profile ###
 class DoctorProfile(db.Model):
@@ -32,12 +62,20 @@ class DoctorProfile(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship("User", back_populates="doctor_profile", uselist=False)
 
+
 ### Availability ###
 class Availability(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctor_profile.id'))
-    date = db.Column(db.String(20))
-    time = db.Column(db.String(20))
+    type = db.Column(db.String(20))  # weekly / override
+    day = db.Column(db.String(10))   # Monday, Tuesday, etc.
+    start_time = db.Column(db.String(10))
+    end_time = db.Column(db.String(10))
+    date = db.Column(db.String(20))  # YYYY-MM-DD
+    label = db.Column(db.String(50)) # Holiday / Vacation
+    doctor = db.relationship("DoctorProfile", backref="availability")
+    is_booked = db.Column(db.Boolean, default=False)
+
 
 class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -46,8 +84,8 @@ class Appointment(db.Model):
     status = db.Column(db.String(20), default="pending")
     date = db.Column(db.String(50))
     time = db.Column(db.String(50))
+    consultation_type = db.Column(db.String(50), default="Chat Consultation")
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
     doctor = db.relationship("DoctorProfile", backref="appointments")
     patient = db.relationship("PatientProfile", backref="appointments")
 
@@ -60,15 +98,17 @@ class Payment(db.Model):
     status = db.Column(db.String(20))  # paid / failed / pending
 
 
+### Review ###
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    doctor_id = db.Column(db.Integer, db.ForeignKey('doctor_profile.id'))
+    patient_id = db.Column(db.Integer, db.ForeignKey('patient_profile.id'))
+    rating = db.Column(db.Integer)  # 1-5
+    comment = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    doctor = db.relationship("DoctorProfile", backref="reviews")
+    patient = db.relationship("PatientProfile", backref="reviews")
 
-
-
-
-
-
-
-
-from .extensions import login_manager
 
 @login_manager.user_loader
 def load_user(user_id):

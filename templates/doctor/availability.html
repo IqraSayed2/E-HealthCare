@@ -1,0 +1,912 @@
+{% extends "base.html" %}
+{% block title %}Availability Setup{% endblock %}
+{% block content %}
+
+   <style>
+      /* Main Container */
+      .avail-container {
+        max-width: 1400px;
+        margin: 40px auto;
+        padding: 0 40px;
+      }
+
+      .avail-page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 40px;
+      }
+
+      .avail-title-section h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 8px;
+      }
+
+      .avail-subtitle {
+        color: #6c757d;
+        font-size: 0.95rem;
+      }
+
+      .avail-save-btn {
+        padding: 12px 28px;
+        background: #4285f4;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .avail-save-btn:hover {
+        background: #1967d2;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+      }
+
+      .avail-content-grid {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 30px;
+      }
+
+      /* Weekly Hours Section */
+      .avail-card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+
+      .avail-card-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 25px;
+      }
+
+      .avail-day-row {
+        display: flex;
+        align-items: center;
+        padding: 18px;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        transition: all 0.3s ease;
+      }
+
+      .avail-day-row:hover {
+        border-color: #d0d5dd;
+      }
+
+      .avail-day-row.avail-disabled {
+        background: #f8f9fa;
+      }
+
+      .avail-checkbox {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: #4285f4;
+      }
+
+      .avail-day-label {
+        font-weight: 600;
+        color: #1a1a1a;
+        min-width: 100px;
+        margin-left: 12px;
+      }
+
+      .avail-day-label.avail-unavailable {
+        color: #6c757d;
+      }
+
+      .avail-unavailable-text {
+        font-size: 0.9rem;
+        color: #6c757d;
+        font-style: italic;
+      }
+
+      .avail-time-inputs {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+      }
+
+      .avail-time-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .avail-time-input {
+        padding: 8px 35px 8px 12px;
+        border: 1px solid #d0d5dd;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        width: 120px;
+        cursor: pointer;
+      }
+
+      .avail-time-input:focus {
+        outline: none;
+        border-color: #4285f4;
+      }
+
+      .avail-clock-icon {
+        position: absolute;
+        right: 10px;
+        color: #6c757d;
+        font-size: 0.85rem;
+        pointer-events: none;
+      }
+
+      .avail-time-separator {
+        color: #6c757d;
+        font-weight: 500;
+      }
+
+      .avail-add-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #4285f4;
+        border: none;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      .avail-add-btn:hover {
+        background: #1967d2;
+      }
+
+      .avail-hours-display {
+        color: #6c757d;
+        font-size: 0.9rem;
+        font-weight: 500;
+        min-width: 60px;
+        text-align: right;
+      }
+
+      /* Calendar Section */
+      .avail-calendar-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+
+      .avail-calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .avail-calendar-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1a1a1a;
+      }
+
+      .avail-calendar-nav {
+        display: flex;
+        gap: 10px;
+      }
+
+      .avail-nav-btn {
+        width: 32px;
+        height: 32px;
+        border: 1px solid #d0d5dd;
+        background: white;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      .avail-nav-btn:hover {
+        background: #f8f9fa;
+        border-color: #adb5bd;
+      }
+
+      .avail-calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .avail-calendar-day-header {
+        text-align: center;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #6c757d;
+        padding: 8px 0;
+      }
+
+      .avail-calendar-day {
+        aspect-ratio: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        position: relative;
+      }
+
+      .avail-calendar-day:hover {
+        background: #f8f9fa;
+      }
+
+      .avail-calendar-day.avail-disabled {
+        color: #d0d5dd;
+        cursor: default;
+      }
+
+      .avail-calendar-day.avail-today {
+        background: #4285f4;
+        color: white;
+      }
+
+      .avail-calendar-day.avail-selected {
+        background: #e8f0fe;
+        color: #1967d2;
+      }
+
+      .avail-day-indicator {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 4px;
+      }
+
+      .avail-indicator-available {
+        background: #4285f4;
+      }
+
+      .avail-indicator-override {
+        background: #fbbc04;
+      }
+
+      .avail-indicator-booked {
+        background: #ea4335;
+      }
+
+      .avail-indicator-unavailable {
+        background: #d0d5dd;
+      }
+
+      .avail-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .avail-legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+      }
+
+      .avail-legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      .avail-legend-available {
+        background: #4285f4;
+      }
+      .avail-legend-override {
+        background: #fbbc04;
+      }
+      .avail-legend-booked {
+        background: #ea4335;
+      }
+      .avail-legend-unavailable {
+        background: #d0d5dd;
+      }
+
+      /* Override Section */
+      .avail-override-section {
+        margin-top: 30px;
+      }
+
+      .avail-override-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 10px;
+      }
+
+      .avail-override-subtitle {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+      }
+
+      .avail-date-select-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      .avail-date-input-wrapper {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .avail-date-input {
+        flex: 1;
+        padding: 12px 15px;
+        border: 1px solid #d0d5dd;
+        border-radius: 8px;
+        font-size: 0.95rem;
+      }
+
+      .avail-date-input:focus {
+        outline: none;
+        border-color: #4285f4;
+      }
+
+      .avail-block-btn {
+        padding: 12px 24px;
+        background: #f8f9fa;
+        border: 1px solid #d0d5dd;
+        border-radius: 8px;
+        font-weight: 600;
+        color: #495057;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .avail-block-btn:hover {
+        background: #e9ecef;
+      }
+
+      .avail-upcoming-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-top: 30px;
+        margin-bottom: 15px;
+      }
+
+      .avail-override-item {
+        padding: 18px;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .avail-override-date {
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 4px;
+      }
+
+      .avail-override-label {
+        font-size: 0.85rem;
+        color: #fbbc04;
+      }
+
+      .avail-override-vacation {
+        color: #4285f4;
+      }
+
+      .avail-delete-btn {
+        width: 36px;
+        height: 36px;
+        border: none;
+        background: #f8f9fa;
+        border-radius: 6px;
+        color: #6c757d;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .avail-delete-btn:hover {
+        background: #fee;
+        color: #dc3545;
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 1024px) {
+        .avail-content-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .avail-calendar-card {
+          max-width: 500px;
+          margin: 0 auto;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .avail-header {
+          padding: 12px 20px;
+        }
+
+        .avail-nav {
+          display: none;
+        }
+
+        .avail-container {
+          margin: 25px auto;
+          padding: 0 20px;
+        }
+
+        .avail-page-header {
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .avail-save-btn {
+          width: 100%;
+        }
+
+        .avail-card {
+          padding: 20px;
+        }
+
+        .avail-day-row {
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .avail-day-label {
+          min-width: auto;
+          width: 100%;
+        }
+
+        .avail-time-inputs {
+          width: 100%;
+        }
+
+        .avail-calendar-grid {
+          gap: 4px;
+        }
+
+        .avail-calendar-day {
+          font-size: 0.85rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .avail-page-header h1 {
+          font-size: 1.5rem;
+        }
+
+        .avail-card-title {
+          font-size: 1.1rem;
+        }
+
+        .avail-time-input {
+          width: 100px;
+        }
+
+        .avail-date-input-wrapper {
+          flex-direction: column;
+        }
+
+        .avail-block-btn {
+          width: 100%;
+        }
+      }
+    </style>
+
+<div class="avail-container">
+<form method="POST">
+
+  <!-- ================= PAGE HEADER ================= -->
+  <div class="avail-page-header">
+    <div class="avail-title-section">
+      <h1>Availability Setup</h1>
+      <p class="avail-subtitle">
+        Manage your consultation schedule and block out time for personal events.
+      </p>
+    </div>
+    <button class="avail-save-btn" type="submit">Save Changes</button>
+  </div>
+
+  <div class="avail-content-grid">
+
+    <!-- ================= LEFT COLUMN ================= -->
+    <div>
+
+      <!-- ===== WEEKLY HOURS ===== -->
+      <div class="avail-card">
+        <h2 class="avail-card-title">Set Your Weekly Hours</h2>
+
+        {% for day in ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"] %}
+        {% set d = weekly.get(day) %}
+        <div class="avail-day-row {% if not d %}avail-disabled{% endif %}">
+
+          <input type="checkbox"
+                 class="avail-checkbox"
+                 name="{{ day }}_enabled"
+                 {% if d %}checked{% endif %}>
+
+          <label class="avail-day-label {% if not d %}avail-unavailable{% endif %}">
+            {{ day }}
+          </label>
+
+          <div class="avail-time-inputs" {% if not d %}style="display: none;"{% endif %}>
+            <div class="avail-time-wrapper">
+              <input type="time"
+                     name="{{ day }}_start"
+                     class="avail-time-input"
+                     value="{{ d.start_time if d else '09:00' }}">
+              <i class="far fa-clock avail-clock-icon"></i>
+            </div>
+
+            <span class="avail-time-separator">-</span>
+
+            <div class="avail-time-wrapper">
+              <input type="time"
+                     name="{{ day }}_end"
+                     class="avail-time-input"
+                     value="{{ d.end_time if d else '17:00' }}">
+              <i class="far fa-clock avail-clock-icon"></i>
+            </div>
+          </div>
+
+          <span class="avail-hours-display" {% if not d %}style="display: none;"{% endif %}>
+            {% if d %}{{ ((d.end_time[:2]|int - d.start_time[:2]|int)) }} hours{% else %}8 hours{% endif %}
+          </span>
+
+          {% if not d %}
+            <span class="avail-unavailable-text">Unavailable</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- ===== ADD DATE OVERRIDE ===== -->
+      <div class="avail-override-section">
+        <div class="avail-card">
+
+          <h2 class="avail-override-title">Add a Date Override</h2>
+          <p class="avail-override-subtitle">
+            Block out holidays, vacations, or set custom hours for a specific date.
+          </p>
+
+          <label class="avail-date-select-label">Select a date</label>
+          <div class="avail-date-input-wrapper">
+            <input type="date"
+                   name="override_date"
+                   class="avail-date-input">
+
+            <input type="text"
+                   name="override_label"
+                   class="avail-date-input"
+                   placeholder="Label (e.g., Holiday, Vacation)">
+
+            <button type="submit" class="avail-block-btn">
+              Add Time Intervals or Block Date
+            </button>
+          </div>
+
+          <h3 class="avail-upcoming-title">Upcoming Overrides</h3>
+
+          {% if overrides %}
+            {% for o in overrides %}
+            <div class="avail-override-item">
+              <div>
+                <div class="avail-override-date">{{ o.date }}</div>
+                <div class="avail-override-label">{{ o.label }}</div>
+              </div>
+              <button type="button" class="avail-delete-btn" onclick="deleteOverride({{ o.id }})">
+                <i class="far fa-trash-alt"></i>
+              </button>
+            </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-muted">No overrides added</p>
+          {% endif %}
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= RIGHT COLUMN : CALENDAR ================= -->
+    <div>
+      <!-- Dynamic Calendar -->
+      <div class="avail-calendar-card">
+
+        <div class="avail-calendar-header">
+          <h3 class="avail-calendar-title" id="calendar-title"></h3>
+          <div class="avail-calendar-nav">
+            <button type="button" class="avail-nav-btn" id="prev-month">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button type="button" class="avail-nav-btn" id="next-month">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="avail-calendar-grid" id="calendar-grid">
+          <div class="avail-calendar-day-header">S</div>
+          <div class="avail-calendar-day-header">M</div>
+          <div class="avail-calendar-day-header">T</div>
+          <div class="avail-calendar-day-header">W</div>
+          <div class="avail-calendar-day-header">T</div>
+          <div class="avail-calendar-day-header">F</div>
+          <div class="avail-calendar-day-header">S</div>
+          <!-- Days will be generated by JS -->
+        </div>
+
+        <div class="avail-legend">
+          <div class="avail-legend-item">
+            <div class="avail-legend-dot avail-legend-available"></div>
+            <span>Available</span>
+          </div>
+          <div class="avail-legend-item">
+            <div class="avail-legend-dot avail-legend-override"></div>
+            <span>Override Days</span>
+          </div>
+          <div class="avail-legend-item">
+            <div class="avail-legend-dot avail-legend-booked"></div>
+            <span>Booked</span>
+          </div>
+          <div class="avail-legend-item">
+            <div class="avail-legend-dot avail-legend-unavailable"></div>
+            <span>Unavailable</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</form>
+</div>
+
+<script>
+  // Handle checkbox toggle
+  const checkboxes = document.querySelectorAll(".avail-checkbox");
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", function () {
+      const row = this.closest(".avail-day-row");
+      const timeInputs = row.querySelector(".avail-time-inputs");
+      const hoursDisplay = row.querySelector(".avail-hours-display");
+      const unavailableText = row.querySelector(".avail-unavailable-text");
+
+      if (this.checked) {
+        row.classList.remove("avail-disabled");
+        if (timeInputs) timeInputs.style.display = "flex";
+        if (hoursDisplay) hoursDisplay.style.display = "block";
+        if (unavailableText) unavailableText.style.display = "none";
+      } else {
+        row.classList.add("avail-disabled");
+        if (timeInputs) timeInputs.style.display = "none";
+        if (hoursDisplay) hoursDisplay.style.display = "none";
+        if (unavailableText) unavailableText.style.display = "inline";
+      }
+    });
+  });
+
+  // Calculate hours
+  function calculateHours(startTime, endTime) {
+    const [startHour, startMin] = startTime.split(":").map(Number);
+    const [endHour, endMin] = endTime.split(":").map(Number);
+    const hours = endHour + endMin / 60 - (startHour + startMin / 60);
+    return Math.round(hours * 10) / 10;
+  }
+
+  // Update hours display when time changes
+  const timeInputs = document.querySelectorAll(".avail-time-input");
+  timeInputs.forEach((input) => {
+    input.addEventListener("change", function () {
+      const row = this.closest(".avail-day-row");
+      const inputs = row.querySelectorAll(".avail-time-input");
+      if (inputs.length === 2) {
+        const hours = calculateHours(inputs[0].value, inputs[1].value);
+        const display = row.querySelector(".avail-hours-display");
+        if (display) {
+          display.textContent = hours + " hours";
+        }
+      }
+    });
+  });
+
+  // Delete override
+  function deleteOverride(id) {
+    if (confirm("Are you sure you want to delete this override?")) {
+      fetch(`/doctor/availability/delete/${id}`)
+        .then(response => {
+          if (response.ok) {
+            // Remove the item from DOM
+            const deleteBtn = document.querySelector(`button[onclick="deleteOverride(${id})"]`);
+            if (deleteBtn) {
+              const item = deleteBtn.closest('.avail-override-item');
+              item.remove();
+            }
+          } else {
+            alert('Failed to delete override');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error deleting override');
+        });
+    }
+  }
+
+  // Add time interval
+  const addButtons = document.querySelectorAll(".avail-add-btn");
+  addButtons.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      alert("Add additional time interval functionality would open here");
+    });
+  });
+
+  // Block date button
+  const blockBtn = document.querySelector(".avail-block-btn");
+  blockBtn?.addEventListener("click", function () {
+    const dateInput = document.querySelector("input[name='override_date']");
+    if (dateInput.value) {
+      // The form will submit
+    } else {
+      alert("Please select a date first");
+    }
+  });
+
+  // Save changes
+  const saveBtn = document.querySelector(".avail-save-btn");
+  saveBtn?.addEventListener("click", function () {
+    // The form will submit
+  });
+
+  // Availability data from backend
+  const weeklyData = {{ weekly_js|tojson }};
+  const overridesData = {{ overrides_js|tojson }};
+  const bookedDates = {{ booked_dates|tojson }};
+
+  // Helper to get day name
+  function getDayName(date) {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days[date.getDay()];
+  }
+
+  // Helper to format date as YYYY-MM-DD (local date)
+  function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  // Dynamic Calendar
+  let currentDate = new Date();
+
+  function generateCalendar(date) {
+    const calendarGrid = document.getElementById('calendar-grid');
+    const title = document.getElementById('calendar-title');
+
+    // Clear existing days (keep headers)
+    const headers = calendarGrid.querySelectorAll('.avail-calendar-day-header');
+    calendarGrid.innerHTML = '';
+    headers.forEach(header => calendarGrid.appendChild(header));
+
+    // Set title
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    title.textContent = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+
+    // Get first day of month and last day
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Start from previous Sunday
+    const startDate = new Date(firstDay);
+    startDate.setDate(firstDay.getDate() - firstDay.getDay());
+
+    // Generate 35 days (5 weeks)
+    for (let i = 0; i < 35; i++) {
+      const dayDate = new Date(startDate);
+      dayDate.setDate(startDate.getDate() + i);
+
+      const dayDiv = document.createElement('div');
+      dayDiv.className = 'avail-calendar-day';
+      dayDiv.textContent = dayDate.getDate();
+
+      // Check if disabled
+      const isPast = dayDate < today;
+      const isCurrentMonth = dayDate.getMonth() === date.getMonth();
+
+      if (!isCurrentMonth || isPast) {
+        dayDiv.classList.add('avail-disabled');
+      }
+
+      // Mark today
+      if (dayDate.toDateString() === today.toDateString()) {
+        dayDiv.classList.add('avail-today');
+      }
+
+      // Determine indicator
+      if (!dayDiv.classList.contains('avail-disabled') || dayDiv.classList.contains('avail-today')) {
+        const dateStr = formatDate(dayDate);
+        const dayName = getDayName(dayDate);
+
+        // Check for booked
+        if (bookedDates.includes(dateStr)) {
+          const indicator = document.createElement('div');
+          indicator.className = 'avail-day-indicator avail-indicator-booked';
+          dayDiv.appendChild(indicator);
+        }
+        // Check for override
+        else if (overridesData.find(o => o.date === dateStr)) {
+          const indicator = document.createElement('div');
+          indicator.className = 'avail-day-indicator avail-indicator-override';
+          dayDiv.appendChild(indicator);
+        }
+        // Check for weekly availability
+        else if (weeklyData[dayName]) {
+          const indicator = document.createElement('div');
+          indicator.className = 'avail-day-indicator avail-indicator-available';
+          dayDiv.appendChild(indicator);
+        }
+        // Default unavailable
+        else {
+          const indicator = document.createElement('div');
+          indicator.className = 'avail-day-indicator avail-indicator-unavailable';
+          dayDiv.appendChild(indicator);
+        }
+      }
+
+      calendarGrid.appendChild(dayDiv);
+    }
+  }
+
+  // Initialize calendar
+  generateCalendar(currentDate);
+
+  // Navigation
+  document.getElementById('prev-month').addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    generateCalendar(currentDate);
+  });
+
+  document.getElementById('next-month').addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    generateCalendar(currentDate);
+  });
+
+  // Calendar day selection (only for current month and future)
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('avail-calendar-day') && !e.target.classList.contains('avail-disabled')) {
+      document.querySelectorAll('.avail-calendar-day').forEach(day => day.classList.remove('avail-selected'));
+      e.target.classList.add('avail-selected');
+    }
+  });
+</script>
+
+{% endblock %}

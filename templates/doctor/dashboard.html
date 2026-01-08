@@ -2,7 +2,7 @@
 {% block title %}Doctor Dashboard{% endblock %}
 {% block content %}
 
-    <style>
+  <style>
       :root {
         --ehc-primary: #16a2b8;
         --ehc-primary-dark: #138496;
@@ -14,11 +14,13 @@
         --ehc-dark: #212529;
       }
 
-      .ehc-dashboard-wrapper {
-        padding: 2rem;
+       .ehc-dashboard-wrapper {
+        max-width: 1400px;
+        margin: 40px auto;
+        padding: 0 40px;
       }
 
-      .ehc-dashboard-title {
+      .ehc-welcome-section {
         background: linear-gradient(
           135deg,
           var(--ehc-primary) 0%,
@@ -29,6 +31,9 @@
         padding: 2rem;
         margin-bottom: 2rem;
         box-shadow: 0 4px 12px rgba(22, 162, 184, 0.2);
+      }
+
+      .ehc-welcome-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -64,6 +69,7 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        text-decoration: none;
       }
 
       .ehc-welcome-btn:hover {
@@ -516,92 +522,148 @@
       }
     </style>
 
-<div class="ehc-dashboard">
+<div class="ehc-dashboard-wrapper">
 
-  <h1 class="ehc-dashboard-title">
-    Welcome, Dr. {{ current_user.name }}
-  </h1>
+  <!-- Welcome Section -->
+  <div class="ehc-welcome-section">
+    <div class="ehc-welcome-header">
+      <div class="ehc-welcome-info">
+        <h1>Welcome back, Dr. {{ current_user.name }}</h1>
+        <p>
+          {{ today_appointments|length }} appointments scheduled today
+        </p>
+      </div>
 
-  <!-- Stats -->
+      <div class="ehc-welcome-actions">
+        <a href="{{ url_for('doctor.availability') }}" class="ehc-welcome-btn">
+          <i class="fas fa-calendar-plus"></i>
+          Add Availability
+        </a>
+        <a href="#" class="ehc-welcome-btn">
+          <i class="fas fa-user"></i>
+          My Profile
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
   <div class="ehc-stats-grid">
 
     <div class="ehc-stat-card">
-      <h3>Total Appointments</h3>
-      <p>{{ total_appointments }}</p>
+      <div class="ehc-stat-header">
+        <div class="ehc-stat-icon appointments">
+          <i class="far fa-calendar-check"></i>
+        </div>
+      </div>
+      <div class="ehc-stat-label">Total Appointments</div>
+      <div class="ehc-stat-value">{{ total_appointments }}</div>
     </div>
 
     <div class="ehc-stat-card">
-      <h3>Pending Requests</h3>
-      <p>{{ pending_appointments }}</p>
+      <div class="ehc-stat-header">
+        <div class="ehc-stat-icon pending">
+          <i class="fas fa-clock"></i>
+        </div>
+      </div>
+      <div class="ehc-stat-label">Pending Requests</div>
+      <div class="ehc-stat-value">{{ pending_appointments }}</div>
     </div>
 
     <div class="ehc-stat-card">
-      <h3>Completed</h3>
-      <p>{{ completed_appointments }}</p>
+      <div class="ehc-stat-header">
+        <div class="ehc-stat-icon earnings">
+          <i class="fas fa-check-circle"></i>
+        </div>
+      </div>
+      <div class="ehc-stat-label">Completed</div>
+      <div class="ehc-stat-value">{{ completed_appointments }}</div>
     </div>
 
   </div>
 
-  <!-- Today's Appointments -->
-  <div class="ehc-section">
-    <h2>Today's Appointments</h2>
+  <!-- Main Content Grid -->
+  <div class="ehc-content-grid">
 
-    {% if today_appointments %}
-      <table class="ehc-table">
-        <thead>
-          <tr>
-            <th>Patient</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
+    <!-- LEFT COLUMN -->
+    <div>
+
+      <!-- Today's Appointments -->
+      <div class="ehc-content-card mb-4">
+        <div class="ehc-card-header">
+          <h2 class="ehc-card-title">
+            <i class="fas fa-calendar-day"></i>
+            Today's Appointments
+          </h2>
+        </div>
+
+        {% if today_appointments %}
           {% for appt in today_appointments %}
-            <tr>
-              <td>{{ appt.patient.user.name }}</td>
-              <td>{{ appt.date }}</td>
-              <td>{{ appt.time }}</td>
-              <td>{{ appt.status }}</td>
-            </tr>
+          <div class="ehc-appointment-card">
+            <div class="ehc-appointment-time">
+              <div class="ehc-time-hour">{{ appt.time }}</div>
+            </div>
+
+            <div class="ehc-appointment-info">
+              <div class="ehc-patient-name">
+                {{ appt.patient.user.name }}
+              </div>
+
+              <div class="ehc-appointment-meta">
+                <span class="ehc-meta-tag">
+                  <i class="fas fa-calendar"></i>
+                  {{ appt.date }}
+                </span>
+
+                <span class="ehc-status-badge {{ appt.status }}">
+                  {{ appt.status|capitalize }}
+                </span>
+              </div>
+
+              <div class="ehc-appointment-actions">
+                {% if appt.status == "pending" %}
+                  <a href="{{ url_for('doctor.accept', id=appt.id) }}"
+                     class="ehc-action-btn primary">
+                    <i class="fas fa-check"></i> Accept
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
           {% endfor %}
-        </tbody>
-      </table>
-    {% else %}
-      <p>No appointments today</p>
-    {% endif %}
+        {% else %}
+          <div class="ehc-empty-state">
+            <div class="ehc-empty-icon">
+              <i class="far fa-calendar-times"></i>
+            </div>
+            <p>No appointments today</p>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+
+      <!-- Summary Card -->
+      <div class="ehc-content-card">
+        <div class="ehc-card-header">
+          <h2 class="ehc-card-title">
+            <i class="fas fa-info-circle"></i>
+            Quick Summary
+          </h2>
+        </div>
+
+        <p><strong>Total Appointments:</strong> {{ total_appointments }}</p>
+        <p><strong>Pending:</strong> {{ pending_appointments }}</p>
+        <p><strong>Completed:</strong> {{ completed_appointments }}</p>
+
+      </div>
+
+    </div>
+
   </div>
-
-  <!-- All Appointments -->
-  <div class="ehc-section">
-    <h2>All Appointments</h2>
-
-    {% if appointments %}
-      <table class="ehc-table">
-        <thead>
-          <tr>
-            <th>Patient</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for appt in appointments %}
-            <tr>
-              <td>{{ appt.patient.user.name }}</td>
-              <td>{{ appt.date }}</td>
-              <td>{{ appt.time }}</td>
-              <td>{{ appt.status }}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    {% else %}
-      <p>No appointments found</p>
-    {% endif %}
-  </div>
-
 </div>
 
 {% endblock %}
