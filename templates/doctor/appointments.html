@@ -313,9 +313,9 @@
             white-space: nowrap;
         }
 
-        .ehc-status-badge.upcoming {
-            background: rgba(59, 130, 246, 0.1);
-            color: #3b82f6;
+        .ehc-status-badge.accepted {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
         }
 
         .ehc-status-badge.pending {
@@ -353,15 +353,18 @@
         .ehc-action-btn.primary {
             background: var(--ehc-primary);
             color: white;
+            text-decoration: none;
         }
 
         .ehc-action-btn.primary:hover {
             background: var(--ehc-primary-dark);
+            text-decoration: none;
         }
 
         .ehc-action-btn.success {
             background: var(--ehc-success);
             color: white;
+            text-decoration: none;
         }
 
         .ehc-action-btn.success:hover {
@@ -596,7 +599,8 @@
         <select name="status" class="ehc-filter-select">
           <option value="all">All Status</option>
           <option value="pending" {% if status_filter=='pending' %}selected{% endif %}>Pending</option>
-          <option value="accepted" {% if status_filter=='accepted' %}selected{% endif %}>Upcoming</option>
+          <option value="accepted" {% if status_filter=='accepted' %}selected{% endif %}>Accepted</option>
+          <option value="paid" {% if status_filter=='paid' %}selected{% endif %}>Paid</option>
           <option value="completed" {% if status_filter=='completed' %}selected{% endif %}>Completed</option>
           <option value="cancelled" {% if status_filter=='cancelled' %}selected{% endif %}>Cancelled</option>
         </select>
@@ -637,6 +641,9 @@
       <button class="ehc-tab-btn active" onclick="switchTab('upcoming')">
         Upcoming <span class="ehc-tab-badge">{{ upcoming|length }}</span>
       </button>
+      <button class="ehc-tab-btn" onclick="switchTab('accepted')">
+        Accepted <span class="ehc-tab-badge">{{ accepted|length }}</span>
+      </button>
       <button class="ehc-tab-btn" onclick="switchTab('pending')">
         Pending <span class="ehc-tab-badge">{{ pending|length }}</span>
       </button>
@@ -651,6 +658,7 @@
     <!-- ================= TAB CONTENTS ================= -->
     {% for name, items, badge in [
         ('upcoming', upcoming, 'upcoming'),
+        ('accepted', accepted, 'accepted'),
         ('pending', pending, 'pending'),
         ('completed', completed, 'completed'),
         ('cancelled', cancelled, 'cancelled')
@@ -689,7 +697,7 @@
                 <a href="{{ url_for('doctor.cancel_appointment', id=appt.id) }}"
                    class="ehc-action-btn danger">Decline</a>
 
-              {% elif appt.status == 'accepted' %}
+              {% elif appt.status in ['accepted', 'paid'] %}
                 <a href="{{ url_for('doctor.complete_appointment', id=appt.id) }}"
                    class="ehc-action-btn success">Complete</a>
                 <a href="{{ url_for('doctor.cancel_appointment', id=appt.id) }}"

@@ -1,7 +1,10 @@
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect, current_app, abort
 from flask_login import login_required, current_user
 from .models import DoctorProfile, Appointment, PatientProfile, Availability, User, Review
 from .extensions import db
+from werkzeug.utils import secure_filename
+import os
+import razorpay
 
 
 patient = Blueprint("patient", __name__, url_prefix="/patient")
@@ -61,14 +64,61 @@ def doctor_preview(id):
 
     doctor = DoctorProfile.query.get_or_404(id)
 
-    slots = Availability.query.filter_by(
-        doctor_id=id
-    ).order_by(Availability.date, Availability.start_time).all()
+    # Get weekly availability
+    weekly_avail = Availability.query.filter_by(
+        doctor_id=id,
+        type="weekly"
+    ).all()
 
-    # group slots by date
-    slots_by_date = {}
-    for s in slots:
-        slots_by_date.setdefault(s.date, []).append(s)
+    # Get overrides
+    overrides = Availability.query.filter_by(
+        doctor_id=id,
+        type="override"
+    ).all()
+
+    # Get booked appointments
+    booked_slots = Appointment.query.filter_by(
+        doctor_id=id,
+        status="accepted"
+    ).with_entities(Appointment.date, Appointment.time).all()
+    booked_set = set((a.date, a.time) for a in booked_slots)
+
+    # Generate slots for next 7 days
+    from datetime import datetime, timedelta
+    today = datetime.now().date()
+    slots_by_day = {}
+
+    for i in range(7):
+        current_date = today + timedelta(days=i)
+        day_name = current_date.strftime("%A")  # Monday, Tuesday, etc.
+
+        # Check if overridden
+        override = next((o for o in overrides if o.date == str(current_date)), None)
+        if override:
+            continue  # Skip if blocked
+
+        # Get weekly avail for this day
+        avail = next((w for w in weekly_avail if w.day == day_name), None)
+        if not avail:
+            continue
+
+        # Generate hourly slots
+        start_hour = int(avail.start_time.split(':')[0])
+        end_hour = int(avail.end_time.split(':')[0])
+        slots = []
+        for hour in range(start_hour, end_hour):
+            time_str = f"{hour:02d}:00"
+            is_booked = (str(current_date), time_str) in booked_set
+            slots.append({
+                'time': time_str,
+                'is_booked': is_booked
+            })
+
+        if slots:
+            slots_by_day[day_name] = {
+                'date': str(current_date),
+                'slots': slots
+            }
 
     # Fetch reviews
     reviews = Review.query.filter_by(doctor_id=id).order_by(Review.created_at.desc()).all()
@@ -83,7 +133,7 @@ def doctor_preview(id):
     return render_template(
         "patient/doctor_preview.html",
         doctor=doctor,
-        slots_by_date=slots_by_date,
+        slots_by_day=slots_by_day,
         reviews=reviews,
         avg_rating=avg_rating
     )
@@ -96,6 +146,18 @@ def book(doctor_id):
     date = request.form["date"]
     time = request.form["time"]
 
+    # Check if slot is already booked
+    existing = Appointment.query.filter_by(
+        doctor_id=doctor_id,
+        date=date,
+        time=time,
+        status="accepted"
+    ).first()
+
+    if existing:
+        return "Slot already booked", 400
+
+    # Check override
     blocked = Availability.query.filter_by(
         doctor_id=doctor_id,
         type="override",
@@ -109,11 +171,60 @@ def book(doctor_id):
         doctor_id=doctor_id,
         patient_id=current_user.patient_profile.id,
         date=date,
-        time=time
+        time=time,
+        status="pending"
     )
 
     db.session.add(appt)
     db.session.commit()
+    return redirect("/patient/my-appointments")
+
+
+@patient.route("/payment/<int:appointment_id>")
+@login_required
+def payment(appointment_id):
+    appt = Appointment.query.get_or_404(appointment_id)
+    if appt.patient_id != current_user.patient_profile.id or appt.status != "accepted":
+        abort(403)
+    
+    # Create Razorpay order
+    client = razorpay.Client(auth=(current_app.config['RAZORPAY_KEY_ID'], current_app.config['RAZORPAY_KEY_SECRET']))
+    order_data = {
+        "amount": appt.doctor.fees * 100,
+        "currency": "INR",
+        "receipt": f"appointment_{appt.id}",
+        "notes": {
+            "appointment_id": appt.id
+        }
+    }
+    order = client.order.create(data=order_data)
+    
+    return render_template("patient/payment.html", appointment=appt, razorpay_key=current_app.config['RAZORPAY_KEY_ID'], order_id=order['id'])
+
+
+@patient.route("/payment/success/<int:appointment_id>", methods=["POST"])
+@login_required
+def payment_success(appointment_id):
+    appt = Appointment.query.get_or_404(appointment_id)
+    if appt.patient_id != current_user.patient_profile.id:
+        abort(403)
+    
+    data = request.get_json()
+    
+    # Verify payment signature
+    client = razorpay.Client(auth=(current_app.config['RAZORPAY_KEY_ID'], current_app.config['RAZORPAY_KEY_SECRET']))
+    try:
+        client.utility.verify_payment_signature({
+            'razorpay_order_id': data['razorpay_order_id'],
+            'razorpay_payment_id': data['razorpay_payment_id'],
+            'razorpay_signature': data['razorpay_signature']
+        })
+        appt.status = "paid"
+        db.session.commit()
+    except:
+        # Payment verification failed
+        pass
+    
     return redirect("/patient/my-appointments")
 
 
@@ -152,6 +263,22 @@ def profile():
         profile.state = request.form.get("state_province")
         profile.zip_code = request.form.get("zip_postal_code")
         profile.country = request.form.get("country")
+
+        # Handle file upload for patient profile picture
+        print(f"Patient profile file: {request.files.get('patient_profile')}")
+        upload_dir = os.path.join(current_app.static_folder, 'uploads')
+        print(f"Upload dir: {upload_dir}")
+        if 'patient_profile' in request.files:
+            file = request.files['patient_profile']
+            if file and file.filename:
+                filename = secure_filename(file.filename)
+                os.makedirs(upload_dir, exist_ok=True)
+                file_path = os.path.join(upload_dir, filename)
+                file.save(file_path)
+                profile.profile_pic = filename
+                print(f"Saved patient profile_pic: {profile.profile_pic}")
+            else:
+                print("No file or empty filename")
 
         db.session.commit()
         return redirect("/patient/profile")

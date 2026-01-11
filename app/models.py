@@ -23,6 +23,7 @@ class PatientProfile(db.Model):
     gender = db.Column(db.String(10))
     blood_group = db.Column(db.String(10))
     date_of_birth = db.Column(db.String(20))
+    profile_pic = db.Column(db.String(255))  # File path for uploaded profile picture
     emergency_contact_name = db.Column(db.String(100))
     emergency_contact_phone = db.Column(db.String(20))
     # Contact
@@ -56,9 +57,35 @@ class PatientProfile(db.Model):
 class DoctorProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     specialization = db.Column(db.String(120))
+    secondary_specialization = db.Column(db.String(120))
     experience = db.Column(db.Integer)
     fees = db.Column(db.Integer)
     about = db.Column(db.Text)
+    # Personal Information
+    phone = db.Column(db.String(20))
+    date_of_birth = db.Column(db.String(20))
+    gender = db.Column(db.String(10))
+    medical_licence_no = db.Column(db.String(50))
+    profile_pic = db.Column(db.String(255))  # File path for uploaded profile picture
+    # Qualification and Credentials
+    medical_degree = db.Column(db.String(120))
+    medical_school = db.Column(db.String(120))
+    graduation_year = db.Column(db.Integer)
+    board_certifications = db.Column(db.Text)
+    licence_file = db.Column(db.String(255))  # File path for uploaded licence
+    # Clinic/Hospital Information
+    clinic_name = db.Column(db.String(120))
+    clinic_address = db.Column(db.Text)
+    clinic_city = db.Column(db.String(50))
+    clinic_state = db.Column(db.String(50))
+    clinic_country = db.Column(db.String(50))
+    clinic_zip_code = db.Column(db.String(20))
+    # Additional Information
+    areas_of_expertise = db.Column(db.Text)
+    awards_recognitions = db.Column(db.Text)
+    research_publications = db.Column(db.Text)
+    professional_memberships = db.Column(db.Text)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship("User", back_populates="doctor_profile", uselist=False)
 

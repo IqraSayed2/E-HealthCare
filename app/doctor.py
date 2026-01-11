@@ -1,8 +1,11 @@
-from flask import Blueprint, render_template, request, redirect, abort
+from flask import Blueprint, render_template, request, redirect, abort, current_app
 from flask_login import login_required, current_user
 from .models import Appointment, Availability, PatientProfile, User
-from .extensions import db
+from .extensions import db, mail
+from flask_mail import Message
 from datetime import date
+import os
+from werkzeug.utils import secure_filename
 
 doctor = Blueprint("doctor", __name__, url_prefix="/doctor")
 
@@ -79,7 +82,8 @@ def appointments():
     appointments = query.order_by(Appointment.date).all()
 
     # Group by status (for tabs)
-    upcoming = [a for a in appointments if a.status == "accepted"]
+    upcoming = [a for a in appointments if a.status == "paid"]
+    accepted = [a for a in appointments if a.status == "accepted"]
     pending = [a for a in appointments if a.status == "pending"]
     completed = [a for a in appointments if a.status == "completed"]
     cancelled = [a for a in appointments if a.status == "cancelled"]
@@ -90,6 +94,7 @@ def appointments():
     return render_template(
         "doctor/appointments.html",
         upcoming=upcoming,
+        accepted=accepted,
         pending=pending,
         completed=completed,
         cancelled=cancelled,
@@ -104,8 +109,34 @@ def appointments():
 @login_required
 def accept_appointment(id):
     appt = Appointment.query.get_or_404(id)
+    if appt.doctor_id != current_user.doctor_profile.id:
+        abort(403)
+
+    # Check if slot is still available
+    existing_accepted = Appointment.query.filter_by(
+        doctor_id=appt.doctor_id,
+        date=appt.date,
+        time=appt.time,
+        status="accepted"
+    ).first()
+
+    if existing_accepted:
+        # Slot taken, cancel this request
+        appt.status = "cancelled"
+        db.session.commit()
+        return redirect("/doctor/appointments")
+
     appt.status = "accepted"
     db.session.commit()
+
+    # Send email to patient
+    patient = appt.patient.user
+    msg = Message('Appointment Accepted',
+                  sender='your-email@gmail.com',
+                  recipients=[patient.email])
+    msg.body = f'Your appointment with Dr. {appt.doctor.user.name} on {appt.date} at {appt.time} has been accepted. Please proceed to payment.'
+    mail.send(msg)
+
     return redirect("/doctor/appointments")
 
 
@@ -221,9 +252,69 @@ def delete_availability(id):
     return redirect("/doctor/availability")
 
 
-@doctor.route("/profile")
+@doctor.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
+    if request.method == "POST":
+        # Update doctor profile
+        profile = current_user.doctor_profile
+        # Personal Information
+        current_user.name = request.form.get('full_name', current_user.name)
+        profile.phone = request.form.get('contact') or None
+        current_user.email = request.form.get('email_id', current_user.email)
+        profile.date_of_birth = request.form.get('date_of_birth') or None
+        profile.gender = request.form.get('gender') or None
+        profile.about = request.form.get('professional_bio') or None
+        profile.medical_licence_no = request.form.get('medical_licence_no_') or None
+        profile.experience = int(request.form.get('years_of_experience')) if request.form.get('years_of_experience') else None
+        profile.specialization = request.form.get('primary_specialization') or None
+        profile.secondary_specialization = request.form.get('secondary_specialization') or None
+        fees_str = request.form.get('consultation_fees')
+        profile.fees = int(fees_str) if fees_str and fees_str.isdigit() else None
+        # Qualification and Credentials
+        profile.medical_degree = request.form.get('medical_degree') or None
+        profile.medical_school = request.form.get('medical_school') or None
+        profile.graduation_year = int(request.form.get('graduation_year')) if request.form.get('graduation_year') else None
+        profile.board_certifications = request.form.get('board_certifications') or None
+        # Clinic/Hospital Information
+        profile.clinic_name = request.form.get('clinic_hospital_name') or None
+        profile.clinic_address = request.form.get('address') or None
+        profile.clinic_city = request.form.get('city') or None
+        profile.clinic_state = request.form.get('state') or None
+        profile.clinic_country = request.form.get('country') or None
+        profile.clinic_zip_code = request.form.get('zip_code') or None
+        # Additional Information
+        profile.areas_of_expertise = request.form.get('areas_of_expertise') or None
+        profile.awards_recognitions = request.form.get('awards_and_recognition') or None
+        profile.research_publications = request.form.get('research___publications') or None
+        profile.professional_memberships = request.form.get('professional_membership') or None
+        
+        # Handle file upload
+        print(f"Doctor profile file: {request.files.get('doctor_profile')}")
+        print(f"Licence file: {request.files.get('upload_medical_licence')}")
+        upload_dir = os.path.join(current_app.static_folder, 'uploads')
+        print(f"Upload dir: {upload_dir}")
+        if 'upload_medical_licence' in request.files:
+            file = request.files['upload_medical_licence']
+            if file and file.filename:
+                filename = secure_filename(file.filename)
+                os.makedirs(upload_dir, exist_ok=True)
+                file_path = os.path.join(upload_dir, filename)
+                file.save(file_path)
+                profile.licence_file = filename
+        
+        if 'doctor_profile' in request.files:
+            file = request.files['doctor_profile']
+            if file and file.filename:
+                filename = secure_filename(file.filename)
+                os.makedirs(upload_dir, exist_ok=True)
+                file_path = os.path.join(upload_dir, filename)
+                file.save(file_path)
+                profile.profile_pic = filename
+                print(f"Saved profile_pic: {profile.profile_pic}")
+        
+        db.session.commit()
+        return redirect("/doctor/profile")
     return render_template("doctor/profile.html")
 
 

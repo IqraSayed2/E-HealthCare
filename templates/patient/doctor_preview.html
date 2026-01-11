@@ -309,6 +309,29 @@
         text-decoration: line-through;
       }
 
+      .ehc-book-section {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: var(--ehc-light);
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .ehc-book-btn {
+        background: var(--ehc-primary);
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 0.5rem;
+      }
+
+      .ehc-book-btn:hover {
+        background: var(--ehc-primary-dark);
+      }
+
       .ehc-fee-card {
         background: linear-gradient(
           135deg,
@@ -421,7 +444,6 @@
         justify-content: center;
         color: white;
         font-size: 1.3rem;
-        font-weight: 600;
       }
 
       .ehc-reviewer-name {
@@ -523,12 +545,12 @@
 
 <div class="ehc-profile-wrapper">
 
-  <!-- Back -->
+  <!-- Back Button -->
   <button class="ehc-back-button" onclick="history.back()">
     <i class="fas fa-arrow-left"></i> Back to Search
   </button>
 
-  <!-- ================= HEADER ================= -->
+  <!-- ================= PROFILE HEADER ================= -->
   <div class="ehc-profile-header">
     <div class="ehc-profile-top">
 
@@ -537,7 +559,6 @@
       </div>
 
       <div class="ehc-doctor-main-info">
-
         <div class="ehc-verified-badge">
           <i class="fas fa-check-circle"></i> Verified Doctor
         </div>
@@ -555,40 +576,40 @@
             <i class="fas fa-briefcase"></i>
             <span>{{ doctor.experience }} Years Experience</span>
           </div>
+          <div class="ehc-meta-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{ doctor.clinic_city }}, {{ doctor.clinic_country }}</span>
+          </div>
         </div>
 
-        <!-- Rating (dynamic) -->
         <div class="ehc-rating-section">
           <div class="ehc-rating-stars">
             {% for i in range(5) %}
-              {% if i < avg_rating %}
-                <i class="fas fa-star ehc-star"></i>
-              {% else %}
-                <i class="fas fa-star ehc-star empty"></i>
-              {% endif %}
+              <i class="fas fa-star ehc-star {% if i >= avg_rating|int %}empty{% endif %}"></i>
             {% endfor %}
           </div>
           <span class="ehc-rating-text">{{ avg_rating }}</span>
           <span class="ehc-rating-count">({{ reviews|length }} reviews)</span>
         </div>
-
       </div>
     </div>
 
     <div class="ehc-doctor-tags">
-      <span class="ehc-tag">General Care</span>
-      <span class="ehc-tag">Consultation</span>
-      <span class="ehc-tag">Online</span>
+      {% for tag in (doctor.areas_of_expertise or '').split(',') %}
+        {% if tag %}
+          <span class="ehc-tag">{{ tag.strip() }}</span>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
 
   <!-- ================= GRID ================= -->
   <div class="ehc-profile-grid">
 
-    <!-- ========== LEFT COLUMN ========== -->
+    <!-- LEFT -->
     <div>
 
-      <!-- About -->
+      <!-- ABOUT -->
       <div class="ehc-profile-section">
         <h2 class="ehc-section-title">
           <i class="fas fa-user"></i> About Doctor
@@ -596,6 +617,25 @@
         <p class="ehc-about-text">
           {{ doctor.about or "No description provided." }}
         </p>
+
+        <div class="ehc-info-grid">
+          <div class="ehc-info-item">
+            <div class="ehc-info-label">Education</div>
+            <div class="ehc-info-value">{{ doctor.medical_school }}</div>
+          </div>
+          <div class="ehc-info-item">
+            <div class="ehc-info-label">Degree</div>
+            <div class="ehc-info-value">{{ doctor.medical_degree }}</div>
+          </div>
+          <div class="ehc-info-item">
+            <div class="ehc-info-label">Clinic</div>
+            <div class="ehc-info-value">{{ doctor.clinic_name }}</div>
+          </div>
+          <div class="ehc-info-item">
+            <div class="ehc-info-label">Experience</div>
+            <div class="ehc-info-value">{{ doctor.experience }} Years</div>
+          </div>
+        </div>
       </div>
 
       <!-- ================= AVAILABLE SLOTS ================= -->
@@ -604,54 +644,51 @@
           <i class="far fa-calendar-check"></i> Available Slots
         </h2>
 
-        {% if slots_by_date %}
+        {% if slots_by_day %}
         <div class="ehc-slot-selector">
 
-          <!-- DATE TABS -->
           <div class="ehc-date-tabs">
-            {% for date, slots in slots_by_date.items() %}
+            {% for day, data in slots_by_day.items() %}
             <div class="ehc-date-tab {% if loop.first %}active{% endif %}"
-                 onclick="selectDate('{{ date }}')"
-                 data-date="{{ date }}">
-              <div class="ehc-date-day">
-                {{ date }}
-              </div>
+                 onclick="selectDay('{{ day }}')"
+                 data-day="{{ day }}">
+              <div class="ehc-date-day">{{ day }}</div>
+              <div class="ehc-date-date">{{ data.date }}</div>
             </div>
             {% endfor %}
           </div>
 
-          <!-- TIME SLOTS -->
-          {% for date, slots in slots_by_date.items() %}
+          {% for day, data in slots_by_day.items() %}
           <div class="ehc-time-slots"
-               data-date="{{ date }}"
+               data-day="{{ day }}"
                {% if not loop.first %}style="display:none"{% endif %}>
-            {% for slot in slots %}
+            {% for slot in data.slots %}
               {% if slot.is_booked %}
-                <div class="ehc-time-slot unavailable">
+                <div class="ehc-time-slot unavailable">{{ slot.time }}</div>
+              {% else %}
+                <div class="ehc-time-slot available" onclick="selectTime('{{ data.date }}', '{{ slot.time }}')">
                   {{ slot.time }}
                 </div>
-              {% else %}
-                <form method="POST"
-                      action="{{ url_for('patient.book', doctor_id=doctor.id) }}">
-                  <input type="hidden" name="date" value="{{ slot.date }}">
-                  <input type="hidden" name="time" value="{{ slot.time }}">
-                  <button type="submit" class="ehc-time-slot">
-                    {{ slot.time }}
-                  </button>
-                </form>
               {% endif %}
             {% endfor %}
           </div>
           {% endfor %}
 
         </div>
+
+        <!-- Book Slot Button -->
+        <div class="ehc-book-section" style="display:none;">
+          <p>Selected: <span id="selected-slot"></span></p>
+          <p>Consultation Fees: ₹{{ doctor.fees }}</p>
+          <button class="ehc-book-btn" onclick="bookSlot({{ doctor.id }})">Book Slot</button>
+        </div>
+
         {% else %}
           <p class="text-muted">No slots available</p>
         {% endif %}
       </div>
 
       <!-- ================= REVIEWS ================= -->
-      {% if reviews %}
       <div class="ehc-profile-section">
         <h2 class="ehc-section-title">
           <i class="fas fa-star"></i> Patient Reviews
@@ -662,26 +699,26 @@
           <div class="ehc-review-header">
             <div class="ehc-reviewer-info">
               <div class="ehc-reviewer-avatar">
-                {{ review.patient.user.name[:2].upper() }}
+                <i class="fas fa-user"></i>
               </div>
               <div>
-                <div class="ehc-reviewer-name">{{ review.patient.user.name }}</div>
-                <div class="ehc-review-date">{{ review.created_at.strftime('%B %d, %Y') }}</div>
+                <div class="ehc-reviewer-name">
+                  {{ review.patient.user.name }}
+                </div>
+                <div class="ehc-review-date">
+                  {{ review.created_at.strftime('%d %b %Y') }}
+                </div>
               </div>
             </div>
+
             <div class="ehc-review-rating">
               {% for i in range(5) %}
-                {% if i < review.rating %}
-                  <i class="fas fa-star ehc-star"></i>
-                {% else %}
-                  <i class="fas fa-star ehc-star empty"></i>
-                {% endif %}
+                <i class="fas fa-star ehc-star {% if i >= review.rating %}empty{% endif %}"></i>
               {% endfor %}
             </div>
           </div>
-          <p class="ehc-review-text">
-            {{ review.comment }}
-          </p>
+
+          <p class="ehc-review-text">{{ review.comment }}</p>
         </div>
         {% endfor %}
 
@@ -691,18 +728,41 @@
         </div>
         {% endif %}
       </div>
-      {% endif %}
 
     </div>
 
-    <!-- ========== RIGHT COLUMN ========== -->
+    <!-- RIGHT -->
     <div class="ehc-sticky-sidebar">
 
       <div class="ehc-profile-section">
         <div class="ehc-fee-card">
           <div class="ehc-fee-label">Consultation Fee</div>
           <div class="ehc-fee-amount">₹{{ doctor.fees }}</div>
-          <div class="ehc-fee-note">Pay after appointment</div>
+          <div class="ehc-fee-note">Per consultation</div>
+        </div>
+
+        <button class="ehc-book-button" disabled>
+          Select Time Slot First
+        </button>
+      </div>
+
+      <div class="ehc-profile-section">
+        <h3 class="ehc-section-title">
+          <i class="fas fa-clinic-medical"></i> Clinic Information
+        </h3>
+
+        <div class="ehc-info-item">
+          <div class="ehc-info-label">Clinic Name</div>
+          <div class="ehc-info-value">{{ doctor.clinic_name }}</div>
+        </div>
+
+        <div class="ehc-info-item">
+          <div class="ehc-info-label">Address</div>
+          <div class="ehc-info-value">
+            {{ doctor.clinic_address }},
+            {{ doctor.clinic_city }},
+            {{ doctor.clinic_state }}
+          </div>
         </div>
       </div>
 
@@ -712,12 +772,55 @@
 </div>
 
 <script>
-function selectDate(date) {
+let selectedDate = null;
+let selectedTime = null;
+
+function selectDay(day) {
   document.querySelectorAll('.ehc-date-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.ehc-time-slots').forEach(s => s.style.display = 'none');
 
-  document.querySelector(`[data-date="${date}"]`).classList.add('active');
-  document.querySelector(`.ehc-time-slots[data-date="${date}"]`).style.display = 'grid';
+  document.querySelector(`[data-day="${day}"]`).classList.add('active');
+  document.querySelector(`.ehc-time-slots[data-day="${day}"]`).style.display = 'grid';
+
+  // Reset time selection
+  selectedTime = null;
+  document.querySelectorAll('.ehc-time-slot').forEach(slot => slot.classList.remove('selected'));
+  document.querySelector('.ehc-book-section').style.display = 'none';
+}
+
+function selectTime(date, time) {
+  selectedDate = date;
+  selectedTime = time;
+
+  document.querySelectorAll('.ehc-time-slot').forEach(slot => slot.classList.remove('selected'));
+  event.target.classList.add('selected');
+
+  document.getElementById('selected-slot').textContent = `${date} at ${time}`;
+  document.querySelector('.ehc-book-section').style.display = 'block';
+}
+
+function bookSlot(doctorId) {
+  if (!selectedDate || !selectedTime) return;
+
+  // Create form and submit
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = `/patient/book/${doctorId}`;
+
+  const dateInput = document.createElement('input');
+  dateInput.type = 'hidden';
+  dateInput.name = 'date';
+  dateInput.value = selectedDate;
+
+  const timeInput = document.createElement('input');
+  timeInput.type = 'hidden';
+  timeInput.name = 'time';
+  timeInput.value = selectedTime;
+
+  form.appendChild(dateInput);
+  form.appendChild(timeInput);
+  document.body.appendChild(form);
+  form.submit();
 }
 </script>
 

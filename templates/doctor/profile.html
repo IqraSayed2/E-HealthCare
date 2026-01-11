@@ -1,59 +1,982 @@
-{% extends "base.html" %}
-{% block title %}Doctor Profile{% endblock %}
+{% extends "base.html" %} 
+{% block title %}Doctor Profile{% endblock %} 
 {% block content %}
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3>My Profile</h3>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4 text-center">
-                            <div class="profile-avatar-large">{{ current_user.name[:2].upper() }}</div>
-                            <button class="btn btn-primary mt-3">Change Picture</button>
-                        </div>
-                        <div class="col-md-8">
-                            <h4>{{ current_user.name }}</h4>
-                            <p class="text-muted">{{ current_user.doctor_profile.specialization }}</p>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <strong>Email:</strong><br>
-                                    {{ current_user.email }}
-                                </div>
-                                <div class="col-sm-6">
-                                    <strong>Fees:</strong><br>
-                                    ${{ current_user.doctor_profile.fees }}
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <strong>Experience:</strong><br>
-                                    {{ current_user.doctor_profile.experience }} years
-                                </div>
-                                <div class="col-sm-6">
-                                    <strong>Specialization:</strong><br>
-                                    {{ current_user.doctor_profile.specialization }}
-                                </div>
-                            </div>
-                            <hr>
-                            <div>
-                                <strong>About:</strong><br>
-                                {{ current_user.doctor_profile.about or 'No description available' }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <button class="btn btn-secondary">Edit Profile</button>
-                </div>
+<style>
+  /* Header Styles */
+  .ehp-header {
+    background: white;
+    padding: 15px 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .ehp-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .ehp-logo-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ehp-logo {
+    width: 35px;
+    height: 35px;
+    background: #16a2b8;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+  }
+
+  .ehp-platform-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  .ehp-nav {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+  }
+
+  .ehp-nav-link {
+    color: #6c757d;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+  }
+
+  .ehp-nav-link:hover,
+  .ehp-nav-link.ehp-active {
+    color: #16a2b8;
+  }
+
+  .ehp-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .ehp-icon-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #f5f5f5;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #495057;
+    transition: all 0.3s ease;
+  }
+
+  .ehp-icon-btn:hover {
+    background: #e0e0e0;
+  }
+
+  .ehp-user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    cursor: pointer;
+  }
+
+  /* Main Layout */
+  .ehp-container {
+    max-width: 1400px;
+    margin: 30px auto;
+    padding: 0 30px;
+    display: flex;
+    gap: 25px;
+  }
+
+  /* Sidebar */
+  .ehp-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+  }
+
+  .ehp-profile-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    margin-bottom: 20px;
+  }
+
+  .ehp-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .ehp-profile-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #16a2b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
+
+  .ehp-profile-info {
+    flex: 1;
+  }
+
+  .ehp-profile-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 3px;
+  }
+
+  .ehp-profile-id {
+    font-size: 0.85rem;
+    color: #6c757d;
+  }
+
+  .ehp-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ehp-menu-item {
+    margin-bottom: 8px;
+  }
+
+  .ehp-menu-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #495057;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .ehp-menu-link:hover {
+    background: #f5f6fa;
+    color: #1a1a1a;
+  }
+
+  .ehp-menu-link.ehp-active {
+    background: #e3f2fd;
+    color: #1976d2;
+  }
+
+  .ehp-menu-icon {
+    font-size: 1.1rem;
+    width: 20px;
+  }
+
+  .ehp-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    background: white;
+    border: none;
+    color: #dc3545;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+  }
+
+  .ehp-logout-btn:hover {
+    background: #fff5f5;
+  }
+
+  /* Main Content */
+  .ehp-main-content {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    padding: 35px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .ehp-content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .ehp-page-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  .ehp-edit-btn {
+    padding: 10px 25px;
+    background: #f5f5f5;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ehp-edit-btn:hover {
+    background: #e0e0e0;
+  }
+
+  .ehp-last-updated {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 30px;
+  }
+
+  .ehp-section {
+    margin-bottom: 40px;
+  }
+
+  .ehp-section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+
+  .ehp-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .ehp-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .ehp-info-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-weight: 500;
+  }
+
+  .ehp-info-value {
+    font-size: 1rem;
+    color: #1a1a1a;
+    font-weight: 600;
+  }
+
+  /* Mobile Menu Toggle */
+  .ehp-mobile-toggle {
+    display: none;
+    background: #f5f5f5;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 15px;
+  }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .ehp-nav {
+      display: none;
+    }
+
+    .ehp-container {
+      flex-direction: column;
+    }
+
+    .ehp-sidebar {
+      width: 100%;
+      position: fixed;
+      left: -100%;
+      top: 0;
+      height: 100vh;
+      z-index: 2000;
+      background: white;
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .ehp-sidebar.ehp-sidebar-open {
+      left: 0;
+    }
+
+    .ehp-mobile-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1999;
+    }
+
+    .ehp-mobile-overlay.ehp-active {
+      display: block;
+    }
+
+    .ehp-mobile-toggle {
+      display: block;
+    }
+
+    .ehp-sidebar-close {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+
+    .ehp-close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #495057;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .ehp-header {
+      padding: 12px 20px;
+    }
+
+    .ehp-container {
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    .ehp-main-content {
+      padding: 25px 20px;
+    }
+
+    .ehp-page-title {
+      font-size: 1.5rem;
+    }
+
+    .ehp-info-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .ehp-nav-link {
+      display: none;
+    }
+
+    .ehp-platform-name {
+      font-size: 0.95rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .ehp-header-actions {
+      gap: 8px;
+    }
+
+    .ehp-icon-btn {
+      width: 35px;
+      height: 35px;
+    }
+
+    .ehp-main-content {
+      padding: 20px 15px;
+    }
+
+    .ehp-content-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+
+    .ehp-edit-btn {
+      width: 100%;
+    }
+  }
+
+  .ehp-hide-mobile {
+    display: block;
+  }
+
+  @media (max-width: 992px) {
+    .ehp-hide-mobile {
+      display: none;
+    }
+  }
+
+  .ehp-input,
+  .ehp-textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+
+  .ehp-input:focus,
+  .ehp-textarea:focus {
+    outline: none;
+    border-color: #16a2b8;
+  }
+
+  .ehp-save-btn {
+    padding: 10px 25px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ehp-save-btn:hover {
+    background: #218838;
+  }
+</style>
+
+<form method="POST" id="profileForm" enctype="multipart/form-data">
+  <div class="ehp-container">
+    <!-- SIDEBAR (UNCHANGED UI) -->
+    <aside class="ehp-sidebar">
+      <div class="ehp-profile-card">
+        <div class="ehp-profile-header">
+          <div class="ehp-profile-avatar">
+            {% if current_user.doctor_profile.profile_pic %}
+              <img src="{{ url_for('static', filename='uploads/' + current_user.doctor_profile.profile_pic) }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            {% else %}
+              {{ current_user.name[:2].upper() }}
+            {% endif %}
+          </div>
+          <div class="ehp-profile-info">
+            <div class="ehp-profile-name">{{ current_user.name }}</div>
+            <div class="ehp-profile-id">
+              ID: {{ current_user.doctor_profile.id }}
             </div>
+          </div>
         </div>
-    </div>
-</div>
+
+        <ul class="ehp-menu">
+          <li class="ehp-menu-item">
+            <a
+              href="#"
+              class="ehp-menu-link ehp-active"
+              data-section="personal"
+            >
+              <i class="fas fa-user ehp-menu-icon"></i>
+              <span>Personal Information</span>
+            </a>
+          </li>
+          <li class="ehp-menu-item">
+            <a href="#" class="ehp-menu-link" data-section="qualification">
+              <i class="fas fa-graduation-cap ehp-menu-icon"></i>
+              <span>Qualification & Credentials</span>
+            </a>
+          </li>
+          <li class="ehp-menu-item">
+            <a href="#" class="ehp-menu-link" data-section="clinic">
+              <i class="fas fa-hospital ehp-menu-icon"></i>
+              <span>Clinic/Hospital Information</span>
+            </a>
+          </li>
+          <li class="ehp-menu-item">
+            <a href="#" class="ehp-menu-link" data-section="additional">
+              <i class="fas fa-info-circle ehp-menu-icon"></i>
+              <span>Additional Information</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <button class="ehp-logout-btn">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Log Out</span>
+      </button>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="ehp-main-content">
+      <!-- PERSONAL -->
+      <section class="ehp-content-section" id="personalSection">
+        <div class="ehp-content-header">
+          <h1 class="ehp-page-title">Personal Information</h1>
+          <button type="button" class="ehp-edit-btn">Edit</button>
+        </div>
+
+        <p class="ehp-last-updated">
+          Last updated: {{ current_user.doctor_profile.updated_at.strftime('%B %d, %Y') if current_user.doctor_profile.updated_at else 'Never' }}
+        </p>
+
+        <div class="ehp-section">
+          <div class="ehp-info-grid editable">
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Doctor Profile</span>
+              <span class="ehp-info-value">
+                {% if current_user.doctor_profile.profile_pic %}
+                  <img src="{{ url_for('static', filename='uploads/' + current_user.doctor_profile.profile_pic) }}" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
+                {% else %}
+                  No profile picture uploaded
+                {% endif %}
+              </span>
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Full Name</span>
+              <span class="ehp-info-value">{{ current_user.name }}</span>
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Contact</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.phone or 'Not provided' }}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Email ID</span>
+              <span class="ehp-info-value">{{ current_user.email }}</span>
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Date of Birth</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.date_of_birth or 'Not provided' }}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Gender</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.gender or 'Not provided' }}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Medical Licence No.</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.medical_licence_no or 'Not provided' }}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Years of Experience</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.experience or 'Not provided' }}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Primary Specialization</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.specialization or 'Not provided'}}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Secondary Specialization</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.secondary_specialization or 'Not provided' }}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Consultation Fees</span>
+              <span class="ehp-info-value"
+                >{{ '₹' + current_user.doctor_profile.fees|string if current_user.doctor_profile.fees else 'Not provided' }}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Professional Bio</span>
+              <span class="ehp-info-value" data-original="{{ current_user.doctor_profile.about }}">{{ current_user.doctor_profile.about.replace('\n', '<br>') | safe if current_user.doctor_profile.about else 'Not provided' }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- QUALIFICATION -->
+      <section
+        class="ehp-content-section"
+        id="qualificationSection"
+        style="display: none"
+      >
+        <div class="ehp-content-header">
+          <h1 class="ehp-page-title">Qualification & Credentials</h1>
+          <button type="button" class="ehp-edit-btn">Edit</button>
+        </div>
+
+        <p class="ehp-last-updated">
+          Last updated: {{ current_user.doctor_profile.updated_at.strftime('%B %d, %Y') if current_user.doctor_profile.updated_at else 'Never' }}
+        </p>
+
+        <div class="ehp-section">
+          <div class="ehp-info-grid editable">
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Medical Degree</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.medical_degree or 'Not provided' }}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Medical School</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.medical_school or 'Not provided' }}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Graduation Year</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.graduation_year or 'Not provided' }}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Board Certifications</span>
+              <span class="ehp-info-value" data-original="{{ current_user.doctor_profile.board_certifications }}">{{ current_user.doctor_profile.board_certifications.replace('\n', '<br>') | safe if current_user.doctor_profile.board_certifications else 'Not provided' }}</span>
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Upload Medical Licence</span>
+              <span class="ehp-info-value">
+                {% if current_user.doctor_profile.licence_file %}
+                  {% if current_user.doctor_profile.licence_file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')) %}
+                    <img src="{{ url_for('static', filename='uploads/' + current_user.doctor_profile.licence_file) }}" alt="Medical Licence" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
+                  {% else %}
+                    <a href="{{ url_for('static', filename='uploads/' + current_user.doctor_profile.licence_file) }}" target="_blank" style="text-decoration: none; color: #1a1a1a;">{{ current_user.doctor_profile.licence_file }}</a>
+                  {% endif %}
+                {% else %}
+                  Not uploaded
+                {% endif %}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CLINIC -->
+      <section
+        class="ehp-content-section"
+        id="clinicSection"
+        style="display: none"
+      >
+        <div class="ehp-content-header">
+          <h1 class="ehp-page-title">Clinic/Hospital Information</h1>
+          <button type="button" class="ehp-edit-btn">Edit</button>
+        </div>
+
+        <p class="ehp-last-updated">
+          Last updated: {{ current_user.doctor_profile.updated_at.strftime('%B %d, %Y') if current_user.doctor_profile.updated_at else 'Never' }}
+        </p>
+
+        <div class="ehp-section">
+          <div class="ehp-info-grid editable">
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Clinic/Hospital Name</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.clinic_name or 'Not provided'}}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Address</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.clinic_address or 'Not provided'}}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">City</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.clinic_city or 'Not provided'}}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">State</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.clinic_state or 'Not provided'}}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Country</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.clinic_country or 'Not provided'}}</span
+              >
+            </div>
+            <div class="ehp-info-item">
+              <span class="ehp-info-label">Zip Code</span>
+              <span class="ehp-info-value"
+                >{{ current_user.doctor_profile.clinic_zip_code or 'Not provided'}}</span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ADDITIONAL -->
+      <section
+        class="ehp-content-section"
+        id="additionalSection"
+        style="display: none"
+      >
+        <div class="ehp-content-header">
+          <h1 class="ehp-page-title">Additional Information</h1>
+          <button type="button" class="ehp-edit-btn">Edit</button>
+        </div>
+
+        <p class="ehp-last-updated">
+          Last updated: {{ current_user.doctor_profile.updated_at.strftime('%B  %d, %Y') if current_user.doctor_profile.updated_at else 'Never' }}
+        </p>
+
+        <div class="ehp-section">
+          <div class="ehp-info-item editable">
+            <span class="ehp-info-label">Areas of Expertise</span>
+            <span class="ehp-info-value" data-original="{{ current_user.doctor_profile.areas_of_expertise }}">{{ current_user.doctor_profile.areas_of_expertise.replace('\n', '<br>') | safe if current_user.doctor_profile.areas_of_expertise else 'Not provided' }}</span>
+          </div>
+        </div>
+
+        <div class="ehp-section">
+          <div class="ehp-info-item editable">
+            <span class="ehp-info-label">Awards and Recognition</span>
+            <span class="ehp-info-value" data-original="{{ current_user.doctor_profile.awards_recognitions }}">{{ current_user.doctor_profile.awards_recognitions.replace('\n', '<br>') | safe if current_user.doctor_profile.awards_recognitions else 'Not provided' }}</span>
+          </div>
+        </div>
+
+        <div class="ehp-section">
+          <div class="ehp-info-item editable">
+            <span class="ehp-info-label">Research & Publications</span>
+            <span class="ehp-info-value" data-original="{{ current_user.doctor_profile.research_publications }}">{{ current_user.doctor_profile.research_publications.replace('\n', '<br>') | safe if current_user.doctor_profile.research_publications else 'Not provided' }}</span>
+          </div>
+        </div>
+
+        <div class="ehp-section">
+          <div class="ehp-info-item editable">
+            <span class="ehp-info-label">Professional Membership</span>
+            <span class="ehp-info-value" data-original="{{ current_user.doctor_profile.professional_memberships }}">{{ current_user.doctor_profile.professional_memberships.replace('\n', '<br>') | safe if current_user.doctor_profile.professional_memberships else 'Not provided' }}</span>
+          </div>
+        </div>
+      </section>
+
+      <button
+        type="submit"
+        id="saveBtn"
+        style="display: none"
+        class="ehp-save-btn"
+      >
+        Save Changes
+      </button>
+    </main>
+  </div>
+</form>
+
+<script>
+  document.querySelectorAll(".ehp-edit-btn").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const section = this.closest(".ehp-content-section");
+      section.classList.add("editing");
+      section.querySelectorAll(".ehp-info-item").forEach((item) => {
+        const label = item.querySelector(".ehp-info-label").textContent;
+        const valueSpan = item.querySelector(".ehp-info-value");
+        const currentValue = valueSpan.textContent;
+
+        let input;
+        const specializations = [
+          "General Physician", "Cardiologist", "Dermatologist", "Pediatrician", 
+          "Orthopedic Surgeon", "Neurologist", "Psychiatrist", "Gynecologist", 
+          "Ophthalmologist", "ENT Specialist", "Dentist", "Radiologist", 
+          "Pathologist", "Surgeon", "Urologist", "Nephrologist", "Endocrinologist", 
+          "Oncologist", "Pulmonologist", "Gastroenterologist", "Rheumatologist", 
+          "Hematologist", "Infectious Disease Specialist", "Allergist", 
+          "Plastic Surgeon", "Neurosurgeon", "Cardiothoracic Surgeon", "Vascular Surgeon"
+        ];
+
+        if (label === "Date of Birth") {
+          input = document.createElement("input");
+          input.type = "date";
+          input.className = "ehp-input";
+          input.value = currentValue === "Not provided" ? "" : currentValue;
+        } else if (label === "Gender") {
+          input = document.createElement("select");
+          input.className = "ehp-input";
+          ["Male", "Female", "Other"].forEach((option) => {
+            const opt = document.createElement("option");
+            opt.value = option;
+            opt.textContent = option;
+            if (currentValue === option) opt.selected = true;
+            input.appendChild(opt);
+          });
+        } else if (label === "Primary Specialization" || label === "Secondary Specialization") {
+          input = document.createElement("select");
+          input.className = "ehp-input";
+          const defaultOpt = document.createElement("option");
+          defaultOpt.value = "";
+          defaultOpt.textContent = "Select Specialization";
+          input.appendChild(defaultOpt);
+          specializations.forEach((spec) => {
+            const opt = document.createElement("option");
+            opt.value = spec;
+            opt.textContent = spec;
+            if (currentValue === spec) opt.selected = true;
+            input.appendChild(opt);
+          });
+        } else if (label === "Upload Medical Licence") {
+          input = document.createElement("input");
+          input.type = "file";
+          input.className = "ehp-input";
+          input.accept = "image/*,.pdf";
+          input.name = "upload_medical_licence";
+        } else if (label === "Doctor Profile") {
+          input = document.createElement("input");
+          input.type = "file";
+          input.className = "ehp-input";
+          input.accept = "image/*";
+          input.name = "doctor_profile";
+          // Add preview for selected image
+          input.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                let preview = item.querySelector('.preview-img');
+                if (!preview) {
+                  preview = document.createElement('img');
+                  preview.className = 'preview-img';
+                  preview.style.width = '100px';
+                  preview.style.height = '100px';
+                  preview.style.objectFit = 'cover';
+                  preview.style.borderRadius = '50%';
+                  preview.style.marginTop = '10px';
+                  item.appendChild(preview);
+                }
+                preview.src = e.target.result;
+              };
+              reader.readAsDataURL(file);
+            }
+          });
+        } else if (label === "Graduation Year") {
+          input = document.createElement("input");
+          input.type = "number";
+          input.className = "ehp-input";
+          input.min = "1900";
+          input.max = new Date().getFullYear();
+          input.value = currentValue === "Not provided" ? "" : currentValue;
+        } else if (
+          [
+            "Professional Bio",
+            "Board Certifications",
+            "Areas of Expertise",
+            "Awards and Recognition",
+            "Research & Publications",
+            "Professional Membership",
+          ].includes(label)
+        ) {
+          input = document.createElement("textarea");
+          input.className = "ehp-textarea";
+          input.value = item.querySelector('.ehp-info-value').dataset.original || '';
+        } else {
+          input = document.createElement("input");
+          input.type = "text";
+          input.className = "ehp-input";
+          input.value = currentValue === "Not provided" ? "" : currentValue;
+        }
+
+        valueSpan.style.display = "none";
+        item.appendChild(input);
+      });
+      this.style.display = "none";
+      document.getElementById("saveBtn").style.display = "inline-block";
+    });
+  });
+
+  document.getElementById("saveBtn").addEventListener("click", function () {
+    const form = document.getElementById("profileForm");
+    const allSections = document.querySelectorAll(".ehp-content-section");
+
+    allSections.forEach((section) => {
+      section.querySelectorAll(".ehp-info-item").forEach((item) => {
+        const label = item.querySelector(".ehp-info-label").textContent;
+        const valueSpan = item.querySelector(".ehp-info-value");
+        const input =
+          item.querySelector(".ehp-input") ||
+          item.querySelector(".ehp-textarea");
+        let value;
+
+        if (input) {
+          // If there's an input (editing), use its value
+          if (input.type === 'file') {
+            // File input, leave it for form submission, don't set valueSpan or create hidden
+            const preview = item.querySelector('.preview-img');
+            if (preview) preview.remove();
+            return; // Skip the rest
+          }
+          value = input.value.trim() || "Not provided";
+          if (input.tagName === 'TEXTAREA') {
+            valueSpan.innerHTML = value.replace(/\n/g, '<br>');
+            valueSpan.dataset.original = value;
+          } else {
+            valueSpan.textContent = value;
+          }
+          input.remove();
+        } else {
+          // If no input (not editing), use the current span value
+          if (label === "Consultation Fees") {
+            value = valueSpan.textContent.replace('₹', '').trim() === "Not provided" ? "" : valueSpan.textContent.replace('₹', '').trim();
+          } else if (label === "Upload Medical Licence" || label === "Doctor Profile") {
+            // Skip creating hidden for file fields
+            return;
+          } else if (valueSpan.dataset.original !== undefined) {
+            value = valueSpan.dataset.original;
+          } else {
+            value = valueSpan.textContent === "Not provided" ? "" : valueSpan.textContent;
+          }
+        }
+
+        // Create hidden input for form submission
+        const hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = label.toLowerCase().replace(/[^a-z0-9]/g, "_");
+        hiddenInput.value = value;
+        form.appendChild(hiddenInput);
+      });
+      section.classList.remove("editing");
+    });
+
+    this.style.display = "none";
+    document
+      .querySelectorAll(".ehp-edit-btn")
+      .forEach((btn) => (btn.style.display = "inline-block"));
+    form.submit();
+  });
+
+  // Section navigation
+  const menuLinks = document.querySelectorAll(".ehp-menu-link");
+  const contentSections = document.querySelectorAll(".ehp-content-section");
+
+  menuLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      const targetSection = this.getAttribute("data-section");
+
+      menuLinks.forEach((l) => l.classList.remove("ehp-active"));
+      this.classList.add("ehp-active");
+
+      contentSections.forEach((section) => {
+        section.style.display = "none";
+      });
+
+      const sectionId = targetSection + "Section";
+      document.getElementById(sectionId).style.display = "block";
+    });
+  });
+</script>
 
 {% endblock %}

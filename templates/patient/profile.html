@@ -469,7 +469,13 @@
   <aside class="ehp-sidebar">
     <div class="ehp-profile-card">
       <div class="ehp-profile-header">
-        <div class="ehp-profile-avatar">{{ current_user.name[:2].upper() }}</div>
+        <div class="ehp-profile-avatar">
+          {% if current_user.patient_profile.profile_pic %}
+            <img src="{{ url_for('static', filename='uploads/' + current_user.patient_profile.profile_pic) }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+          {% else %}
+            {{ current_user.name[:2].upper() }}
+          {% endif %}
+        </div>
         <div class="ehp-profile-info">
           <div class="ehp-profile-name">{{ current_user.name }}</div>
           <div class="ehp-profile-id">ID: {{ current_user.patient_profile.id }}</div>
@@ -492,13 +498,7 @@
         <li class="ehp-menu-item">
           <a href="#" class="ehp-menu-link" data-section="contact">
             <i class="fas fa-address-book ehp-menu-icon"></i>
-            <span>Contact & Address</span>
-          </a>
-        </li>
-        <li class="ehp-menu-item">
-          <a href="#" class="ehp-menu-link" data-section="account">
-            <i class="fas fa-sliders-h ehp-menu-icon"></i>
-            <span>Account Settings</span>
+            <span>Contact</span>
           </a>
         </li>
       </ul>
@@ -523,6 +523,16 @@
 
       <div class="ehp-section">
         <div class="ehp-info-grid editable">
+          <div class="ehp-info-item">
+            <span class="ehp-info-label">Patient Profile</span>
+            <span class="ehp-info-value">
+              {% if current_user.patient_profile.profile_pic %}
+                <img src="{{ url_for('static', filename='uploads/' + current_user.patient_profile.profile_pic) }}" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
+              {% else %}
+                No profile picture uploaded
+              {% endif %}
+            </span>
+          </div>
           <div class="ehp-info-item">
             <span class="ehp-info-label">Full Name</span>
             <span class="ehp-info-value">{{ current_user.name }}</span>
@@ -653,44 +663,6 @@
       </div>
     </section>
 
-    <!-- ACCOUNT -->
-    <section class="ehp-content-section" id="accountSection" style="display:none">
-      <div class="ehp-content-header">
-        <h1 class="ehp-page-title">Account Settings</h1>
-        <button type="button" class="ehp-edit-btn">Edit</button>
-      </div>
-
-      <p class="ehp-last-updated">Last updated: {{ current_user.patient_profile.updated_at.strftime('%B %d, %Y') if current_user.patient_profile.updated_at else 'Never' }}</p>
-
-      <div class="ehp-section">
-        <h2 class="ehp-section-title">Login Information</h2>
-        <div class="ehp-info-grid">
-          <div class="ehp-info-item">
-            <span class="ehp-info-label">Username</span>
-            <span class="ehp-info-value">{{ current_user.name }}</span>
-          </div>
-          <div class="ehp-info-item">
-            <span class="ehp-info-label">Email</span>
-            <span class="ehp-info-value">{{ current_user.email }}</span>
-          </div>
-          <div class="ehp-info-item">
-            <span class="ehp-info-label">Password</span>
-            <span class="ehp-info-value">••••••••</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="ehp-section">
-        <h2 class="ehp-section-title">Notification Preferences</h2>
-        <div class="ehp-info-grid">
-          <div class="ehp-info-item">
-            <span class="ehp-info-label">Email Notifications</span>
-            <span class="ehp-info-value">Enabled</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <button type="submit" id="saveBtn" style="display:none" class="ehp-save-btn">
       Save Changes
     </button>
@@ -736,6 +708,34 @@ document.querySelectorAll('.ehp-edit-btn').forEach(btn => {
           if (currentValue === option) opt.selected = true;
           input.appendChild(opt);
         });
+      } else if (label === "Patient Profile") {
+        input = document.createElement("input");
+        input.type = "file";
+        input.className = "ehp-input";
+        input.accept = "image/*";
+        input.name = "patient_profile";
+        // Add preview for selected image
+        input.addEventListener('change', function(e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              let preview = item.querySelector('.preview-img');
+              if (!preview) {
+                preview = document.createElement('img');
+                preview.className = 'preview-img';
+                preview.style.width = '100px';
+                preview.style.height = '100px';
+                preview.style.objectFit = 'cover';
+                preview.style.borderRadius = '50%';
+                preview.style.marginTop = '10px';
+                item.appendChild(preview);
+              }
+              preview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
       } else if (label === 'Medication List' || label === 'Conditions' || label === 'Surgeries' || label === 'Family History' || label === 'Immunizations') {
         input = document.createElement('textarea');
         input.className = 'ehp-textarea';
@@ -768,6 +768,12 @@ document.getElementById('saveBtn').addEventListener('click', function() {
 
       if (input) {
         // If there's an input (editing), use its value
+        if (input.type === 'file') {
+          // File input, leave it for form submission, don't set valueSpan or create hidden
+          const preview = item.querySelector('.preview-img');
+          if (preview) preview.remove();
+          return; // Skip the rest
+        }
         value = input.value.trim() || 'Not provided';
         valueSpan.textContent = value;
         valueSpan.style.display = 'block';

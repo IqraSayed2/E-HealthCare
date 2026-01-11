@@ -37,7 +37,13 @@ def signup():
     if role == "patient":
         db.session.add(PatientProfile(user_id=user.id))
     else:
-        db.session.add(DoctorProfile(user_id=user.id))
+        doctor_profile = DoctorProfile(
+            user_id=user.id,
+            specialization=request.form.get("specialization"),
+            experience=int(request.form.get("experience")) if request.form.get("experience") else None,
+            medical_licence_no=request.form.get("license")
+        )
+        db.session.add(doctor_profile)
 
     db.session.commit()
     flash('Account created successfully — please login', 'login')
@@ -57,9 +63,9 @@ def login():
     login_user(user)
 
     if user.role == "patient":
-        return redirect("/patient/dashboard")
+        return redirect("/patient/profile")
     else:
-        return redirect("/doctor/dashboard")
+        return redirect("/doctor/profile")
 
 @auth.route("/logout")
 def logout():
