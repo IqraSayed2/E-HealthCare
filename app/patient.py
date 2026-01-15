@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, current_app, abort
+from flask import Blueprint, render_template, request, redirect, current_app, abort, flash, url_for
 from flask_login import login_required, current_user
-from .models import DoctorProfile, Appointment, PatientProfile, Availability, User, Review
+from .models import DoctorProfile, Appointment, PatientProfile, Availability, User, Review, Message
 from .extensions import db
 from werkzeug.utils import secure_filename
 import os
@@ -14,8 +14,9 @@ patient = Blueprint("patient", __name__, url_prefix="/patient")
 def dashboard():
 
     # Fetch upcoming appointments
-    upcoming = Appointment.query.filter_by(
-        patient_id=current_user.patient_profile.id
+    upcoming = Appointment.query.filter(
+        Appointment.patient_id == current_user.patient_profile.id,
+        Appointment.status.in_(['pending', 'confirmed', 'paid'])
     ).order_by(Appointment.date).limit(5).all()
 
     # Count values
@@ -36,9 +37,7 @@ def dashboard():
     )
 
 
-
 @patient.route("/find-doctor")
-@login_required
 def find_doctor():
     search = request.args.get("search")
 
@@ -231,14 +230,34 @@ def payment_success(appointment_id):
 @patient.route("/my-appointments")
 @login_required
 def my_appointments():
-    appts = Appointment.query.filter_by(patient_id=current_user.patient_profile.id).all()
-    return render_template("patient/my_appointments.html", appointments=appts)
+    from datetime import datetime
+    upcoming = Appointment.query.filter(
+        Appointment.patient_id == current_user.patient_profile.id,
+        Appointment.status.in_(['pending', 'confirmed', 'paid'])
+    ).all()
+    past = Appointment.query.filter_by(patient_id=current_user.patient_profile.id, status="completed").all()
+    canceled = Appointment.query.filter_by(patient_id=current_user.patient_profile.id, status="canceled").all()
+    
+    def format_date(appt):
+        try:
+            date_obj = datetime.strptime(appt.date, '%Y-%m-%d')
+            time_str = appt.time
+            formatted = date_obj.strftime('%A, %B %d, %Y') + ' at ' + time_str
+            appt.formatted_datetime = formatted
+        except:
+            appt.formatted_datetime = appt.date + ' at ' + appt.time
+        return appt
+    
+    upcoming = [format_date(a) for a in upcoming]
+    past = [format_date(a) for a in past]
+    canceled = [format_date(a) for a in canceled]
+    
+    return render_template("patient/my_appointments.html", upcoming=upcoming, past=past, canceled=canceled)
 
 
 @patient.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
-
     profile = current_user.patient_profile
 
     if request.method == "POST":
@@ -271,7 +290,7 @@ def profile():
         if 'patient_profile' in request.files:
             file = request.files['patient_profile']
             if file and file.filename:
-                filename = secure_filename(file.filename)
+                filename = f"{current_user.id}_{secure_filename(file.filename)}"
                 os.makedirs(upload_dir, exist_ok=True)
                 file_path = os.path.join(upload_dir, filename)
                 file.save(file_path)
@@ -284,3 +303,62 @@ def profile():
         return redirect("/patient/profile")
 
     return render_template("patient/profile.html")
+
+
+@patient.route("/consultations")
+@login_required
+def consultations():
+    # Get the first upcoming appointment
+    appointment = Appointment.query.filter(
+        Appointment.patient_id == current_user.patient_profile.id,
+        Appointment.status.in_(['pending', 'confirmed', 'paid'])
+    ).order_by(Appointment.date, Appointment.time).first()
+    
+    if appointment:
+        return redirect(url_for('patient.consultation', appointment_id=appointment.id))
+    else:
+        flash("No upcoming consultations found.", "info")
+        return redirect(url_for('patient.my_appointments'))
+
+
+@patient.route("/consultation/<int:appointment_id>")
+@login_required
+def consultation(appointment_id):
+    appointment = Appointment.query.filter_by(id=appointment_id, patient_id=current_user.patient_profile.id).first_or_404()
+    
+    # Get all patient's appointments grouped by doctor (most recent appointment per doctor)
+    from sqlalchemy import func
+    doctor_appointments = db.session.query(
+        Appointment,
+        func.row_number().over(
+            partition_by=Appointment.doctor_id,
+            order_by=[Appointment.date.desc(), Appointment.time.desc()]
+        ).label('row_num')
+    ).filter(
+        Appointment.patient_id == current_user.patient_profile.id
+    ).subquery()
+    
+    recent_appointments = Appointment.query.join(
+        doctor_appointments,
+        (Appointment.id == doctor_appointments.c.id) & (doctor_appointments.c.row_num == 1)
+    ).order_by(Appointment.date.desc()).all()
+    
+    messages = Message.query.filter_by(appointment_id=appointment_id).order_by(Message.timestamp).all()
+    
+    return render_template("patient/consultation.html", appointment=appointment, doctor_appointments=recent_appointments, messages=messages)
+
+
+@patient.route("/appointment/cancel/<int:appointment_id>")
+@login_required
+def cancel_appointment(appointment_id):
+    appointment = Appointment.query.filter_by(id=appointment_id, patient_id=current_user.patient_profile.id).first_or_404()
+    
+    # Only allow cancellation of pending, confirmed, or paid appointments
+    if appointment.status in ['pending', 'confirmed', 'paid']:
+        appointment.status = "cancelled"
+        db.session.commit()
+        flash("Appointment cancelled successfully.", "success")
+    else:
+        flash("This appointment cannot be cancelled.", "error")
+    
+    return redirect(url_for('patient.dashboard'))

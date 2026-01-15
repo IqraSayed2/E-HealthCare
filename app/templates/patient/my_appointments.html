@@ -1,0 +1,533 @@
+{% extends "base.html" %} 
+{% block title %}My Appointments{% endblock %} 
+{% block content %}
+
+<style>
+  .p-apt-wrapper {
+    background: #f8f9fa;
+    min-height: 100vh;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 0 40px;
+  }
+
+  .p-apt-container {
+    max-width: 850px;
+    margin: 0 auto;
+  }
+
+  .p-apt-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 25px;
+    padding-left: 5px;
+  }
+
+  .p-apt-tabs-wrapper {
+    background: white;
+    border-radius: 12px;
+    padding: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    display: flex;
+    gap: 8px;
+  }
+
+  .p-apt-tab-btn {
+    flex: 1;
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: #6c757d;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .p-apt-tab-btn:hover {
+    background: #f8f9fa;
+    color: #495057;
+  }
+
+  .p-apt-tab-btn.p-apt-tab-active {
+    background: white;
+    color: #000000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .p-apt-content-section {
+    display: none;
+  }
+
+  .p-apt-content-section.p-apt-content-active {
+    display: block;
+  }
+
+  .p-apt-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+
+  .p-apt-appointment-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+  }
+
+  .p-apt-appointment-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .p-apt-doctor-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #16a2b8 0%, #138496 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .p-apt-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .p-apt-doctor-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .p-apt-doctor-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 2px;
+  }
+
+  .p-apt-doctor-specialty {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 4px;
+  }
+
+  .p-apt-appointment-time {
+    font-size: 0.875rem;
+    color: #495057;
+  }
+
+  .p-apt-action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .p-apt-action-btn {
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .p-apt-btn-primary {
+    background: #d4f1f4;
+    color: #16a2b8;
+  }
+
+  .p-apt-btn-primary:hover {
+    background: #b0e8f1;
+    color: #138496;
+  }
+
+  .p-apt-btn-secondary {
+    background: #f5f5f5;
+    color: #495057;
+  }
+
+  .p-apt-btn-secondary:hover {
+    background: #e0e0e0;
+    color: #212529;
+  }
+
+  .p-apt-empty-state {
+    background: white;
+    border-radius: 12px;
+    padding: 60px 30px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .p-apt-empty-icon {
+    width: 80px;
+    height: 80px;
+    background: #e3f2fd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+
+  .p-apt-empty-icon i {
+    font-size: 2.5rem;
+    color: #16a2b8;
+  }
+
+  .p-apt-empty-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 12px;
+  }
+
+  .p-apt-empty-description {
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  .p-apt-book-button {
+    background: #16a2b8;
+    color: white;
+    border: none;
+    padding: 13px 32px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+  }
+
+  .p-apt-book-button:hover {
+    background: #16a2b8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(25, 118, 210, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    .p-apt-wrapper {
+      padding: 25px 15px;
+    }
+
+    .p-apt-title {
+      font-size: 1.85rem;
+      margin-bottom: 20px;
+    }
+
+    .p-apt-tabs-wrapper {
+      flex-direction: row;
+      overflow-x: auto;
+    }
+
+    .p-apt-tab-btn {
+      font-size: 0.9rem;
+      padding: 10px 16px;
+    }
+
+    .p-apt-appointment-card {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 18px;
+    }
+
+    .p-apt-doctor-avatar {
+      width: 55px;
+      height: 55px;
+    }
+
+    .p-apt-action-buttons {
+      width: 100%;
+      flex-direction: row;
+    }
+
+    .p-apt-action-btn {
+      flex: 1;
+      padding: 10px 16px;
+      font-size: 0.875rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .p-apt-wrapper {
+      padding: 20px 10px;
+    }
+
+    .p-apt-title {
+      font-size: 1.65rem;
+    }
+
+    .p-apt-doctor-avatar {
+      width: 50px;
+      height: 50px;
+    }
+
+    .p-apt-avatar-placeholder {
+      font-size: 1.2rem;
+    }
+
+    .p-apt-doctor-name {
+      font-size: 1rem;
+    }
+
+    .p-apt-doctor-specialty,
+    .p-apt-appointment-time {
+      font-size: 0.85rem;
+    }
+
+    .p-apt-empty-state {
+      padding: 40px 20px;
+    }
+
+    .p-apt-empty-icon {
+      width: 70px;
+      height: 70px;
+    }
+
+    .p-apt-empty-icon i {
+      font-size: 2rem;
+    }
+
+    .p-apt-action-buttons {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .p-apt-action-btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<div class="p-apt-wrapper">
+  <div class="p-apt-container">
+    <h1 class="p-apt-title">My Appointments</h1>
+
+    <div class="p-apt-tabs-wrapper">
+      <button
+        class="p-apt-tab-btn p-apt-tab-active"
+        data-p-apt-tab="upcoming"
+      >
+        Upcoming
+      </button>
+      <button class="p-apt-tab-btn" data-p-apt-tab="past">Past</button>
+      <button class="p-apt-tab-btn" data-p-apt-tab="canceled">
+        Canceled
+      </button>
+    </div>
+
+    <!-- Upcoming Appointments -->
+    <div
+      class="p-apt-content-section p-apt-content-active"
+      data-p-apt-content="upcoming"
+    >
+      <div class="p-apt-card-list">
+        {% for appt in upcoming %}
+        <div class="p-apt-appointment-card">
+          <div class="p-apt-doctor-avatar">
+            {% if appt.doctor.user.doctor_profile.profile_pic %}
+              <img src="{{ url_for('static', filename='uploads/' + appt.doctor.user.doctor_profile.profile_pic) }}" alt="Dr. {{ appt.doctor.user.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            {% else %}
+              <div class="p-apt-avatar-placeholder">
+                {{ appt.doctor.user.name.split() | map('first') | join('') | upper }}
+              </div>
+            {% endif %}
+          </div>
+          <div class="p-apt-doctor-info">
+            <div class="p-apt-doctor-name">
+              Dr. {{ appt.doctor.user.name }}
+            </div>
+            <div class="p-apt-doctor-specialty">
+              {{ appt.doctor.specialization }}
+            </div>
+            <div class="p-apt-appointment-time">
+              {{ appt.formatted_datetime }}
+            </div>
+          </div>
+          <div class="p-apt-action-buttons">
+            <a
+              href="{{ url_for('patient.consultation', appointment_id=appt.id) }}"
+              class="p-apt-action-btn p-apt-btn-primary"
+              style="text-decoration: none"
+            >
+              Consult
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      {% if not upcoming %}
+      <div class="p-apt-empty-state">
+        <div class="p-apt-empty-icon">
+          <i class="far fa-calendar-plus"></i>
+        </div>
+        <div class="p-apt-empty-title">No Upcoming Appointments</div>
+        <div class="p-apt-empty-description">
+          You don't have any upcoming appointments scheduled.
+        </div>
+        <button class="p-apt-book-button">Book a New Appointment</button>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Past Appointments -->
+    <div class="p-apt-content-section" data-p-apt-content="past">
+      <div class="p-apt-card-list">
+        {% for appt in past %}
+        <div class="p-apt-appointment-card">
+          <div class="p-apt-doctor-avatar">
+            {% if appt.doctor.user.doctor_profile.profile_pic %}
+              <img src="{{ url_for('static', filename='uploads/' + appt.doctor.user.doctor_profile.profile_pic) }}" alt="Dr. {{ appt.doctor.user.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            {% else %}
+              <div class="p-apt-avatar-placeholder">
+                {{ appt.doctor.user.name.split() | map('first') | join('') | upper }}
+              </div>
+            {% endif %}
+          </div>
+          <div class="p-apt-doctor-info">
+            <div class="p-apt-doctor-name">
+              Dr. {{ appt.doctor.user.name }}
+            </div>
+            <div class="p-apt-doctor-specialty">
+              {{ appt.doctor.specialization }}
+            </div>
+            <div class="p-apt-appointment-time">
+              {{ appt.formatted_datetime }}
+            </div>
+          </div>
+          <div class="p-apt-action-buttons">
+            <button class="p-apt-action-btn p-apt-btn-secondary">
+              View Details
+            </button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% if not past %}
+      <div class="p-apt-empty-state">
+        <div class="p-apt-empty-icon">
+          <i class="far fa-history"></i>
+        </div>
+        <div class="p-apt-empty-title">No Past Appointments</div>
+        <div class="p-apt-empty-description">
+          You haven't completed any appointments yet.
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Canceled Appointments -->
+    <div class="p-apt-content-section" data-p-apt-content="canceled">
+      <div class="p-apt-card-list">
+        {% for appt in canceled %}
+        <div class="p-apt-appointment-card">
+          <div class="p-apt-doctor-avatar">
+            {% if appt.doctor.user.doctor_profile.profile_pic %}
+              <img src="{{ url_for('static', filename='uploads/' + appt.doctor.user.doctor_profile.profile_pic) }}" alt="Dr. {{ appt.doctor.user.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            {% else %}
+              <div class="p-apt-avatar-placeholder">
+                {{ appt.doctor.user.name.split() | map('first') | join('') | upper }}
+              </div>
+            {% endif %}
+          </div>
+          <div class="p-apt-doctor-info">
+            <div class="p-apt-doctor-name">
+              Dr. {{ appt.doctor.user.name }}
+            </div>
+            <div class="p-apt-doctor-specialty">
+              {{ appt.doctor.specialization }}
+            </div>
+            <div class="p-apt-appointment-time">
+              {{ appt.formatted_datetime }}
+            </div>
+          </div>
+          <div class="p-apt-action-buttons">
+            <button class="p-apt-action-btn p-apt-btn-primary">Rebook</button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% if not canceled %}
+      <div class="p-apt-empty-state">
+        <div class="p-apt-empty-icon">
+          <i class="far fa-times-circle"></i>
+        </div>
+        <div class="p-apt-empty-title">No Canceled Appointments</div>
+        <div class="p-apt-empty-description">
+          You don't have any canceled appointments.
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Tab switching functionality
+  const tabButtons = document.querySelectorAll(".p-apt-tab-btn");
+  const contentSections = document.querySelectorAll(".p-apt-content-section");
+
+  tabButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const targetTab = this.getAttribute("data-p-apt-tab");
+
+      // Remove active class from all tabs
+      tabButtons.forEach((btn) => btn.classList.remove("p-apt-tab-active"));
+
+      // Add active class to clicked tab
+      this.classList.add("p-apt-tab-active");
+
+      // Hide all content sections
+      contentSections.forEach((section) => {
+        section.classList.remove("p-apt-content-active");
+      });
+
+      // Show target content
+      const targetContent = document.querySelector(
+        `[data-p-apt-content="${targetTab}"]`
+      );
+      if (targetContent) {
+        targetContent.classList.add("p-apt-content-active");
+      }
+    });
+  });
+
+  // Add smooth scroll behavior
+  document.querySelectorAll(".p-apt-tab-btn").forEach((tab) => {
+    tab.addEventListener("click", function () {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    });
+  });
+</script>
+
+{% endblock %}

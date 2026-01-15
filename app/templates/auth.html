@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login & Sign Up</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+
+  <body class="authbody">
+    <div class="ehc-auth-container">
+      <!-- TAB BUTTONS -->
+      <div class="ehc-tab-buttons">
+        <button
+          class="ehc-tab-btn {% if active_tab == 'login' %}active{% endif %}"
+          onclick="switchTab(event,'login')"
+        >
+          Login
+        </button>
+        <button
+          class="ehc-tab-btn {% if active_tab == 'signup' %}active{% endif %}"
+          onclick="switchTab(event,'signup')"
+        >
+          Sign Up
+        </button>
+      </div>
+
+      <!-- ================= LOGIN FORM ================= -->
+      <div
+        class="ehc-tab-content {% if active_tab == 'login' %}active{% endif %}"
+        id="login-tab"
+      >
+        {% with messages = get_flashed_messages(with_categories=true) %} {% for
+        category, msg in messages %} {% if category == 'login' %}
+        <div class="alert alert-danger">{{ msg }}</div>
+        {% endif %} {% endfor %} {% endwith %}
+
+        <form method="POST" action="{{ url_for('auth.login') }}">
+          <div class="ehc-form-group">
+            <label class="ehc-form-label">Email</label>
+            <div class="ehc-input-wrapper">
+              <i class="fas fa-envelope ehc-input-icon"></i>
+              <input
+                type="email"
+                name="email"
+                class="ehc-form-input"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="ehc-form-group">
+            <label class="ehc-form-label">Password</label>
+            <div class="ehc-input-wrapper">
+              <i class="fas fa-lock ehc-input-icon"></i>
+              <input
+                type="password"
+                name="password"
+                class="ehc-form-input"
+                required
+              />
+            </div>
+          </div>
+
+          <button type="submit" class="ehc-submit-btn">Login</button>
+
+          <div class="ehc-switch-text">
+            Don't have an account?
+            <a href="#" onclick="switchTab(event,'signup'); return false;"
+              >Sign up</a
+            >
+          </div>
+        </form>
+      </div>
+
+      <!-- ================= SIGNUP FORM ================= -->
+      <div
+        class="ehc-tab-content {% if active_tab == 'signup' %}active{% endif %}"
+        id="signup-tab"
+      >
+        {% with messages = get_flashed_messages(with_categories=true) %} {% for
+        category, msg in messages %} {% if category == 'signup' %}
+        <div class="alert alert-danger">{{ msg }}</div>
+        {% endif %} {% endfor %} {% endwith %}
+
+        <form
+          method="POST"
+          action="{{ url_for('auth.signup') }}"
+          enctype="multipart/form-data"
+        >
+          <!-- ROLE selection -->
+          <input type="hidden" name="role" id="roleInput" value="patient" />
+
+          <div class="ehc-user-type-selector">
+            <div
+              class="ehc-user-type-card selected"
+              onclick="selectUserType(event,'patient')"
+            >
+              <div class="ehc-user-type-icon"><i class="fas fa-user"></i></div>
+              <div class="ehc-user-type-label">Patient</div>
+            </div>
+
+            <div
+              class="ehc-user-type-card"
+              onclick="selectUserType(event,'doctor')"
+            >
+              <div class="ehc-user-type-icon">
+                <i class="fas fa-user-md"></i>
+              </div>
+              <div class="ehc-user-type-label">Doctor</div>
+            </div>
+          </div>
+
+          <!-- Common Fields -->
+          <div class="ehc-form-group">
+            <label class="ehc-form-label">Full Name</label>
+            <div class="ehc-input-wrapper">
+              <i class="fas fa-user ehc-input-icon"></i>
+              <input type="text" name="name" class="ehc-form-input" required />
+            </div>
+          </div>
+
+          <div class="ehc-form-group">
+            <label class="ehc-form-label">Email</label>
+            <div class="ehc-input-wrapper">
+              <i class="fas fa-envelope ehc-input-icon"></i>
+              <input
+                type="email"
+                name="email"
+                class="ehc-form-input"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="ehc-form-group">
+            <label class="ehc-form-label">Password</label>
+            <div class="ehc-input-wrapper">
+              <i class="fas fa-lock ehc-input-icon"></i>
+              <input
+                type="password"
+                name="password"
+                class="ehc-form-input"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="ehc-form-group">
+            <label class="ehc-form-label">Confirm Password</label>
+            <div class="ehc-input-wrapper">
+              <i class="fas fa-lock ehc-input-icon"></i>
+              <input
+                type="password"
+                name="password_confirm"
+                class="ehc-form-input"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Doctor fields (OPTIONAL for now) -->
+          <div class="ehc-doctor-fields" id="doctorFields">
+            <div class="ehc-form-group">
+              <label class="ehc-form-label">Specialization</label>
+              <div class="ehc-input-wrapper">
+                <i class="fas fa-stethoscope ehc-input-icon"></i>
+                <select
+                  name="specialization"
+                  class="ehc-form-input"
+                  style="padding-left: 3rem"
+                >
+                  <option value="">Select Specialization</option>
+                  <option value="General Physician">General Physician</option>
+                  <option value="Cardiologist">Cardiologist</option>
+                  <option value="Dermatologist">Dermatologist</option>
+                  <option value="Pediatrician">Pediatrician</option>
+                  <option value="Orthopedic Surgeon">Orthopedic Surgeon</option>
+                  <option value="Neurologist">Neurologist</option>
+                  <option value="Psychiatrist">Psychiatrist</option>
+                  <option value="Gynecologist">Gynecologist</option>
+                  <option value="Ophthalmologist">Ophthalmologist</option>
+                  <option value="ENT Specialist">ENT Specialist</option>
+                  <option value="Dentist">Dentist</option>
+                  <option value="Radiologist">Radiologist</option>
+                  <option value="Pathologist">Pathologist</option>
+                  <option value="Surgeon">Surgeon</option>
+                  <option value="Urologist">Urologist</option>
+                  <option value="Nephrologist">Nephrologist</option>
+                  <option value="Endocrinologist">Endocrinologist</option>
+                  <option value="Oncologist">Oncologist</option>
+                  <option value="Pulmonologist">Pulmonologist</option>
+                  <option value="Gastroenterologist">Gastroenterologist</option>
+                  <option value="Rheumatologist">Rheumatologist</option>
+                  <option value="Hematologist">Hematologist</option>
+                  <option value="Infectious Disease Specialist">
+                    Infectious Disease Specialist
+                  </option>
+                  <option value="Allergist">Allergist</option>
+                  <option value="Plastic Surgeon">Plastic Surgeon</option>
+                  <option value="Neurosurgeon">Neurosurgeon</option>
+                  <option value="Cardiothoracic Surgeon">
+                    Cardiothoracic Surgeon
+                  </option>
+                  <option value="Vascular Surgeon">Vascular Surgeon</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="ehc-form-group">
+              <label class="ehc-form-label">Experience (Years)</label>
+              <div class="ehc-input-wrapper">
+                <i class="fas fa-briefcase ehc-input-icon"></i>
+                <input type="number" name="experience" class="ehc-form-input" />
+              </div>
+            </div>
+
+            <div class="ehc-form-group">
+              <label class="ehc-form-label">License Number</label>
+              <div class="ehc-input-wrapper">
+                <i class="fas fa-id-card ehc-input-icon"></i>
+                <input type="text" name="license" class="ehc-form-input" />
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="ehc-submit-btn">Sign Up</button>
+
+          <div class="ehc-switch-text">
+            Already have an account?
+            <a href="#" onclick="switchTab(event,'login'); return false;"
+              >Login</a
+            >
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      /* ---------- Tab Switch ---------- */
+      function switchTab(event, tab) {
+        document
+          .querySelectorAll(".ehc-tab-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        event.target.classList.add("active");
+
+        document
+          .querySelectorAll(".ehc-tab-content")
+          .forEach((box) => box.classList.remove("active"));
+        document.getElementById(tab + "-tab").classList.add("active");
+      }
+
+      /* ---------- Role Switch ---------- */
+      function selectUserType(event, role) {
+        document
+          .querySelectorAll(".ehc-user-type-card")
+          .forEach((c) => c.classList.remove("selected"));
+        event.currentTarget.classList.add("selected");
+
+        document.getElementById("roleInput").value = role;
+
+        if (role === "doctor") {
+          document.getElementById("doctorFields").classList.add("show");
+        } else {
+          document.getElementById("doctorFields").classList.remove("show");
+        }
+      }
+    </script>
+  </body>
+</html>

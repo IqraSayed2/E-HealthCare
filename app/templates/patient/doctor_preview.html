@@ -1,0 +1,673 @@
+{% extends "base.html" %} 
+{% block title %}Doctor Profile{% endblock %} 
+{% block content %}
+
+<style>
+  .p-drpre-profile-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .p-drpre-back-button {
+    background: white;
+    border: 2px solid #e5e7eb;
+    color: #212529;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .p-drpre-back-button:hover {
+    border-color: #16a2b8;
+    color: #16a2b8;
+  }
+
+  .p-drpre-profile-header {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    margin-bottom: 2rem;
+  }
+
+  .p-drpre-profile-top {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+  }
+
+  .p-drpre-doctor-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 4rem;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .p-drpre-doctor-main-info {
+    flex: 1;
+  }
+
+  .p-drpre-verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+  }
+
+  .p-drpre-doctor-name {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 0.5rem;
+  }
+
+  .p-drpre-doctor-specialty {
+    font-size: 1.1rem;
+    color: #16a2b8;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .p-drpre-doctor-meta {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .p-drpre-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6c757d;
+    font-size: 0.95rem;
+  }
+
+  .p-drpre-meta-item i {
+    color: #16a2b8;
+    font-size: 1.1rem;
+  }
+
+  .p-drpre-star {
+    color: #fbbf24;
+    font-size: 1.3rem;
+  }
+
+  .p-drpre-star.empty {
+    color: #d1d5db;
+  }
+
+  .p-drpre-doctor-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .p-drpre-tag {
+    background: rgba(22, 162, 184, 0.1);
+    color: #16a2b8;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .p-drpre-profile-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+  }
+
+  .p-drpre-profile-section {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    margin-bottom: 2rem;
+  }
+
+  .p-drpre-section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .p-drpre-section-title i {
+    color: #16a2b8;
+  }
+
+  .p-drpre-about-text {
+    color: #6c757d;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .p-drpre-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .p-drpre-info-item {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+  }
+
+  .p-drpre-info-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .p-drpre-info-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #212529;
+  }
+
+  .p-drpre-slot-selector {
+    margin-bottom: 1.5rem;
+  }
+
+  .p-drpre-date-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .p-drpre-date-tab {
+    min-width: 90px;
+    padding: 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+  }
+
+  .p-drpre-date-tab:hover {
+    border-color: #16a2b8;
+  }
+
+  .p-drpre-date-tab.active {
+    border-color: #16a2b8;
+    background: rgba(22, 162, 184, 0.1);
+  }
+
+  .p-drpre-date-day {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 0.3rem;
+  }
+
+  .p-drpre-date-number {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #212529;
+  }
+
+  .p-drpre-date-month {
+    font-size: 0.8rem;
+    color: #6c757d;
+  }
+
+  .p-drpre-time-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.8rem;
+  }
+
+  .p-drpre-time-slot {
+    padding: 0.8rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    color: #212529;
+    background: white;
+  }
+
+  .p-drpre-time-slot:hover {
+    border-color: #16a2b8;
+    background: rgba(22, 162, 184, 0.05);
+  }
+
+  .p-drpre-time-slot.selected {
+    border-color: #16a2b8;
+    background: #16a2b8;
+    color: white;
+  }
+
+  .p-drpre-time-slot.unavailable {
+    opacity: 0.4;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+
+  .p-drpre-book-section {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .p-drpre-book-btn {
+    background: #16a2b8;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.5rem;
+  }
+
+  .p-drpre-book-btn:hover {
+    background: #138496;
+  }
+
+  .p-drpre-fee-card {
+    background: linear-gradient(135deg, #16a2b8 0%, #138496 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .p-drpre-fee-label {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+  }
+
+  .p-drpre-fee-amount {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .p-drpre-fee-note {
+    font-size: 0.85rem;
+    opacity: 0.8;
+  }
+
+  .p-drpre-book-button {
+    width: 100%;
+    padding: 1rem;
+    background: #16a2b8;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+  }
+
+  .p-drpre-book-button:hover {
+    background: #138496;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(22, 162, 184, 0.3);
+  }
+
+  .p-drpre-book-button:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .p-drpre-contact-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+
+  .p-drpre-contact-btn {
+    padding: 0.8rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    background: white;
+    color: #212529;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .p-drpre-contact-btn:hover {
+    border-color: #16a2b8;
+    color: #16a2b8;
+  }
+
+  .p-drpre-sticky-sidebar {
+    position: sticky;
+    top: 2rem;
+  }
+
+  @media (max-width: 992px) {
+    .p-drpre-profile-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .p-drpre-sticky-sidebar {
+      position: static;
+    }
+
+    .p-drpre-profile-top {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .p-drpre-doctor-meta {
+      justify-content: center;
+    }
+
+    .p-drpre-info-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .p-drpre-profile-wrapper {
+      padding: 1rem;
+    }
+
+    .p-drpre-profile-header,
+    .p-drpre-profile-section {
+      padding: 1.5rem;
+    }
+
+    .p-drpre-doctor-name {
+      font-size: 1.5rem;
+    }
+
+    .p-drpre-doctor-image {
+      width: 120px;
+      height: 120px;
+      font-size: 3rem;
+    }
+
+    .p-drpre-time-slots {
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+
+    .p-drpre-contact-buttons {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="p-drpre-profile-wrapper">
+  <!-- Back Button -->
+  <button class="p-drpre-back-button" onclick="history.back()">
+    <i class="fas fa-arrow-left"></i> Back to Search
+  </button>
+
+  <!-- ================= PROFILE HEADER ================= -->
+  <div class="p-drpre-profile-header">
+    <div class="p-drpre-profile-top">
+      <div class="p-drpre-doctor-image">
+        <i class="fas fa-user-md"></i>
+      </div>
+
+      <div class="p-drpre-doctor-main-info">
+        <div class="p-drpre-verified-badge">
+          <i class="fas fa-check-circle"></i> Verified Doctor
+        </div>
+
+        <h1 class="p-drpre-doctor-name">Dr. {{ doctor.user.name }}</h1>
+
+        <div class="p-drpre-doctor-specialty">{{ doctor.specialization }}</div>
+
+        <div class="p-drpre-doctor-meta">
+          <div class="p-drpre-meta-item">
+            <i class="fas fa-briefcase"></i>
+            <span>{{ doctor.experience }} Years Experience</span>
+          </div>
+          <div class="p-drpre-meta-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{ doctor.clinic_city }}, {{ doctor.clinic_country }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-drpre-doctor-tags">
+      {% for tag in (doctor.areas_of_expertise or '').split(',') %} {% if tag %}
+      <span class="p-drpre-tag">{{ tag.strip() }}</span>
+      {% endif %} {% endfor %}
+    </div>
+  </div>
+
+  <!-- ================= GRID ================= -->
+  <div class="p-drpre-profile-grid">
+    <!-- LEFT -->
+    <div>
+      <!-- ABOUT -->
+      <div class="p-drpre-profile-section">
+        <h2 class="p-drpre-section-title">
+          <i class="fas fa-user"></i> About Doctor
+        </h2>
+        <p class="p-drpre-about-text">
+          {{ doctor.about or "No description provided." }}
+        </p>
+
+        <div class="p-drpre-info-grid">
+          <div class="p-drpre-info-item">
+            <div class="p-drpre-info-label">Education</div>
+            <div class="p-drpre-info-value">{{ doctor.medical_school }}</div>
+          </div>
+          <div class="p-drpre-info-item">
+            <div class="p-drpre-info-label">Degree</div>
+            <div class="p-drpre-info-value">{{ doctor.medical_degree }}</div>
+          </div>
+          <div class="p-drpre-info-item">
+            <div class="p-drpre-info-label">Clinic</div>
+            <div class="p-drpre-info-value">{{ doctor.clinic_name }}</div>
+          </div>
+          <div class="p-drpre-info-item">
+            <div class="p-drpre-info-label">Experience</div>
+            <div class="p-drpre-info-value">{{ doctor.experience }} Years</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= AVAILABLE SLOTS ================= -->
+      <div class="p-drpre-profile-section">
+        <h2 class="p-drpre-section-title">
+          <i class="far fa-calendar-check"></i> Available Slots
+        </h2>
+
+        {% if slots_by_day %}
+        <div class="p-drpre-slot-selector">
+          <div class="p-drpre-date-tabs">
+            {% for day, data in slots_by_day.items() %}
+            <div
+              class="p-drpre-date-tab {% if loop.first %}active{% endif %}"
+              onclick="selectDay('{{ day }}')"
+              data-day="{{ day }}"
+            >
+              <div class="p-drpre-date-day">{{ day }}</div>
+              <div class="p-drpre-date-date">{{ data.date }}</div>
+            </div>
+            {% endfor %}
+          </div>
+
+          {% for day, data in slots_by_day.items() %}
+          <div
+            class="p-drpre-time-slots"
+            data-day="{{ day }}"
+            {%
+            if
+            not
+            loop.first
+            %}style="display:none"
+            {%
+            endif
+            %}
+          >
+            {% for slot in data.slots %} {% if slot.is_booked %}
+            <div class="p-drpre-time-slot unavailable">{{ slot.time }}</div>
+            {% else %}
+            <div
+              class="p-drpre-time-slot available"
+              onclick="selectTime('{{ data.date }}', '{{ slot.time }}')"
+            >
+              {{ slot.time }}
+            </div>
+            {% endif %} {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Book Slot Button -->
+        <div class="p-drpre-book-section" style="display: none">
+          <p>Selected: <span id="selected-slot"></span></p>
+          <p>Consultation Fees: ₹{{ doctor.fees }}</p>
+          <button class="p-drpre-book-btn" onclick="bookSlot({{ doctor.id }})">
+            Book Slot
+          </button>
+        </div>
+
+        {% else %}
+        <p class="text-muted">No slots available</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="p-drpre-sticky-sidebar">
+      <div class="p-drpre-profile-section">
+        <div class="p-drpre-fee-card">
+          <div class="p-drpre-fee-label">Consultation Fee</div>
+          <div class="p-drpre-fee-amount">₹{{ doctor.fees }}</div>
+          <div class="p-drpre-fee-note">Per consultation</div>
+        </div>
+      </div>
+
+      <div class="p-drpre-profile-section">
+        <h3 class="p-drpre-section-title">
+          <i class="fas fa-clinic-medical"></i> Clinic Information
+        </h3>
+
+        <div class="p-drpre-info-item">
+          <div class="p-drpre-info-label">Clinic Name</div>
+          <div class="p-drpre-info-value">{{ doctor.clinic_name }}</div>
+        </div>
+
+        <div class="p-drpre-info-item">
+          <div class="p-drpre-info-label">Address</div>
+          <div class="p-drpre-info-value">
+            {{ doctor.clinic_address }}, {{ doctor.clinic_city }}, {{
+            doctor.clinic_state }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let selectedDate = null;
+  let selectedTime = null;
+
+  function selectDay(day) {
+    document
+      .querySelectorAll(".p-drpre-date-tab")
+      .forEach((t) => t.classList.remove("active"));
+    document
+      .querySelectorAll(".p-drpre-time-slots")
+      .forEach((s) => (s.style.display = "none"));
+
+    document.querySelector(`[data-day="${day}"]`).classList.add("active");
+    document.querySelector(
+      `.p-drpre-time-slots[data-day="${day}"]`
+    ).style.display = "grid";
+
+    // Reset time selection
+    selectedTime = null;
+    document
+      .querySelectorAll(".p-drpre-time-slot")
+      .forEach((slot) => slot.classList.remove("selected"));
+    document.querySelector(".p-drpre-book-section").style.display = "none";
+  }
+
+  function selectTime(date, time) {
+    selectedDate = date;
+    selectedTime = time;
+
+    document
+      .querySelectorAll(".p-drpre-time-slot")
+      .forEach((slot) => slot.classList.remove("selected"));
+    event.target.classList.add("selected");
+
+    document.getElementById("selected-slot").textContent = `${date} at ${time}`;
+    document.querySelector(".p-drpre-book-section").style.display = "block";
+  }
+
+  function bookSlot(doctorId) {
+    if (!selectedDate || !selectedTime) return;
+
+    // Create form and submit
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = `/patient/book/${doctorId}`;
+
+    const dateInput = document.createElement("input");
+    dateInput.type = "hidden";
+    dateInput.name = "date";
+    dateInput.value = selectedDate;
+
+    const timeInput = document.createElement("input");
+    timeInput.type = "hidden";
+    timeInput.name = "time";
+    timeInput.value = selectedTime;
+
+    form.appendChild(dateInput);
+    form.appendChild(timeInput);
+    document.body.appendChild(form);
+    form.submit();
+  }
+</script>
+
+{% endblock %}

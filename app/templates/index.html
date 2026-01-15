@@ -1,0 +1,166 @@
+{% extends "base.html" %} 
+{% block title %}E-HealthCare{% endblock %} 
+{% block content %}
+
+<!-- Hero Section -->
+<section class="ehome-hero">
+  <div class="container">
+    <div class="ehome-hero-content">
+      <div class="ehome-hero-text">
+        <div class="ehome-tagline">
+          <i class="fas fa-heartbeat"></i>
+          <span>Healthcare reimagined for you</span>
+        </div>
+
+        <h1 class="ehome-hero-title">
+          Your Health,<br />
+          <span class="ehome-hero-title-accent">One Click Away.</span>
+        </h1>
+
+        <p class="ehome-hero-description">
+          Experience seamless healthcare with online consultations, easy
+          appointment booking, and digital health records.
+        </p>
+
+        <div class="ehome-hero-buttons">
+          <a
+            href="{% if current_user.is_authenticated %}{% if current_user.role == 'patient' %}{{ url_for('patient.find_doctor') }}{% else %}{{ url_for('doctor.appointments') }}{% endif %}{% else %}{{ url_for('auth.login_signup') }}{% endif %}"
+            class="ehome-btn-primary"
+            >Book Appointment</a
+          >
+          <a
+            href="{{ url_for('patient.find_doctor') }}"
+            class="ehome-btn-secondary"
+            >Find a Doctor</a
+          >
+        </div>
+
+        <div class="ehome-hero-features">
+          <div class="ehome-feature-badge">
+            <i class="fas fa-check-circle"></i>
+            <span>Verified Specialists</span>
+          </div>
+          <div class="ehome-feature-badge">
+            <i class="fas fa-clock"></i>
+            <span>24/7 Support</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ehome-hero-image">
+        <img
+          src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&h=600&fit=crop"
+          class="ehome-hero-img"
+        />
+
+        <div class="ehome-doctor-card">
+          <div class="ehome-doctor-avatar">
+            <img
+              src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop"
+              style="
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+              "
+            />
+          </div>
+
+          <div class="ehome-doctor-info">
+            <h4>Dr. Sarah</h4>
+            <div class="ehome-doctor-status">Online Now</div>
+            <div class="ehome-doctor-message">
+              "Ready for your consultation?"
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="ehome-features">
+  <div class="container">
+    <div class="ehome-section-header">
+      <h2 class="ehome-section-title">Complete Healthcare Ecosystem</h2>
+      <p class="ehome-section-subtitle">
+        Everything you need to manage your health in one secure platform.
+      </p>
+    </div>
+
+    <div class="ehome-features-grid">
+      <div class="ehome-feature-card">
+        <div class="ehome-feature-icon ehome-icon-teal">
+          <i class="fas fa-video"></i>
+        </div>
+        <h3>Online Consultation</h3>
+        <p>Connect with top doctors via secure video calls from anywhere.</p>
+      </div>
+      <div class="ehome-feature-card">
+        <div class="ehome-feature-icon ehome-icon-blue">
+          <i class="far fa-calendar-check"></i>
+        </div>
+        <h3>Easy Appointments</h3>
+        <p>Book, reschedule, or cancel appointments with just a few clicks.</p>
+      </div>
+      <div class="ehome-feature-card">
+        <div class="ehome-feature-icon ehome-icon-orange">
+          <i class="fas fa-file-prescription"></i>
+        </div>
+        <h3>Digital Prescriptions</h3>
+        <p>Get prescriptions instantly after your consultation.</p>
+      </div>
+      <div class="ehome-feature-card">
+        <div class="ehome-feature-icon ehome-icon-purple">
+          <i class="fas fa-user-md"></i>
+        </div>
+        <h3>Patient History</h3>
+        <p>Secure access to your complete medical history and records.</p>
+      </div>
+      <div class="ehome-feature-card">
+        <div class="ehome-feature-icon ehome-icon-green">
+          <i class="fas fa-heartbeat"></i>
+        </div>
+        <h3>Health Check-ups</h3>
+        <p>Book comprehensive health check-up packages easily.</p>
+      </div>
+      <div class="ehome-feature-card">
+        <div class="ehome-feature-icon ehome-icon-orange">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h3>Secure Data</h3>
+        <p>Your health data is encrypted and protected at all times.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="ehome-cta">
+  <div class="container">
+    <div class="ehome-cta-card">
+      <div class="ehome-cta-content">
+        <h2 class="ehome-cta-title">Ready to prioritize your health?</h2>
+        <p class="ehome-cta-description">
+          Join thousands of users who trust E-Healthcare for their medical
+          needs.
+        </p>
+        <a
+          href="{% if current_user.is_authenticated %}{% if current_user.role == 'patient' %}{{ url_for('patient.dashboard') }}{% else %}{{ url_for('doctor.dashboard') }}{% endif %}{% else %}{{ url_for('auth.login_signup') }}{% endif %}"
+          class="ehome-cta-btn"
+          >Get Started Today</a
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function toggleMobileMenu() {
+    const mobileNav = document.getElementById("mobileNav");
+    mobileNav.classList.toggle("ehome-active");
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,742 @@
+{% extends "base.html" %} 
+{% block title %}Patient Profile{% endblock %} 
+{% block content %}
+
+<style>
+  /* Main Layout */
+  .p-profile-container {
+    max-width: 1400px;
+    margin: 30px auto;
+    padding: 0 30px;
+    display: flex;
+    gap: 25px;
+  }
+
+  /* Sidebar */
+  .p-profile-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+  }
+
+  .p-profile-profile-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    margin-bottom: 20px;
+  }
+
+  .p-profile-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .p-profile-profile-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #16a2b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
+
+  .p-profile-profile-info {
+    flex: 1;
+  }
+
+  .p-profile-profile-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 3px;
+  }
+
+  .p-profile-profile-id {
+    font-size: 0.85rem;
+    color: #6c757d;
+  }
+
+  .p-profile-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .p-profile-menu-item {
+    margin-bottom: 8px;
+  }
+
+  .p-profile-menu-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #495057;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .p-profile-menu-link:hover {
+    background: #f5f6fa;
+    color: #1a1a1a;
+  }
+
+  .p-profile-menu-link.p-profile-active {
+    background: #e3f2fd;
+    color: #1976d2;
+  }
+
+  .p-profile-menu-icon {
+    font-size: 1.1rem;
+    width: 20px;
+  }
+
+  .p-profile-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    background: white;
+    border: none;
+    color: #dc3545;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+  }
+
+  .p-profile-logout-btn:hover {
+    background: #fff5f5;
+  }
+
+  /* Main Content */
+  .p-profile-main-content {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    padding: 35px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .p-profile-content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .p-profile-page-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  .p-profile-edit-btn {
+    padding: 10px 25px;
+    background: #f5f5f5;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .p-profile-edit-btn:hover {
+    background: #e0e0e0;
+  }
+
+  .p-profile-last-updated {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 30px;
+  }
+
+  .p-profile-section {
+    margin-bottom: 40px;
+  }
+
+  .p-profile-section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+
+  .p-profile-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .p-profile-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .p-profile-info-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-weight: 500;
+  }
+
+  .p-profile-info-value {
+    font-size: 1rem;
+    color: #1a1a1a;
+    font-weight: 600;
+  }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .p-profile-container {
+      flex-direction: column;
+    }
+
+    .p-profile-sidebar {
+      width: 100%;
+      position: fixed;
+      left: -100%;
+      top: 0;
+      height: 100vh;
+      z-index: 2000;
+      background: white;
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .p-profile-sidebar.p-profile-sidebar-open {
+      left: 0;
+    }
+
+    .p-profile-active {
+      display: block;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .p-profile-container {
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    .p-profile-main-content {
+      padding: 25px 20px;
+    }
+
+    .p-profile-page-title {
+      font-size: 1.5rem;
+    }
+
+    .p-profile-info-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .p-profile-platform-name {
+      font-size: 0.95rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .p-profile-main-content {
+      padding: 20px 15px;
+    }
+
+    .p-profile-content-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+
+    .p-profile-edit-btn {
+      width: 100%;
+    }
+  }
+
+  .p-profile-input,
+  .p-profile-textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+
+  .p-profile-input:focus,
+  .p-profile-textarea:focus {
+    outline: none;
+    border-color: #16a2b8;
+  }
+
+  .p-profile-save-btn {
+    padding: 10px 25px;
+    background: #16a2b8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .p-profile-save-btn:hover {
+    background: #16a2b8;
+  }
+</style>
+
+<form method="POST" enctype="multipart/form-data" id="profileForm">
+  <div class="p-profile-container">
+    <!-- SIDEBAR -->
+    <aside class="p-profile-sidebar">
+      <div class="p-profile-profile-card">
+        <div class="p-profile-profile-header">
+          <div class="p-profile-profile-avatar">
+            {% if current_user.patient_profile.profile_pic %}
+            <img
+              src="{{ url_for('static', filename='uploads/' + current_user.patient_profile.profile_pic) }}"
+              alt="Profile"
+              style="
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+              "
+            />
+            {% else %} {{ current_user.name[:2].upper() }} {% endif %}
+          </div>
+          <div class="p-profile-profile-info">
+            <div class="p-profile-profile-name">{{ current_user.name }}</div>
+            <div class="p-profile-profile-id">
+              ID: {{ current_user.patient_profile.id }}
+            </div>
+          </div>
+        </div>
+
+        <ul class="p-profile-menu">
+          <li class="p-profile-menu-item">
+            <a
+              href="#"
+              class="p-profile-menu-link p-profile-active"
+              data-section="personal"
+            >
+              <i class="fas fa-user p-profile-menu-icon"></i>
+              <span>Personal Information</span>
+            </a>
+          </li>
+          <li class="p-profile-menu-item">
+            <a href="#" class="p-profile-menu-link" data-section="medical">
+              <i class="fas fa-briefcase-medical p-profile-menu-icon"></i>
+              <span>Medical History</span>
+            </a>
+          </li>
+          <li class="p-profile-menu-item">
+            <a href="#" class="p-profile-menu-link" data-section="contact">
+              <i class="fas fa-address-book p-profile-menu-icon"></i>
+              <span>Contact</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <a
+        href="{{ url_for('auth.logout') }}"
+        class="p-profile-logout-btn"
+        style="text-decoration: none"
+      >
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Log Out</span>
+      </a>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="p-profile-main-content">
+      <!-- PERSONAL -->
+      <section class="p-profile-content-section" id="personalSection">
+        <div class="p-profile-content-header">
+          <h1 class="p-profile-page-title">Personal Information</h1>
+          <button type="button" class="p-profile-edit-btn">Edit</button>
+        </div>
+
+        <p class="p-profile-last-updated">
+          Last updated: {{ current_user.patient_profile.updated_at.strftime('%B
+          %d, %Y') if current_user.patient_profile.updated_at else 'Never' }}
+        </p>
+
+        <div class="p-profile-section">
+          <div class="p-profile-info-grid editable">
+            <div class="p-profile-info-item">
+              <span class="p-profile-info-label">Patient Profile</span>
+              <span class="p-profile-info-value">
+                {% if current_user.patient_profile.profile_pic %}
+                <img
+                  src="{{ url_for('static', filename='uploads/' + current_user.patient_profile.profile_pic) }}"
+                  alt="Profile Picture"
+                  style="
+                    width: 100px;
+                    height: 100px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                  "
+                />
+                {% else %} No profile picture uploaded {% endif %}
+              </span>
+            </div>
+            <div class="p-profile-info-item">
+              <span class="p-profile-info-label">Full Name</span>
+              <span class="p-profile-info-value">{{ current_user.name }}</span>
+            </div>
+            <div class="p-profile-info-item">
+              <span class="p-profile-info-label">Date of Birth</span>
+              <span class="p-profile-info-value"
+                >{{ current_user.patient_profile.date_of_birth or 'Not provided' }}</span
+              >
+            </div>
+            <div class="p-profile-info-item">
+              <span class="p-profile-info-label">Gender</span>
+              <span class="p-profile-info-value"
+                >{{ current_user.patient_profile.gender or 'Not provided' }}</span
+              >
+            </div>
+            <div class="p-profile-info-item">
+              <span class="p-profile-info-label">Blood Type</span>
+              <span class="p-profile-info-value"
+                >{{ current_user.patient_profile.blood_group or 'Not provided' }}</span
+              >
+            </div>
+            <div class="p-profile-info-item">
+              <span class="p-profile-info-label">Contact Number</span>
+              <span class="p-profile-info-value"
+                >{{ current_user.patient_profile.phone or 'Not provided' }}</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="p-profile-section">
+          <h2 class="p-profile-section-title">Allergies and Conditions</h2>
+          <div class="p-profile-info-grid editable">
+            <div class="p-profile-info-item">
+              <span class="p-profile-info-label">Allergies</span>
+              <span class="p-profile-info-value"
+                >{{ current_user.patient_profile.allergies or 'Not provided' }}</span
+              >
+            </div>
+            <div class="p-profile-info-item">
+              <span class="p-profile-info-label">Chronic Conditions</span>
+              <span class="p-profile-info-value"
+                >{{ current_user.patient_profile.conditions or 'Not provided' }}</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="p-profile-section">
+          <h2 class="p-profile-section-title">Current Medications</h2>
+          <div class="p-profile-info-item editable">
+            <span class="p-profile-info-label">Medication List</span>
+            <span class="p-profile-info-value"
+              >{{ current_user.patient_profile.medications or 'Not provided' }}</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- MEDICAL -->
+      <section
+        class="p-profile-content-section"
+        id="medicalSection"
+        style="display: none"
+      >
+        <div class="p-profile-content-header">
+          <h1 class="p-profile-page-title">Medical History</h1>
+          <button type="button" class="p-profile-edit-btn">Edit</button>
+        </div>
+
+        <p class="p-profile-last-updated">
+          Last updated: {{ current_user.patient_profile.updated_at.strftime('%B %d, %Y') if current_user.patient_profile.updated_at else 'Never' }}
+        </p>
+
+        <div class="p-profile-section">
+          <h2 class="p-profile-section-title">Previous Conditions</h2>
+          <div class="p-profile-info-item editable">
+            <span class="p-profile-info-label">Conditions</span>
+            <span class="p-profile-info-value"
+              >{{ current_user.patient_profile.previous_conditions or 'Not provided' }}</span
+            >
+          </div>
+        </div>
+
+        <div class="p-profile-section">
+          <h2 class="p-profile-section-title">Surgeries</h2>
+          <div class="p-profile-info-item editable">
+            <span class="p-profile-info-label">Surgeries</span>
+            <span class="p-profile-info-value"
+              >{{ current_user.patient_profile.surgeries or 'Not provided' }}</span
+            >
+          </div>
+        </div>
+
+        <div class="p-profile-section">
+          <h2 class="p-profile-section-title">Family Medical History</h2>
+          <div class="p-profile-info-grid editable">
+            <div class="p-profile-info-item">
+              <span class="p-profile-info-label">Father's Medical History</span>
+              <span class="p-profile-info-value"
+                >{{ current_user.patient_profile.father_history or 'Not provided' }}</span
+              >
+            </div>
+            <div class="p-profile-info-item">
+              <span class="p-profile-info-label">Mother's Medical History</span>
+              <span class="p-profile-info-value"
+                >{{ current_user.patient_profile.mother_history or 'Not provided' }}</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="p-profile-section">
+          <h2 class="p-profile-section-title">Immunizations</h2>
+          <div class="p-profile-info-item editable">
+            <span class="p-profile-info-label">Immunizations</span>
+            <span class="p-profile-info-value"
+              >{{ current_user.patient_profile.immunizations or 'Not provided' }}</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section
+        class="p-profile-content-section"
+        id="contactSection"
+        style="display: none"
+      >
+        <div class="p-profile-content-header">
+          <h1 class="p-profile-page-title">Contact</h1>
+          <button type="button" class="p-profile-edit-btn">Edit</button>
+        </div>
+
+        <p class="p-profile-last-updated">
+          Last updated: {{ current_user.patient_profile.updated_at.strftime('%B %d, %Y') if current_user.patient_profile.updated_at else 'Never' }}
+        </p>
+
+        <div class="p-profile-section">
+          <h2 class="p-profile-section-title">Contact Information</h2>
+          <div class="p-profile-info-grid editable">
+            <div class="p-profile-info-item">
+              <span class="p-profile-info-label">Primary Phone</span>
+              <span class="p-profile-info-value"
+                >{{ current_user.patient_profile.phone or 'Not provided' }}</span
+              >
+            </div>
+            <div class="p-profile-info-item">
+              <span class="p-profile-info-label">Secondary Phone</span>
+              <span class="p-profile-info-value"
+                >{{ current_user.patient_profile.emergency_contact_phone or 'Not provided' }}</span
+              >
+            </div>
+            <div class="p-profile-info-item">
+              <span class="p-profile-info-label">Email Address</span>
+              <span class="p-profile-info-value">{{ current_user.email }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <button
+        type="submit"
+        id="saveBtn"
+        style="display: none"
+        class="p-profile-save-btn"
+      >
+        Save Changes
+      </button>
+    </main>
+  </div>
+</form>
+
+<script>
+  document.querySelectorAll(".p-profile-edit-btn").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const section = this.closest(".p-profile-content-section");
+      section.classList.add("editing");
+      section.querySelectorAll(".p-profile-info-item").forEach((item) => {
+        const label = item.querySelector(".p-profile-info-label").textContent;
+        const valueSpan = item.querySelector(".p-profile-info-value");
+        const currentValue = valueSpan.textContent;
+
+        let input;
+        if (label === "Date of Birth") {
+          input = document.createElement("input");
+          input.type = "date";
+          input.className = "p-profile-input";
+          input.value = currentValue === "Not provided" ? "" : currentValue;
+        } else if (label === "Gender") {
+          input = document.createElement("select");
+          input.className = "p-profile-input";
+          ["Male", "Female", "Other"].forEach((option) => {
+            const opt = document.createElement("option");
+            opt.value = option;
+            opt.textContent = option;
+            if (currentValue === option) opt.selected = true;
+            input.appendChild(opt);
+          });
+        } else if (label === "Blood Type") {
+          input = document.createElement("select");
+          input.className = "p-profile-input";
+          ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].forEach(
+            (option) => {
+              const opt = document.createElement("option");
+              opt.value = option;
+              opt.textContent = option;
+              if (currentValue === option) opt.selected = true;
+              input.appendChild(opt);
+            }
+          );
+        } else if (label === "Patient Profile") {
+          input = document.createElement("input");
+          input.type = "file";
+          input.className = "p-profile-input";
+          input.accept = "image/*";
+          input.name = "patient_profile";
+          // Add preview for selected image
+          input.addEventListener("change", function (e) {
+            const file = e.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = function (e) {
+                let preview = item.querySelector(".preview-img");
+                if (!preview) {
+                  preview = document.createElement("img");
+                  preview.className = "preview-img";
+                  preview.style.width = "100px";
+                  preview.style.height = "100px";
+                  preview.style.objectFit = "cover";
+                  preview.style.borderRadius = "50%";
+                  preview.style.marginTop = "10px";
+                  item.appendChild(preview);
+                }
+                preview.src = e.target.result;
+              };
+              reader.readAsDataURL(file);
+            }
+          });
+        } else if (
+          label === "Medication List" ||
+          label === "Conditions" ||
+          label === "Surgeries" ||
+          label === "Family History" ||
+          label === "Immunizations"
+        ) {
+          input = document.createElement("textarea");
+          input.className = "p-profile-textarea";
+          input.value =
+            currentValue === "None" || currentValue === "Not provided"
+              ? ""
+              : currentValue;
+        } else {
+          input = document.createElement("input");
+          input.type = "text";
+          input.className = "p-profile-input";
+          input.value =
+            currentValue === "Not provided" || currentValue === "None"
+              ? ""
+              : currentValue;
+        }
+
+        valueSpan.style.display = "none";
+        item.appendChild(input);
+      });
+      this.style.display = "none";
+      document.getElementById("saveBtn").style.display = "inline-block";
+    });
+  });
+
+  document.getElementById("saveBtn").addEventListener("click", function () {
+    const form = document.getElementById("profileForm");
+    const allSections = document.querySelectorAll(".p-profile-content-section");
+
+    allSections.forEach((section) => {
+      section.querySelectorAll(".p-profile-info-item").forEach((item) => {
+        const label = item.querySelector(".p-profile-info-label").textContent;
+        const valueSpan = item.querySelector(".p-profile-info-value");
+        const input =
+          item.querySelector(".p-profile-input") ||
+          item.querySelector(".p-profile-textarea");
+        let value;
+
+        if (input) {
+          // If there's an input (editing), use its value
+          if (input.type === "file") {
+            // File input, leave it for form submission, don't set valueSpan or create hidden
+            const preview = item.querySelector(".preview-img");
+            if (preview) preview.remove();
+            return; // Skip the rest
+          }
+          value = input.value.trim() || "";
+          valueSpan.textContent = value || "Not provided";
+          valueSpan.style.display = "block";
+          input.remove();
+        } else {
+          // If no input (not editing), use the current span value
+          value =
+            valueSpan.textContent === "Not provided" ||
+            valueSpan.textContent === "None"
+              ? ""
+              : valueSpan.textContent;
+        }
+
+        // Create hidden input for form submission
+        const hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = label.toLowerCase().replace(/[^a-z0-9]/g, "_");
+        hiddenInput.value = value;
+        form.appendChild(hiddenInput);
+      });
+      section.classList.remove("editing");
+    });
+
+    this.style.display = "none";
+    document
+      .querySelectorAll(".p-profile-edit-btn")
+      .forEach((btn) => (btn.style.display = "inline-block"));
+    form.submit();
+  });
+
+  // Section navigation
+  const menuLinks = document.querySelectorAll(".p-profile-menu-link");
+  const contentSections = document.querySelectorAll(
+    ".p-profile-content-section"
+  );
+
+  menuLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      const targetSection = this.getAttribute("data-section");
+
+      menuLinks.forEach((l) => l.classList.remove("p-profile-active"));
+      this.classList.add("p-profile-active");
+
+      contentSections.forEach((section) => {
+        section.style.display = "none";
+      });
+
+      const sectionId = targetSection + "Section";
+      document.getElementById(sectionId).style.display = "block";
+    });
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Bootstrap & FontAwesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Your CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+
+    <body>
+      <!-- Navbar -->
+      <nav class="ehome-navbar">
+        <div class="container">
+          <div class="d-flex justify-content-between align-items-center">
+            <a href="{{ url_for('main.home') }}" class="ehome-brand">
+              <div class="ehome-logo">
+                <i class="fas fa-stethoscope"></i>
+              </div>
+              <span>E-Healthcare</span>
+            </a>
+
+            <ul class="ehome-nav-menu">
+              {# Anonymous / not logged in #} {% if not
+              current_user.is_authenticated %}
+              <li>
+                <a href="{{ url_for('main.home') }}" class="ehome-nav-link"
+                  ><i class="fas fa-home"></i> Home</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('main.about') }}" class="ehome-nav-link"
+                  ><i class="far fa-user"></i> About</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('patient.find_doctor') }}"
+                  class="ehome-nav-link"
+                  ><i class="fas fa-search"></i> Find a Doctor</a
+                >
+              </li>
+              {% else %} {# Authenticated users: branch by role #} {% if
+              current_user.role == 'patient' %}
+              <li>
+                <a
+                  href="{{ url_for('patient.dashboard') }}"
+                  class="ehome-nav-link"
+                  ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('patient.find_doctor') }}"
+                  class="ehome-nav-link"
+                  ><i class="fas fa-search"></i> Find a Doctor</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('patient.my_appointments') }}"
+                  class="ehome-nav-link"
+                  ><i class="fas fa-calendar"></i> My Appointments</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('patient.consultations') }}"
+                  class="ehome-nav-link"
+                  ><i class="fas fa-comment"></i> Consultation</a
+                >
+              </li>
+              {% elif current_user.role == 'doctor' %}
+              <li>
+                <a
+                  href="{{ url_for('doctor.dashboard') }}"
+                  class="ehome-nav-link"
+                  ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('doctor.appointments') }}"
+                  class="ehome-nav-link"
+                  ><i class="fas fa-calendar"></i> Appointment</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('doctor.availability') }}"
+                  class="ehome-nav-link"
+                  ><i class="fas fa-clock"></i> Availability</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('doctor.consultations') }}"
+                  class="ehome-nav-link"
+                  ><i class="fas fa-comment"></i> Consultation</a
+                >
+              </li>
+              {% else %}
+              <li>
+                <a href="{{ url_for('main.home') }}" class="ehome-nav-link"
+                  >Home</a
+                >
+              </li>
+              {% endif %} {% endif %}
+            </ul>
+
+            <div class="d-flex align-items-center gap-3">
+              {% if not current_user.is_authenticated %}
+              <a
+                href="{{ url_for('auth.login_signup') }}"
+                class="ehome-btn-primary"
+                >Get Started</a
+              >
+              {% else %}
+              <a
+                href="{% if current_user.role == 'patient' %}{{ url_for('patient.profile') }}{% else %}{{ url_for('doctor.profile') }}{% endif %}"
+                class="profile-link"
+              >
+                <div class="profile-avatar">
+                  {% if current_user.role == 'patient' and
+                  current_user.patient_profile.profile_pic %}
+                  <img
+                    src="{{ url_for('static', filename='uploads/' + current_user.patient_profile.profile_pic) }}"
+                    alt="Profile"
+                    style="
+                      width: 100%;
+                      height: 100%;
+                      object-fit: cover;
+                      border-radius: 50%;
+                    "
+                  />
+                  {% elif current_user.role == 'doctor' and
+                  current_user.doctor_profile.profile_pic %}
+                  <img
+                    src="{{ url_for('static', filename='uploads/' + current_user.doctor_profile.profile_pic) }}"
+                    alt="Profile"
+                    style="
+                      width: 100%;
+                      height: 100%;
+                      object-fit: cover;
+                      border-radius: 50%;
+                    "
+                  />
+                  {% else %} {{ current_user.name[:2].upper() }} {% endif %}
+                </div>
+              </a>
+              <a href="{{ url_for('auth.logout') }}" class="ehome-nav-link"
+                ><i class="fas fa-sign-out-alt"></i> Logout</a
+              >
+              {% endif %}
+              <button
+                class="ehome-mobile-menu-btn"
+                onclick="toggleMobileMenu()"
+              >
+                <i class="fas fa-bars"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Mobile Menu -->
+      <div class="ehome-mobile-nav" id="mobileNav">
+        <div class="ehome-mobile-header">
+          <a href="{{ url_for('main.home') }}" class="ehome-brand">
+            <div class="ehome-logo">
+              <i class="fas fa-stethoscope"></i>
+            </div>
+            <span>E-Healthcare</span>
+          </a>
+          <button class="ehome-mobile-close" onclick="toggleMobileMenu()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <ul class="ehome-mobile-menu">
+          {% if not current_user.is_authenticated %}
+          <li>
+            <a href="{{ url_for('main.home') }}" class="ehome-nav-link"
+              ><i class="fas fa-home"></i> Home</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('main.about') }}" class="ehome-nav-link"
+              ><i class="far fa-user"></i> About</a
+            >
+          </li>
+          <li>
+            <a
+              href="{{ url_for('patient.find_doctor') }}"
+              class="ehome-nav-link"
+              ><i class="fas fa-search"></i> Find a Doctor</a
+            >
+          </li>
+          <li>
+            <a
+              href="{{ url_for('auth.login_signup') }}"
+              class="ehome-btn-primary"
+              style="display: inline-block; margin-top: 1rem"
+              >Get Started</a
+            >
+          </li>
+          {% else %} {% if current_user.role == 'patient' %}
+          <li>
+            <a href="{{ url_for('patient.dashboard') }}" class="ehome-nav-link"
+              ><i class="fas fa-user"></i> Dashboard</a
+            >
+          </li>
+          <li>
+            <a
+              href="{{ url_for('patient.find_doctor') }}"
+              class="ehome-nav-link"
+              ><i class="fas fa-search"></i> Find a Doctor</a
+            >
+          </li>
+          <li>
+            <a
+              href="{{ url_for('patient.my_appointments') }}"
+              class="ehome-nav-link"
+              ><i class="fas fa-calendar"></i> My Appointments</a
+            >
+          </li>
+          <li>
+            <a
+              href="{{ url_for('patient.consultations') }}"
+              class="ehome-nav-link"
+              ><i class="fas fa-comment"></i> Consultation</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('auth.logout') }}" class="ehome-nav-link"
+              ><i class="fas fa-sign-out-alt"></i> Logout</a
+            >
+          </li>
+          {% elif current_user.role == 'doctor' %}
+          <li>
+            <a href="{{ url_for('doctor.dashboard') }}" class="ehome-nav-link"
+              ><i class="fas fa-user"></i> Dashboard</a
+            >
+          </li>
+          <li>
+            <a
+              href="{{ url_for('doctor.appointments') }}"
+              class="ehome-nav-link"
+              ><i class="fas fa-calendar"></i> Appointment</a
+            >
+          </li>
+          <li>
+            <a
+              href="{{ url_for('doctor.availability') }}"
+              class="ehome-nav-link"
+              ><i class="fas fa-clock"></i> Availability</a
+            >
+          </li>
+          <li>
+            <a
+              href="{{ url_for('doctor.consultations') }}"
+              class="ehome-nav-link"
+              ><i class="fas fa-comment"></i> Consultation</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('auth.logout') }}" class="ehome-nav-link"
+              ><i class="fas fa-sign-out-alt"></i> Logout</a
+            >
+          </li>
+          {% else %}
+          <li>
+            <a href="{{ url_for('main.home') }}" class="ehome-nav-link">Home</a>
+          </li>
+          {% endif %} {% endif %}
+        </ul>
+      </div>
+
+      {% block content %} {% endblock %}
+
+      <!-- Footer -->
+      <footer class="ehc-footer">
+        <p>© 2026 E-Healthcare. All Rights Reserved.</p>
+      </footer>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+      <script>
+        function toggleMobileMenu() {
+          const mobileNav = document.getElementById("mobileNav");
+          mobileNav.classList.toggle("ehome-active");
+        }
+
+        // Close mobile menu when clicking on a link
+        document
+          .querySelectorAll(".ehome-mobile-nav .ehome-nav-link")
+          .forEach((link) => {
+            link.addEventListener("click", toggleMobileMenu);
+          });
+      </script>
+
+      <script src="{{ url_for('static', filename='script.js') }}"></script>
+    </body>
+</html>

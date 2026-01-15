@@ -1,0 +1,898 @@
+{% extends "base.html" %}
+{% block title %}Doctor Consultation{% endblock %}
+{% block content %}
+
+    <style>
+      /* Wrapper */
+      .medchat-wrapper {
+        display: flex;
+        height: 100vh;
+      }
+
+      /* Sidebar Styles */
+      .medchat-sidebar {
+        width: 320px;
+        background: white;
+        border-right: 1px solid #e0e0e0;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      .medchat-doctor-profile {
+        padding: 20px;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .medchat-doctor-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.2rem;
+      }
+
+      .medchat-doctor-details {
+        flex: 1;
+      }
+
+      .medchat-doctor-name {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 2px;
+      }
+
+      .medchat-doctor-title {
+        font-size: 0.875rem;
+        color: #6c757d;
+      }
+
+      .medchat-search-box {
+        padding: 15px 20px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .medchat-search-input {
+        width: 100%;
+        padding: 10px 15px 10px 40px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+      }
+
+      .medchat-search-input:focus {
+        outline: none;
+        border-color: #16a2b8;
+        background: white;
+      }
+
+      .medchat-search-wrapper {
+        position: relative;
+      }
+
+      .medchat-search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+      }
+
+      .medchat-patient-list {
+        flex: 1;
+        overflow-y: auto;
+      }
+
+      .medchat-patient-item {
+        padding: 15px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+
+      .medchat-patient-item:hover {
+        background: #f8f9fa;
+      }
+
+      .medchat-patient-item.medchat-active {
+        background: #e3f2fd;
+      }
+
+      .medchat-patient-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        position: relative;
+        flex-shrink: 0;
+      }
+
+      .medchat-online-indicator {
+        width: 10px;
+        height: 10px;
+        background: #4caf50;
+        border: 2px solid white;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
+
+      .medchat-patient-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .medchat-patient-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 3px;
+      }
+
+      .medchat-patient-name {
+        font-weight: 600;
+        color: #000;
+        font-size: 0.95rem;
+      }
+
+      .medchat-patient-time {
+        font-size: 0.75rem;
+        color: #6c757d;
+      }
+
+      .medchat-patient-preview {
+        font-size: 0.85rem;
+        color: #6c757d;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Chat Area Styles */
+      .medchat-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: #fafafa;
+      }
+
+      .medchat-chat-header {
+        padding: 20px 30px;
+        background: white;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .medchat-current-patient {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .medchat-current-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+      }
+
+      .medchat-current-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .medchat-current-name {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #000;
+      }
+
+      .medchat-status {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.85rem;
+        color: #4caf50;
+      }
+
+      .medchat-status-dot {
+        width: 8px;
+        height: 8px;
+        background: #4caf50;
+        border-radius: 50%;
+      }
+
+      .medchat-header-actions {
+        display: flex;
+        gap: 15px;
+      }
+
+      .medchat-action-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: #6c757d;
+      }
+
+      .medchat-action-icon:hover {
+        background: #e0e0e0;
+        color: #495057;
+      }
+
+      .medchat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .medchat-message {
+        display: flex;
+        gap: 12px;
+        max-width: 70%;
+      }
+
+      .medchat-message.medchat-sent {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+      }
+
+      .medchat-message-avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+      }
+
+      .medchat-message-content {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .medchat-message-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .medchat-message-sender {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #000;
+      }
+
+      .medchat-message-time {
+        font-size: 0.75rem;
+        color: #6c757d;
+      }
+
+      .medchat-message-bubble {
+        padding: 12px 16px;
+        border-radius: 12px;
+        background: white;
+        color: #333;
+        line-height: 1.5;
+        font-size: 0.95rem;
+      }
+
+      .medchat-message.medchat-sent .medchat-message-bubble {
+        background: #16a2b8;
+        color: white;
+      }
+
+      .medchat-input-area {
+        padding: 20px 30px;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .medchat-input-wrapper {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .medchat-input-field {
+        flex: 1;
+        padding: 12px 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+      }
+
+      .medchat-input-field:focus {
+        outline: none;
+        border-color: #16a2b8;
+        background: white;
+      }
+
+      .medchat-attach-btn {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: transparent;
+        color: #6c757d;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
+      }
+
+      .medchat-attach-btn:hover {
+        color: #495057;
+      }
+
+      .medchat-send-btn {
+        padding: 10px 25px;
+        background: #16a2b8;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .medchat-send-btn:hover {
+        background: #16a2b8;
+        transform: translateY(-1px);
+      }
+
+      .medchat-encryption {
+        text-align: center;
+        padding: 10px;
+        font-size: 0.8rem;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+      }
+
+      .medchat-lock-icon {
+        font-size: 0.75rem;
+      }
+
+      /* Right Sidebar Styles */
+      .medchat-right-sidebar {
+        width: 300px;
+        background: white;
+        border-left: 1px solid #e0e0e0;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: 20px;
+      }
+
+      .medchat-patient-profile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .medchat-patient-profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+      }
+
+      .medchat-patient-profile-name {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 5px;
+      }
+
+      .medchat-patient-profile-details {
+        font-size: 0.9rem;
+        color: #6c757d;
+      }
+
+      .medchat-patient-info-section {
+        margin-bottom: 20px;
+      }
+
+      .medchat-info-title {
+        font-weight: 600;
+        color: #000;
+        margin-bottom: 10px;
+        font-size: 1rem;
+      }
+
+      .medchat-info-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .medchat-info-label {
+        font-weight: 500;
+        color: #495057;
+        font-size: 0.9rem;
+      }
+
+      .medchat-info-value {
+        color: #6c757d;
+        font-size: 0.9rem;
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 768px) {
+        .medchat-wrapper {
+          flex-direction: column;
+        }
+
+        .medchat-sidebar {
+          width: 100%;
+          height: auto;
+          max-height: 40vh;
+          border-right: none;
+          border-bottom: 1px solid #e0e0e0;
+        }
+
+        .medchat-main {
+          height: 60vh;
+        }
+
+        .medchat-right-sidebar {
+          display: none; /* Hide right sidebar on mobile */
+        }
+
+        .medchat-chat-header {
+          padding: 15px 20px;
+        }
+
+        .medchat-messages {
+          padding: 20px 15px;
+        }
+
+        .medchat-message {
+          max-width: 85%;
+        }
+
+        .medchat-input-area {
+          padding: 15px;
+        }
+
+        .medchat-menu-toggle {
+          display: none;
+        }
+
+        .medchat-mobile-overlay {
+          display: none;
+        }
+      }
+    </style>
+
+    <div class="medchat-wrapper">
+
+      <!-- Left Sidebar -->
+      <div class="medchat-sidebar" id="medchatSidebar">
+        <div class="medchat-doctor-profile">
+          <div class="medchat-doctor-avatar">
+            {% if current_user.doctor_profile.profile_pic %}
+              <img src="{{ url_for('static', filename='uploads/' + current_user.doctor_profile.profile_pic) }}" alt="Doctor" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            {% else %}
+              {{ current_user.name.split() | map('slice', 0, 1) | join('') | upper }}
+            {% endif %}
+          </div>
+          <div class="medchat-doctor-details">
+            <div class="medchat-doctor-name">Dr. {{ current_user.name }}</div>
+            <div class="medchat-doctor-title">{{ current_user.doctor_profile.specialization }}</div>
+          </div>
+        </div>
+
+        <div class="medchat-search-box">
+          <div class="medchat-search-wrapper">
+            <i class="fas fa-search medchat-search-icon"></i>
+            <input
+              type="text"
+              class="medchat-search-input"
+              placeholder="Search patients..."
+            />
+          </div>
+        </div>
+
+        <div class="medchat-patient-list">
+          {% for appt in all_appointments %}
+          <a href="{{ url_for('doctor.consultation', appointment_id=appt.id) }}" class="medchat-patient-item {% if appointment and appt.id == appointment.id %}medchat-active{% endif %}">
+            <div class="medchat-patient-avatar">
+              {% if appt.patient.user.patient_profile.profile_pic %}
+                <img src="{{ url_for('static', filename='uploads/' + appt.patient.user.patient_profile.profile_pic) }}" alt="Patient" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+              {% else %}
+                {{ appt.patient.user.name.split() | map('slice', 0, 1) | join('') | upper }}
+              {% endif %}
+              {% if appt.status == 'confirmed' %}<div class="medchat-online-indicator"></div>{% endif %}
+            </div>
+            <div class="medchat-patient-info">
+              <div class="medchat-patient-header">
+                <span class="medchat-patient-name">{{ appt.patient.user.name }}</span>
+                <span class="medchat-patient-time">{{ appt.date }} {{ appt.time }}</span>
+              </div>
+              <div class="medchat-patient-preview">
+                {{ appt.consultation_type }} - {{ appt.status|capitalize }}
+              </div>
+            </div>
+          </a>
+          {% endfor %}
+          {% if not all_appointments %}
+          <div class="medchat-patient-item">
+            <div class="medchat-patient-info">
+              <div class="medchat-patient-name">No consultations found</div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Main Chat Area -->
+      <div class="medchat-main">
+        {% if appointment %}
+        <div class="medchat-chat-header">
+          <div class="medchat-current-patient">
+            <div class="medchat-current-avatar">
+              {% if appointment.patient.user.patient_profile.profile_pic %}
+                <img src="{{ url_for('static', filename='uploads/' + appointment.patient.user.patient_profile.profile_pic) }}" alt="Patient" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+              {% else %}
+                {{ appointment.patient.user.name.split() | map('slice', 0, 1) | join('') | upper }}
+              {% endif %}
+            </div>
+            <div class="medchat-current-info">
+              <div class="medchat-current-name">{{ appointment.patient.user.name }}</div>
+              <div class="medchat-status">
+                <span class="medchat-status-dot"></span>
+                {{ appointment.status|capitalize }}
+              </div>
+            </div>
+          </div>
+          <div class="medchat-header-actions">
+            <div class="medchat-action-icon" onclick="startVideoCall()">
+              <i class="fas fa-video"></i>
+            </div>
+            <div class="medchat-action-icon" onclick="startPhoneCall()">
+              <i class="fas fa-phone"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="medchat-messages" id="medchatMessages">
+          {% for message in messages %}
+          <div class="medchat-message {% if message.sender_id == current_user.id %}medchat-sent{% endif %}">
+            <div class="medchat-message-avatar">
+              {% if message.sender_id == current_user.id %}
+                {% if current_user.doctor_profile.profile_pic %}
+                  <img src="{{ url_for('static', filename='uploads/' + current_user.doctor_profile.profile_pic) }}" alt="You" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                {% else %}
+                  {{ current_user.name.split() | map('slice', 0, 1) | join('') | upper }}
+                {% endif %}
+              {% else %}
+                {% if appointment.patient.user.patient_profile.profile_pic %}
+                  <img src="{{ url_for('static', filename='uploads/' + appointment.patient.user.patient_profile.profile_pic) }}" alt="Patient" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                {% else %}
+                  {{ appointment.patient.user.name.split() | map('slice', 0, 1) | join('') | upper }}
+                {% endif %}
+              {% endif %}
+            </div>
+            <div class="medchat-message-content">
+              <div class="medchat-message-header">
+                <span class="medchat-message-sender">
+                  {% if message.sender_id == current_user.id %}
+                    Dr. {{ current_user.name }}
+                  {% else %}
+                    {{ appointment.patient.user.name }}
+                  {% endif %}
+                </span>
+                <span class="medchat-message-time">{{ message.timestamp.strftime('%I:%M %p') }}</span>
+              </div>
+              <div class="medchat-message-bubble">{{ message.content }}</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="medchat-input-area">
+          <div class="medchat-input-wrapper">
+            <button class="medchat-attach-btn">
+              <i class="fas fa-paperclip"></i>
+            </button>
+            <input
+              type="text"
+              class="medchat-input-field"
+              placeholder="Type your message here..."
+              id="medchatInput"
+            />
+            <button class="medchat-send-btn" id="medchatSendBtn">Send</button>
+          </div>
+          <div class="medchat-encryption">
+            <i class="fas fa-lock medchat-lock-icon"></i>
+            This chat is end-to-end encrypted
+          </div>
+        </div>
+        {% else %}
+        <div class="medchat-messages" style="display: flex; align-items: center; justify-content: center; height: 100%;">
+          <div style="text-align: center; color: #6c757d;">
+            <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+            <h4>No consultations available</h4>
+            <p>Select a consultation from the sidebar to start chatting.</p>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Right Sidebar -->
+      {% if appointment %}
+      <div class="medchat-right-sidebar">
+        <div class="medchat-patient-profile">
+          <div class="medchat-patient-profile-avatar">
+            {% if appointment.patient.user.patient_profile.profile_pic %}
+              <img src="{{ url_for('static', filename='uploads/' + appointment.patient.user.patient_profile.profile_pic) }}" alt="Patient" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            {% else %}
+              {{ appointment.patient.user.name.split() | map('slice', 0, 1) | join('') | upper }}
+            {% endif %}
+          </div>
+          <div class="medchat-patient-profile-name">{{ appointment.patient.user.name }}</div>
+          <div class="medchat-patient-profile-details">{{ appointment.patient.date_of_birth | calculate_age }} years old</div>
+        </div>
+
+        <div class="medchat-patient-info-section">
+          <div class="medchat-info-title">Patient Information</div>
+          <div class="medchat-info-item">
+            <span class="medchat-info-label">Gender:</span>
+            <span class="medchat-info-value">{{ appointment.patient.gender|capitalize }}</span>
+          </div>
+          <div class="medchat-info-item">
+            <span class="medchat-info-label">Blood Group:</span>
+            <span class="medchat-info-value">{{ appointment.patient.blood_group }}</span>
+          </div>
+          <div class="medchat-info-item">
+            <span class="medchat-info-label">Phone:</span>
+            <span class="medchat-info-value">{{ appointment.patient.phone }}</span>
+          </div>
+        </div>
+
+        <div class="medchat-patient-info-section">
+          <div class="medchat-info-title">Medical History</div>
+          <div class="medchat-info-item">
+            <span class="medchat-info-label">Father History:</span>
+            <span class="medchat-info-value">{{ appointment.patient.father_history or 'None' }}</span>
+          </div>
+          <div class="medchat-info-item">
+            <span class="medchat-info-label">Mother History:</span>
+            <span class="medchat-info-value">{{ appointment.patient.mother_history or 'None' }}</span>
+          </div>
+          <div class="medchat-info-item">
+            <span class="medchat-info-label">Allergies:</span>
+            <span class="medchat-info-value">{{ appointment.patient.allergies or 'None' }}</span>
+          </div>
+          <div class="medchat-info-item">
+            <span class="medchat-info-label">Current Medications:</span>
+            <span class="medchat-info-value">{{ appointment.patient.current_medications or 'None' }}</span>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+<!-- Video Call Modal -->
+<div class="modal fade" id="videoCallModal" tabindex="-1" aria-labelledby="videoCallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="videoCallModalLabel">
+          <i class="fas fa-video text-primary"></i> Video Call with {{ appointment.patient.user.name }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center p-4">
+          <div class="mb-3">
+            <i class="fas fa-video fa-3x text-primary mb-3"></i>
+            <h4>Starting Video Call...</h4>
+            <p class="text-muted">Please wait while we connect you to your patient.</p>
+          </div>
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <strong>Note:</strong> Video calling feature is currently under development.
+            For immediate consultation, please use the chat feature or call directly.
+          </div>
+          <div class="mt-3">
+            <button type="button" class="btn btn-success me-2" disabled>
+              <i class="fas fa-video"></i> Join Call
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="fas fa-times"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Phone Call Modal -->
+<div class="modal fade" id="phoneCallModal" tabindex="-1" aria-labelledby="phoneCallModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="phoneCallModalLabel">
+          <i class="fas fa-phone text-success"></i> Call {{ appointment.patient.user.name }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center p-4">
+          <div class="mb-3">
+            <i class="fas fa-phone fa-3x text-success mb-3"></i>
+            <h4>Ready to Call</h4>
+            <p class="text-muted">Click the button below to call your patient directly.</p>
+          </div>
+          <div class="alert alert-success">
+            <i class="fas fa-mobile-alt"></i>
+            <strong>Patient's Contact:</strong> {{ appointment.patient.phone or 'Contact information not available' }}
+          </div>
+          <div class="mt-3">
+            <a href="tel:{{ appointment.patient.phone }}" class="btn btn-success me-2">
+              <i class="fas fa-phone"></i> Call Now
+            </a>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="fas fa-times"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+      const socket = io();
+      const appointmentId = {{ appointment.id }};
+      const senderId = {{ current_user.id }};
+      const messagesContainer = document.getElementById("medchatMessages");
+
+      socket.emit('join', { appointment_id: appointmentId });
+
+      // Patient selection
+      const patientItems = document.querySelectorAll(".medchat-patient-item");
+      patientItems.forEach((item) => {
+        item.addEventListener("click", function () {
+          patientItems.forEach((p) => p.classList.remove("medchat-active"));
+          this.classList.add("medchat-active");
+        });
+      });
+
+      // Send message
+      const sendBtn = document.getElementById("medchatSendBtn");
+      const inputField = document.getElementById("medchatInput");
+
+      if (sendBtn && inputField) {
+        function sendMessage() {
+          const message = inputField.value.trim();
+          if (message) {
+            socket.emit('send_message', {
+              appointment_id: appointmentId,
+              sender_id: senderId,
+              content: message
+            });
+            inputField.value = "";
+          }
+        }
+
+        sendBtn.addEventListener("click", sendMessage);
+        inputField.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            sendMessage();
+          }
+        });
+      }
+
+      socket.on('receive_message', function(data) {
+        const isSent = data.sender_id == senderId;
+        const messageHTML = `
+          <div class="medchat-message ${isSent ? 'medchat-sent' : ''}">
+            <div class="medchat-message-avatar">
+              ${data.sender_initials}
+            </div>
+            <div class="medchat-message-content">
+              <div class="medchat-message-header">
+                <span class="medchat-message-sender">${isSent ? 'Dr. ' : ''}${data.sender_name}</span>
+                <span class="medchat-message-time">${data.timestamp}</span>
+              </div>
+              <div class="medchat-message-bubble">${data.content}</div>
+            </div>
+          </div>
+        `;
+        messagesContainer.insertAdjacentHTML("beforeend", messageHTML);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      });
+
+      // Search functionality
+      const searchInput = document.querySelector(".medchat-search-input");
+      searchInput.addEventListener("input", function () {
+        const searchTerm = this.value.toLowerCase();
+        patientItems.forEach((item) => {
+          const patientName = item
+            .querySelector(".medchat-patient-name")
+            .textContent.toLowerCase();
+          if (patientName.includes(searchTerm)) {
+            item.style.display = "flex";
+          } else {
+            item.style.display = "none";
+          }
+        });
+      });
+
+      // Auto scroll to bottom
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+      // Video call function
+      function startVideoCall() {
+        const modal = new bootstrap.Modal(document.getElementById('videoCallModal'));
+        modal.show();
+      }
+
+      // Phone call function
+      function startPhoneCall() {
+        const modal = new bootstrap.Modal(document.getElementById('phoneCallModal'));
+        modal.show();
+      }
+    </script>
+
+{% endblock content %}

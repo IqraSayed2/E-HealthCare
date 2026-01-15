@@ -4,7 +4,7 @@
 
 <style>
   /* Header Styles */
-  .ehp-header {
+  .d-profile-header {
     background: white;
     padding: 15px 30px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
@@ -13,7 +13,7 @@
     z-index: 1000;
   }
 
-  .ehp-header-content {
+  .d-profile-header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -21,13 +21,13 @@
     margin: 0 auto;
   }
 
-  .ehp-logo-section {
+  .d-profile-logo-section {
     display: flex;
     align-items: center;
     gap: 12px;
   }
 
-  .ehp-logo {
+  .d-profile-logo {
     width: 35px;
     height: 35px;
     background: #16a2b8;
@@ -39,19 +39,19 @@
     font-size: 1.2rem;
   }
 
-  .ehp-platform-name {
+  .d-profile-platform-name {
     font-size: 1.1rem;
     font-weight: 600;
     color: #1a1a1a;
   }
 
-  .ehp-nav {
+  .d-profile-nav {
     display: flex;
     gap: 30px;
     align-items: center;
   }
 
-  .ehp-nav-link {
+  .d-profile-nav-link {
     color: #6c757d;
     text-decoration: none;
     font-weight: 500;
@@ -59,18 +59,18 @@
     transition: color 0.3s ease;
   }
 
-  .ehp-nav-link:hover,
-  .ehp-nav-link.ehp-active {
+  .d-profile-nav-link:hover,
+  .d-profile-nav-link.d-profile-active {
     color: #16a2b8;
   }
 
-  .ehp-header-actions {
+  .d-profile-header-actions {
     display: flex;
     align-items: center;
     gap: 15px;
   }
 
-  .ehp-icon-btn {
+  .d-profile-icon-btn {
     width: 38px;
     height: 38px;
     border-radius: 50%;
@@ -84,11 +84,11 @@
     transition: all 0.3s ease;
   }
 
-  .ehp-icon-btn:hover {
+  .d-profile-icon-btn:hover {
     background: #e0e0e0;
   }
 
-  .ehp-user-avatar {
+  .d-profile-user-avatar {
     width: 38px;
     height: 38px;
     border-radius: 50%;
@@ -97,7 +97,7 @@
   }
 
   /* Main Layout */
-  .ehp-container {
+  .d-profile-container {
     max-width: 1400px;
     margin: 30px auto;
     padding: 0 30px;
@@ -106,12 +106,12 @@
   }
 
   /* Sidebar */
-  .ehp-sidebar {
+  .d-profile-sidebar {
     width: 280px;
     flex-shrink: 0;
   }
 
-  .ehp-profile-card {
+  .d-profile-profile-card {
     background: white;
     border-radius: 12px;
     padding: 25px;
@@ -119,14 +119,14 @@
     margin-bottom: 20px;
   }
 
-  .ehp-profile-header {
+  .d-profile-profile-header {
     display: flex;
     align-items: center;
     gap: 15px;
     margin-bottom: 20px;
   }
 
-  .ehp-profile-avatar {
+  .d-profile-profile-avatar {
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -139,33 +139,33 @@
     font-size: 1.5rem;
   }
 
-  .ehp-profile-info {
+  .d-profile-profile-info {
     flex: 1;
   }
 
-  .ehp-profile-name {
+  .d-profile-profile-name {
     font-size: 1.1rem;
     font-weight: 700;
     color: #1a1a1a;
     margin-bottom: 3px;
   }
 
-  .ehp-profile-id {
+  .d-profile-profile-id {
     font-size: 0.85rem;
     color: #6c757d;
   }
 
-  .ehp-menu {
+  .d-profile-menu {
     list-style: none;
     padding: 0;
     margin: 0;
   }
 
-  .ehp-menu-item {
+  .d-profile-menu-item {
     margin-bottom: 8px;
   }
 
-  .ehp-menu-link {
+  .d-profile-menu-link {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -177,22 +177,22 @@
     transition: all 0.3s ease;
   }
 
-  .ehp-menu-link:hover {
+  .d-profile-menu-link:hover {
     background: #f5f6fa;
     color: #1a1a1a;
   }
 
-  .ehp-menu-link.ehp-active {
+  .d-profile-menu-link.d-profile-active {
     background: #e3f2fd;
     color: #1976d2;
   }
 
-  .ehp-menu-icon {
+  .d-profile-menu-icon {
     font-size: 1.1rem;
     width: 20px;
   }
 
-  .ehp-logout-btn {
+  .d-profile-logout-btn {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -207,12 +207,12 @@
     transition: all 0.3s ease;
   }
 
-  .ehp-logout-btn:hover {
+  .d-profile-logout-btn:hover {
     background: #fff5f5;
   }
 
   /* Main Content */
-  .ehp-main-content {
+  .d-profile-main-content {
     flex: 1;
     background: white;
     border-radius: 12px;
@@ -220,20 +220,20 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   }
 
-  .ehp-content-header {
+  .d-profile-content-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
   }
 
-  .ehp-page-title {
+  .d-profile-page-title {
     font-size: 1.8rem;
     font-weight: 700;
     color: #1a1a1a;
   }
 
-  .ehp-edit-btn {
+  .d-profile-edit-btn {
     padding: 10px 25px;
     background: #f5f5f5;
     border: none;
@@ -244,21 +244,21 @@
     transition: all 0.3s ease;
   }
 
-  .ehp-edit-btn:hover {
+  .d-profile-edit-btn:hover {
     background: #e0e0e0;
   }
 
-  .ehp-last-updated {
+  .d-profile-last-updated {
     font-size: 0.85rem;
     color: #6c757d;
     margin-bottom: 30px;
   }
 
-  .ehp-section {
+  .d-profile-section {
     margin-bottom: 40px;
   }
 
-  .ehp-section-title {
+  .d-profile-section-title {
     font-size: 1.4rem;
     font-weight: 700;
     color: #1a1a1a;
@@ -267,32 +267,32 @@
     border-bottom: 2px solid #f0f0f0;
   }
 
-  .ehp-info-grid {
+  .d-profile-info-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 25px;
   }
 
-  .ehp-info-item {
+  .d-profile-info-item {
     display: flex;
     flex-direction: column;
     gap: 5px;
   }
 
-  .ehp-info-label {
+  .d-profile-info-label {
     font-size: 0.85rem;
     color: #6c757d;
     font-weight: 500;
   }
 
-  .ehp-info-value {
+  .d-profile-info-value {
     font-size: 1rem;
     color: #1a1a1a;
     font-weight: 600;
   }
 
   /* Mobile Menu Toggle */
-  .ehp-mobile-toggle {
+  .d-profile-mobile-toggle {
     display: none;
     background: #f5f5f5;
     border: none;
@@ -304,15 +304,15 @@
 
   /* Responsive */
   @media (max-width: 992px) {
-    .ehp-nav {
+    .d-profile-nav {
       display: none;
     }
 
-    .ehp-container {
+    .d-profile-container {
       flex-direction: column;
     }
 
-    .ehp-sidebar {
+    .d-profile-sidebar {
       width: 100%;
       position: fixed;
       left: -100%;
@@ -325,11 +325,11 @@
       padding: 20px;
     }
 
-    .ehp-sidebar.ehp-sidebar-open {
+    .d-profile-sidebar.d-profile-sidebar-open {
       left: 0;
     }
 
-    .ehp-mobile-overlay {
+    .d-profile-mobile-overlay {
       display: none;
       position: fixed;
       top: 0;
@@ -340,21 +340,21 @@
       z-index: 1999;
     }
 
-    .ehp-mobile-overlay.ehp-active {
+    .d-profile-mobile-overlay.d-profile-active {
       display: block;
     }
 
-    .ehp-mobile-toggle {
+    .d-profile-mobile-toggle {
       display: block;
     }
 
-    .ehp-sidebar-close {
+    .d-profile-sidebar-close {
       display: flex;
       justify-content: flex-end;
       margin-bottom: 20px;
     }
 
-    .ehp-close-btn {
+    .d-profile-close-btn {
       background: none;
       border: none;
       font-size: 1.5rem;
@@ -364,74 +364,74 @@
   }
 
   @media (max-width: 768px) {
-    .ehp-header {
+    .d-profile-header {
       padding: 12px 20px;
     }
 
-    .ehp-container {
+    .d-profile-container {
       margin: 20px auto;
       padding: 0 15px;
     }
 
-    .ehp-main-content {
+    .d-profile-main-content {
       padding: 25px 20px;
     }
 
-    .ehp-page-title {
+    .d-profile-page-title {
       font-size: 1.5rem;
     }
 
-    .ehp-info-grid {
+    .d-profile-info-grid {
       grid-template-columns: 1fr;
       gap: 20px;
     }
 
-    .ehp-nav-link {
+    .d-profile-nav-link {
       display: none;
     }
 
-    .ehp-platform-name {
+    .d-profile-platform-name {
       font-size: 0.95rem;
     }
   }
 
   @media (max-width: 576px) {
-    .ehp-header-actions {
+    .d-profile-header-actions {
       gap: 8px;
     }
 
-    .ehp-icon-btn {
+    .d-profile-icon-btn {
       width: 35px;
       height: 35px;
     }
 
-    .ehp-main-content {
+    .d-profile-main-content {
       padding: 20px 15px;
     }
 
-    .ehp-content-header {
+    .d-profile-content-header {
       flex-direction: column;
       align-items: flex-start;
       gap: 15px;
     }
 
-    .ehp-edit-btn {
+    .d-profile-edit-btn {
       width: 100%;
     }
   }
 
-  .ehp-hide-mobile {
+  .d-profile-hide-mobile {
     display: block;
   }
 
   @media (max-width: 992px) {
-    .ehp-hide-mobile {
+    .d-profile-hide-mobile {
       display: none;
     }
   }
 
-  .ehp-input,
-  .ehp-textarea {
+  .d-profile-input,
+  .d-profile-textarea {
     width: 100%;
     padding: 8px 12px;
     border: 1px solid #ddd;
@@ -439,13 +439,13 @@
     font-size: 1rem;
   }
 
-  .ehp-input:focus,
-  .ehp-textarea:focus {
+  .d-profile-input:focus,
+  .d-profile-textarea:focus {
     outline: none;
     border-color: #16a2b8;
   }
 
-  .ehp-save-btn {
+  .d-profile-save-btn {
     padding: 10px 25px;
     background: #28a745;
     color: white;
@@ -456,87 +456,87 @@
     transition: all 0.3s ease;
   }
 
-  .ehp-save-btn:hover {
+  .d-profile-save-btn:hover {
     background: #218838;
   }
 </style>
 
 <form method="POST" id="profileForm" enctype="multipart/form-data">
-  <div class="ehp-container">
-    <!-- SIDEBAR (UNCHANGED UI) -->
-    <aside class="ehp-sidebar">
-      <div class="ehp-profile-card">
-        <div class="ehp-profile-header">
-          <div class="ehp-profile-avatar">
+  <div class="d-profile-container">
+    <!-- SIDEBAR -->
+    <aside class="d-profile-sidebar">
+      <div class="d-profile-profile-card">
+        <div class="d-profile-profile-header">
+          <div class="d-profile-profile-avatar">
             {% if current_user.doctor_profile.profile_pic %}
               <img src="{{ url_for('static', filename='uploads/' + current_user.doctor_profile.profile_pic) }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
             {% else %}
               {{ current_user.name[:2].upper() }}
             {% endif %}
           </div>
-          <div class="ehp-profile-info">
-            <div class="ehp-profile-name">{{ current_user.name }}</div>
-            <div class="ehp-profile-id">
+          <div class="d-profile-profile-info">
+            <div class="d-profile-profile-name">{{ current_user.name }}</div>
+            <div class="d-profile-profile-id">
               ID: {{ current_user.doctor_profile.id }}
             </div>
           </div>
         </div>
 
-        <ul class="ehp-menu">
-          <li class="ehp-menu-item">
+        <ul class="d-profile-menu">
+          <li class="d-profile-menu-item">
             <a
               href="#"
-              class="ehp-menu-link ehp-active"
+              class="d-profile-menu-link d-profile-active"
               data-section="personal"
             >
-              <i class="fas fa-user ehp-menu-icon"></i>
+              <i class="fas fa-user d-profile-menu-icon"></i>
               <span>Personal Information</span>
             </a>
           </li>
-          <li class="ehp-menu-item">
-            <a href="#" class="ehp-menu-link" data-section="qualification">
-              <i class="fas fa-graduation-cap ehp-menu-icon"></i>
+          <li class="d-profile-menu-item">
+            <a href="#" class="d-profile-menu-link" data-section="qualification">
+              <i class="fas fa-graduation-cap d-profile-menu-icon"></i>
               <span>Qualification & Credentials</span>
             </a>
           </li>
-          <li class="ehp-menu-item">
-            <a href="#" class="ehp-menu-link" data-section="clinic">
-              <i class="fas fa-hospital ehp-menu-icon"></i>
+          <li class="d-profile-menu-item">
+            <a href="#" class="d-profile-menu-link" data-section="clinic">
+              <i class="fas fa-hospital d-profile-menu-icon"></i>
               <span>Clinic/Hospital Information</span>
             </a>
           </li>
-          <li class="ehp-menu-item">
-            <a href="#" class="ehp-menu-link" data-section="additional">
-              <i class="fas fa-info-circle ehp-menu-icon"></i>
+          <li class="d-profile-menu-item">
+            <a href="#" class="d-profile-menu-link" data-section="additional">
+              <i class="fas fa-info-circle d-profile-menu-icon"></i>
               <span>Additional Information</span>
             </a>
           </li>
         </ul>
       </div>
-      <button class="ehp-logout-btn">
+      <button class="d-profile-logout-btn">
         <i class="fas fa-sign-out-alt"></i>
         <span>Log Out</span>
       </button>
     </aside>
 
     <!-- MAIN CONTENT -->
-    <main class="ehp-main-content">
+    <main class="d-profile-main-content">
       <!-- PERSONAL -->
-      <section class="ehp-content-section" id="personalSection">
-        <div class="ehp-content-header">
-          <h1 class="ehp-page-title">Personal Information</h1>
-          <button type="button" class="ehp-edit-btn">Edit</button>
+      <section class="d-profile-content-section" id="personalSection">
+        <div class="d-profile-content-header">
+          <h1 class="d-profile-page-title">Personal Information</h1>
+          <button type="button" class="d-profile-edit-btn">Edit</button>
         </div>
 
-        <p class="ehp-last-updated">
+        <p class="d-profile-last-updated">
           Last updated: {{ current_user.doctor_profile.updated_at.strftime('%B %d, %Y') if current_user.doctor_profile.updated_at else 'Never' }}
         </p>
 
-        <div class="ehp-section">
-          <div class="ehp-info-grid editable">
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Doctor Profile</span>
-              <span class="ehp-info-value">
+        <div class="d-profile-section">
+          <div class="d-profile-info-grid editable">
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Doctor Profile</span>
+              <span class="d-profile-info-value">
                 {% if current_user.doctor_profile.profile_pic %}
                   <img src="{{ url_for('static', filename='uploads/' + current_user.doctor_profile.profile_pic) }}" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
                 {% else %}
@@ -544,65 +544,65 @@
                 {% endif %}
               </span>
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Full Name</span>
-              <span class="ehp-info-value">{{ current_user.name }}</span>
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Full Name</span>
+              <span class="d-profile-info-value">{{ current_user.name }}</span>
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Contact</span>
-              <span class="ehp-info-value"
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Contact</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.phone or 'Not provided' }}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Email ID</span>
-              <span class="ehp-info-value">{{ current_user.email }}</span>
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Email ID</span>
+              <span class="d-profile-info-value">{{ current_user.email }}</span>
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Date of Birth</span>
-              <span class="ehp-info-value"
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Date of Birth</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.date_of_birth or 'Not provided' }}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Gender</span>
-              <span class="ehp-info-value"
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Gender</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.gender or 'Not provided' }}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Medical Licence No.</span>
-              <span class="ehp-info-value"
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Medical Licence No.</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.medical_licence_no or 'Not provided' }}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Years of Experience</span>
-              <span class="ehp-info-value"
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Years of Experience</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.experience or 'Not provided' }}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Primary Specialization</span>
-              <span class="ehp-info-value"
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Primary Specialization</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.specialization or 'Not provided'}}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Secondary Specialization</span>
-              <span class="ehp-info-value"
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Secondary Specialization</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.secondary_specialization or 'Not provided' }}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Consultation Fees</span>
-              <span class="ehp-info-value"
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Consultation Fees</span>
+              <span class="d-profile-info-value"
                 >{{ '₹' + current_user.doctor_profile.fees|string if current_user.doctor_profile.fees else 'Not provided' }}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Professional Bio</span>
-              <span class="ehp-info-value" data-original="{{ current_user.doctor_profile.about }}">{{ current_user.doctor_profile.about.replace('\n', '<br>') | safe if current_user.doctor_profile.about else 'Not provided' }}</span>
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Professional Bio</span>
+              <span class="d-profile-info-value" data-original="{{ current_user.doctor_profile.about }}">{{ current_user.doctor_profile.about.replace('\n', '<br>') | safe if current_user.doctor_profile.about else 'Not provided' }}</span>
             </div>
           </div>
         </div>
@@ -610,46 +610,46 @@
 
       <!-- QUALIFICATION -->
       <section
-        class="ehp-content-section"
+        class="d-profile-content-section"
         id="qualificationSection"
         style="display: none"
       >
-        <div class="ehp-content-header">
-          <h1 class="ehp-page-title">Qualification & Credentials</h1>
-          <button type="button" class="ehp-edit-btn">Edit</button>
+        <div class="d-profile-content-header">
+          <h1 class="d-profile-page-title">Qualification & Credentials</h1>
+          <button type="button" class="d-profile-edit-btn">Edit</button>
         </div>
 
-        <p class="ehp-last-updated">
+        <p class="d-profile-last-updated">
           Last updated: {{ current_user.doctor_profile.updated_at.strftime('%B %d, %Y') if current_user.doctor_profile.updated_at else 'Never' }}
         </p>
 
-        <div class="ehp-section">
-          <div class="ehp-info-grid editable">
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Medical Degree</span>
-              <span class="ehp-info-value"
+        <div class="d-profile-section">
+          <div class="d-profile-info-grid editable">
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Medical Degree</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.medical_degree or 'Not provided' }}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Medical School</span>
-              <span class="ehp-info-value"
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Medical School</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.medical_school or 'Not provided' }}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Graduation Year</span>
-              <span class="ehp-info-value"
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Graduation Year</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.graduation_year or 'Not provided' }}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Board Certifications</span>
-              <span class="ehp-info-value" data-original="{{ current_user.doctor_profile.board_certifications }}">{{ current_user.doctor_profile.board_certifications.replace('\n', '<br>') | safe if current_user.doctor_profile.board_certifications else 'Not provided' }}</span>
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Board Certifications</span>
+              <span class="d-profile-info-value" data-original="{{ current_user.doctor_profile.board_certifications }}">{{ current_user.doctor_profile.board_certifications.replace('\n', '<br>') | safe if current_user.doctor_profile.board_certifications else 'Not provided' }}</span>
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Upload Medical Licence</span>
-              <span class="ehp-info-value">
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Upload Medical Licence</span>
+              <span class="d-profile-info-value">
                 {% if current_user.doctor_profile.licence_file %}
                   {% if current_user.doctor_profile.licence_file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')) %}
                     <img src="{{ url_for('static', filename='uploads/' + current_user.doctor_profile.licence_file) }}" alt="Medical Licence" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
@@ -667,54 +667,54 @@
 
       <!-- CLINIC -->
       <section
-        class="ehp-content-section"
+        class="d-profile-content-section"
         id="clinicSection"
         style="display: none"
       >
-        <div class="ehp-content-header">
-          <h1 class="ehp-page-title">Clinic/Hospital Information</h1>
-          <button type="button" class="ehp-edit-btn">Edit</button>
+        <div class="d-profile-content-header">
+          <h1 class="d-profile-page-title">Clinic/Hospital Information</h1>
+          <button type="button" class="d-profile-edit-btn">Edit</button>
         </div>
 
-        <p class="ehp-last-updated">
+        <p class="d-profile-last-updated">
           Last updated: {{ current_user.doctor_profile.updated_at.strftime('%B %d, %Y') if current_user.doctor_profile.updated_at else 'Never' }}
         </p>
 
-        <div class="ehp-section">
-          <div class="ehp-info-grid editable">
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Clinic/Hospital Name</span>
-              <span class="ehp-info-value"
+        <div class="d-profile-section">
+          <div class="d-profile-info-grid editable">
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Clinic/Hospital Name</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.clinic_name or 'Not provided'}}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Address</span>
-              <span class="ehp-info-value"
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Address</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.clinic_address or 'Not provided'}}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">City</span>
-              <span class="ehp-info-value"
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">City</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.clinic_city or 'Not provided'}}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">State</span>
-              <span class="ehp-info-value"
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">State</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.clinic_state or 'Not provided'}}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Country</span>
-              <span class="ehp-info-value"
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Country</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.clinic_country or 'Not provided'}}</span
               >
             </div>
-            <div class="ehp-info-item">
-              <span class="ehp-info-label">Zip Code</span>
-              <span class="ehp-info-value"
+            <div class="d-profile-info-item">
+              <span class="d-profile-info-label">Zip Code</span>
+              <span class="d-profile-info-value"
                 >{{ current_user.doctor_profile.clinic_zip_code or 'Not provided'}}</span
               >
             </div>
@@ -724,44 +724,44 @@
 
       <!-- ADDITIONAL -->
       <section
-        class="ehp-content-section"
+        class="d-profile-content-section"
         id="additionalSection"
         style="display: none"
       >
-        <div class="ehp-content-header">
-          <h1 class="ehp-page-title">Additional Information</h1>
-          <button type="button" class="ehp-edit-btn">Edit</button>
+        <div class="d-profile-content-header">
+          <h1 class="d-profile-page-title">Additional Information</h1>
+          <button type="button" class="d-profile-edit-btn">Edit</button>
         </div>
 
-        <p class="ehp-last-updated">
+        <p class="d-profile-last-updated">
           Last updated: {{ current_user.doctor_profile.updated_at.strftime('%B  %d, %Y') if current_user.doctor_profile.updated_at else 'Never' }}
         </p>
 
-        <div class="ehp-section">
-          <div class="ehp-info-item editable">
-            <span class="ehp-info-label">Areas of Expertise</span>
-            <span class="ehp-info-value" data-original="{{ current_user.doctor_profile.areas_of_expertise }}">{{ current_user.doctor_profile.areas_of_expertise.replace('\n', '<br>') | safe if current_user.doctor_profile.areas_of_expertise else 'Not provided' }}</span>
+        <div class="d-profile-section">
+          <div class="d-profile-info-item editable">
+            <span class="d-profile-info-label">Areas of Expertise</span>
+            <span class="d-profile-info-value" data-original="{{ current_user.doctor_profile.areas_of_expertise }}">{{ current_user.doctor_profile.areas_of_expertise.replace('\n', '<br>') | safe if current_user.doctor_profile.areas_of_expertise else 'Not provided' }}</span>
           </div>
         </div>
 
-        <div class="ehp-section">
-          <div class="ehp-info-item editable">
-            <span class="ehp-info-label">Awards and Recognition</span>
-            <span class="ehp-info-value" data-original="{{ current_user.doctor_profile.awards_recognitions }}">{{ current_user.doctor_profile.awards_recognitions.replace('\n', '<br>') | safe if current_user.doctor_profile.awards_recognitions else 'Not provided' }}</span>
+        <div class="d-profile-section">
+          <div class="d-profile-info-item editable">
+            <span class="d-profile-info-label">Awards and Recognition</span>
+            <span class="d-profile-info-value" data-original="{{ current_user.doctor_profile.awards_recognitions }}">{{ current_user.doctor_profile.awards_recognitions.replace('\n', '<br>') | safe if current_user.doctor_profile.awards_recognitions else 'Not provided' }}</span>
           </div>
         </div>
 
-        <div class="ehp-section">
-          <div class="ehp-info-item editable">
-            <span class="ehp-info-label">Research & Publications</span>
-            <span class="ehp-info-value" data-original="{{ current_user.doctor_profile.research_publications }}">{{ current_user.doctor_profile.research_publications.replace('\n', '<br>') | safe if current_user.doctor_profile.research_publications else 'Not provided' }}</span>
+        <div class="d-profile-section">
+          <div class="d-profile-info-item editable">
+            <span class="d-profile-info-label">Research & Publications</span>
+            <span class="d-profile-info-value" data-original="{{ current_user.doctor_profile.research_publications }}">{{ current_user.doctor_profile.research_publications.replace('\n', '<br>') | safe if current_user.doctor_profile.research_publications else 'Not provided' }}</span>
           </div>
         </div>
 
-        <div class="ehp-section">
-          <div class="ehp-info-item editable">
-            <span class="ehp-info-label">Professional Membership</span>
-            <span class="ehp-info-value" data-original="{{ current_user.doctor_profile.professional_memberships }}">{{ current_user.doctor_profile.professional_memberships.replace('\n', '<br>') | safe if current_user.doctor_profile.professional_memberships else 'Not provided' }}</span>
+        <div class="d-profile-section">
+          <div class="d-profile-info-item editable">
+            <span class="d-profile-info-label">Professional Membership</span>
+            <span class="d-profile-info-value" data-original="{{ current_user.doctor_profile.professional_memberships }}">{{ current_user.doctor_profile.professional_memberships.replace('\n', '<br>') | safe if current_user.doctor_profile.professional_memberships else 'Not provided' }}</span>
           </div>
         </div>
       </section>
@@ -770,7 +770,7 @@
         type="submit"
         id="saveBtn"
         style="display: none"
-        class="ehp-save-btn"
+        class="d-profile-save-btn"
       >
         Save Changes
       </button>
@@ -779,13 +779,13 @@
 </form>
 
 <script>
-  document.querySelectorAll(".ehp-edit-btn").forEach((btn) => {
+  document.querySelectorAll(".d-profile-edit-btn").forEach((btn) => {
     btn.addEventListener("click", function () {
-      const section = this.closest(".ehp-content-section");
+      const section = this.closest(".d-profile-content-section");
       section.classList.add("editing");
-      section.querySelectorAll(".ehp-info-item").forEach((item) => {
-        const label = item.querySelector(".ehp-info-label").textContent;
-        const valueSpan = item.querySelector(".ehp-info-value");
+      section.querySelectorAll(".d-profile-info-item").forEach((item) => {
+        const label = item.querySelector(".d-profile-info-label").textContent;
+        const valueSpan = item.querySelector(".d-profile-info-value");
         const currentValue = valueSpan.textContent;
 
         let input;
@@ -802,11 +802,11 @@
         if (label === "Date of Birth") {
           input = document.createElement("input");
           input.type = "date";
-          input.className = "ehp-input";
+          input.className = "d-profile-input";
           input.value = currentValue === "Not provided" ? "" : currentValue;
         } else if (label === "Gender") {
           input = document.createElement("select");
-          input.className = "ehp-input";
+          input.className = "d-profile-input";
           ["Male", "Female", "Other"].forEach((option) => {
             const opt = document.createElement("option");
             opt.value = option;
@@ -816,7 +816,7 @@
           });
         } else if (label === "Primary Specialization" || label === "Secondary Specialization") {
           input = document.createElement("select");
-          input.className = "ehp-input";
+          input.className = "d-profile-input";
           const defaultOpt = document.createElement("option");
           defaultOpt.value = "";
           defaultOpt.textContent = "Select Specialization";
@@ -831,13 +831,13 @@
         } else if (label === "Upload Medical Licence") {
           input = document.createElement("input");
           input.type = "file";
-          input.className = "ehp-input";
+          input.className = "d-profile-input";
           input.accept = "image/*,.pdf";
           input.name = "upload_medical_licence";
         } else if (label === "Doctor Profile") {
           input = document.createElement("input");
           input.type = "file";
-          input.className = "ehp-input";
+          input.className = "d-profile-input";
           input.accept = "image/*";
           input.name = "doctor_profile";
           // Add preview for selected image
@@ -865,7 +865,7 @@
         } else if (label === "Graduation Year") {
           input = document.createElement("input");
           input.type = "number";
-          input.className = "ehp-input";
+          input.className = "d-profile-input";
           input.min = "1900";
           input.max = new Date().getFullYear();
           input.value = currentValue === "Not provided" ? "" : currentValue;
@@ -880,12 +880,12 @@
           ].includes(label)
         ) {
           input = document.createElement("textarea");
-          input.className = "ehp-textarea";
-          input.value = item.querySelector('.ehp-info-value').dataset.original || '';
+          input.className = "d-profile-textarea";
+          input.value = item.querySelector('.d-profile-info-value').dataset.original || '';
         } else {
           input = document.createElement("input");
           input.type = "text";
-          input.className = "ehp-input";
+          input.className = "d-profile-input";
           input.value = currentValue === "Not provided" ? "" : currentValue;
         }
 
@@ -899,15 +899,15 @@
 
   document.getElementById("saveBtn").addEventListener("click", function () {
     const form = document.getElementById("profileForm");
-    const allSections = document.querySelectorAll(".ehp-content-section");
+    const allSections = document.querySelectorAll(".d-profile-content-section");
 
     allSections.forEach((section) => {
-      section.querySelectorAll(".ehp-info-item").forEach((item) => {
-        const label = item.querySelector(".ehp-info-label").textContent;
-        const valueSpan = item.querySelector(".ehp-info-value");
+      section.querySelectorAll(".d-profile-info-item").forEach((item) => {
+        const label = item.querySelector(".d-profile-info-label").textContent;
+        const valueSpan = item.querySelector(".d-profile-info-value");
         const input =
-          item.querySelector(".ehp-input") ||
-          item.querySelector(".ehp-textarea");
+          item.querySelector(".d-profile-input") ||
+          item.querySelector(".d-profile-textarea");
         let value;
 
         if (input) {
@@ -952,22 +952,22 @@
 
     this.style.display = "none";
     document
-      .querySelectorAll(".ehp-edit-btn")
+      .querySelectorAll(".d-profile-edit-btn")
       .forEach((btn) => (btn.style.display = "inline-block"));
     form.submit();
   });
 
   // Section navigation
-  const menuLinks = document.querySelectorAll(".ehp-menu-link");
-  const contentSections = document.querySelectorAll(".ehp-content-section");
+  const menuLinks = document.querySelectorAll(".d-profile-menu-link");
+  const contentSections = document.querySelectorAll(".d-profile-content-section");
 
   menuLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
       e.preventDefault();
       const targetSection = this.getAttribute("data-section");
 
-      menuLinks.forEach((l) => l.classList.remove("ehp-active"));
-      this.classList.add("ehp-active");
+      menuLinks.forEach((l) => l.classList.remove("d-profile-active"));
+      this.classList.add("d-profile-active");
 
       contentSections.forEach((section) => {
         section.style.display = "none";

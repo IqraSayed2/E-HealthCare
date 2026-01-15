@@ -1,8 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, abort, current_app
+from flask import Blueprint, render_template, request, redirect, abort, current_app, flash, url_for
 from flask_login import login_required, current_user
-from .models import Appointment, Availability, PatientProfile, User
+from .models import Appointment, Availability, PatientProfile, User, Message
 from .extensions import db, mail
-from flask_mail import Message
 from datetime import date
 import os
 from werkzeug.utils import secure_filename
@@ -161,7 +160,6 @@ def complete_appointment(id):
 @doctor.route("/availability", methods=["GET", "POST"])
 @login_required
 def availability():
-
     doctor_id = current_user.doctor_profile.id
 
     if request.method == "POST":
@@ -297,7 +295,7 @@ def profile():
         if 'upload_medical_licence' in request.files:
             file = request.files['upload_medical_licence']
             if file and file.filename:
-                filename = secure_filename(file.filename)
+                filename = f"{current_user.id}_{secure_filename(file.filename)}"
                 os.makedirs(upload_dir, exist_ok=True)
                 file_path = os.path.join(upload_dir, filename)
                 file.save(file_path)
@@ -306,7 +304,7 @@ def profile():
         if 'doctor_profile' in request.files:
             file = request.files['doctor_profile']
             if file and file.filename:
-                filename = secure_filename(file.filename)
+                filename = f"{current_user.id}_{secure_filename(file.filename)}"
                 os.makedirs(upload_dir, exist_ok=True)
                 file_path = os.path.join(upload_dir, filename)
                 file.save(file_path)
@@ -331,3 +329,67 @@ def patient_preview(patient_id):
     if not appointment:
         abort(403)  # Forbidden
     return render_template("doctor/patient_preview.html", patient=patient_profile)
+
+
+@doctor.route("/consultations")
+@login_required
+def consultations():
+    doctor_id = current_user.doctor_profile.id
+    
+    # Get unique patients with their most recent appointment
+    from sqlalchemy import func
+    subquery = db.session.query(
+        Appointment.patient_id,
+        func.max(Appointment.date).label('max_date')
+    ).filter(
+        Appointment.doctor_id == doctor_id,
+        Appointment.status != 'cancelled'
+    ).group_by(Appointment.patient_id).subquery()
+    
+    all_appointments = Appointment.query.join(
+        subquery,
+        db.and_(
+            Appointment.patient_id == subquery.c.patient_id,
+            Appointment.date == subquery.c.max_date
+        )
+    ).filter(
+        Appointment.doctor_id == doctor_id
+    ).order_by(Appointment.date.desc(), Appointment.time.desc()).all()
+    
+    # Find the most recent appointment for the main chat
+    appointment = all_appointments[0] if all_appointments else None
+    
+    return render_template("doctor/consultation.html", appointment=appointment, all_appointments=all_appointments)
+
+
+@doctor.route("/consultation/<int:appointment_id>")
+@login_required
+def consultation(appointment_id):
+    appointment = Appointment.query.get_or_404(appointment_id)
+    # Ensure the appointment belongs to the current doctor
+    if appointment.doctor_id != current_user.doctor_profile.id:
+        abort(403)
+    
+    # Get unique patients with their most recent appointment
+    from sqlalchemy import func
+    subquery = db.session.query(
+        Appointment.patient_id,
+        func.max(Appointment.date).label('max_date')
+    ).filter(
+        Appointment.doctor_id == current_user.doctor_profile.id,
+        Appointment.status != 'cancelled'
+    ).group_by(Appointment.patient_id).subquery()
+    
+    all_appointments = Appointment.query.join(
+        subquery,
+        db.and_(
+            Appointment.patient_id == subquery.c.patient_id,
+            Appointment.date == subquery.c.max_date
+        )
+    ).filter(
+        Appointment.doctor_id == current_user.doctor_profile.id
+    ).order_by(Appointment.date.desc(), Appointment.time.desc()).all()
+    
+    messages = Message.query.filter_by(appointment_id=appointment_id).order_by(Message.timestamp).all()
+    
+    return render_template("doctor/consultation.html", appointment=appointment, all_appointments=all_appointments, messages=messages)

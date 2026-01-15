@@ -1,0 +1,1075 @@
+{% extends "base.html" %} 
+{% block title %}Patient Consultation{% endblock %} 
+{% block content %}
+
+<style>
+  /* Wrapper */
+  .p-consult-wrapper {
+    display: flex;
+    height: 100vh;
+  }
+
+  /* Sidebar Styles */
+  .p-consult-sidebar {
+    width: 320px;
+    background: white;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .p-consult-doctor-profile {
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .p-consult-doctor-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .p-consult-doctor-details {
+    flex: 1;
+  }
+
+  .p-consult-doctor-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 2px;
+  }
+
+  .p-consult-doctor-title {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+
+  .p-consult-search-box {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .p-consult-search-input {
+    width: 100%;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+  }
+
+  .p-consult-search-input:focus {
+    outline: none;
+    border-color: #16a2b8;
+    background: white;
+  }
+
+  .p-consult-search-wrapper {
+    position: relative;
+  }
+
+  .p-consult-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+  }
+
+  .p-consult-patient-list {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .p-consult-patient-item {
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .p-consult-patient-item:hover {
+    background: #f8f9fa;
+  }
+
+  .p-consult-patient-item.p-consult-active {
+    background: #e3f2fd;
+  }
+
+  .p-consult-patient-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .p-consult-online-indicator {
+    width: 10px;
+    height: 10px;
+    background: #4caf50;
+    border: 2px solid white;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+  .p-consult-patient-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .p-consult-patient-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3px;
+  }
+
+  .p-consult-patient-name {
+    font-weight: 600;
+    color: #000;
+    font-size: 0.95rem;
+  }
+
+  .p-consult-patient-time {
+    font-size: 0.75rem;
+    color: #6c757d;
+  }
+
+  .p-consult-patient-preview {
+    font-size: 0.85rem;
+    color: #6c757d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Chat Area Styles */
+  .p-consult-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #fafafa;
+  }
+
+  .p-consult-chat-header {
+    padding: 20px 30px;
+    background: white;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .p-consult-current-patient {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .p-consult-current-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+  }
+
+  .p-consult-current-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .p-consult-current-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #000;
+  }
+
+  .p-consult-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    color: #4caf50;
+  }
+
+  .p-consult-status-dot {
+    width: 8px;
+    height: 8px;
+    background: #4caf50;
+    border-radius: 50%;
+  }
+
+  .p-consult-header-actions {
+    display: flex;
+    gap: 15px;
+  }
+
+  .p-consult-action-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #6c757d;
+  }
+
+  .p-consult-action-icon:hover {
+    background: #e0e0e0;
+    color: #495057;
+  }
+
+  .p-consult-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .p-consult-message {
+    display: flex;
+    gap: 12px;
+    max-width: 70%;
+  }
+
+  .p-consult-message.p-consult-sent {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+
+  .p-consult-message-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .p-consult-message-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .p-consult-message-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .p-consult-message-sender {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #000;
+  }
+
+  .p-consult-message-time {
+    font-size: 0.75rem;
+    color: #6c757d;
+  }
+
+  .p-consult-message-bubble {
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: white;
+    color: #333;
+    line-height: 1.5;
+    font-size: 0.95rem;
+  }
+
+  .p-consult-message.p-consult-sent .p-consult-message-bubble {
+    background: #16a2b8;
+    color: white;
+  }
+
+  .p-consult-input-area {
+    padding: 20px 30px;
+    background: white;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .p-consult-input-wrapper {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .p-consult-input-field {
+    flex: 1;
+    padding: 12px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+  }
+
+  .p-consult-input-field:focus {
+    outline: none;
+    border-color: #16a2b8;
+    background: white;
+  }
+
+  .p-consult-attach-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    color: #6c757d;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+  }
+
+  .p-consult-attach-btn:hover {
+    color: #495057;
+  }
+
+  .p-consult-send-btn {
+    padding: 10px 25px;
+    background: #16a2b8;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .p-consult-send-btn:hover {
+    background: #16a2b8;
+    transform: translateY(-1px);
+  }
+
+  .p-consult-encryption {
+    text-align: center;
+    padding: 10px;
+    font-size: 0.8rem;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .p-consult-lock-icon {
+    font-size: 0.75rem;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .p-consult-wrapper {
+      flex-direction: column;
+    }
+
+    .p-consult-sidebar {
+      width: 100%;
+      height: auto;
+      max-height: 40vh;
+      border-right: none;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .p-consult-main {
+      height: 60vh;
+    }
+
+    .p-consult-chat-header {
+      padding: 15px 20px;
+    }
+
+    .p-consult-messages {
+      padding: 20px 15px;
+    }
+
+    .p-consult-message {
+      max-width: 85%;
+    }
+
+    .p-consult-input-area {
+      padding: 15px;
+    }
+  }
+
+  /* Doctor Profile Modal Styles */
+  .p-profile-modal-content {
+    max-width: 100%;
+  }
+
+  .p-profile-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .p-profile-modal-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .p-profile-modal-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .p-profile-modal-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  .p-profile-modal-info {
+    flex: 1;
+  }
+
+  .p-profile-modal-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 5px;
+  }
+
+  .p-profile-modal-specialty {
+    font-size: 1.1rem;
+    color: #16a2b8;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .p-profile-modal-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .p-profile-modal-experience,
+  .p-profile-modal-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+
+  .p-profile-modal-details {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .p-profile-modal-section {
+    margin-bottom: 0;
+  }
+
+  .p-profile-modal-section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .p-profile-modal-section-title i {
+    color: #16a2b8;
+  }
+
+  .p-profile-modal-text {
+    color: #6c757d;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .p-profile-modal-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .p-profile-modal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .p-profile-modal-item:last-child {
+    border-bottom: none;
+  }
+
+  .p-profile-modal-label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9rem;
+  }
+
+  .p-profile-modal-value {
+    color: #6c757d;
+    text-align: right;
+    font-size: 0.9rem;
+  }
+
+  .p-profile-modal-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .p-profile-modal-tag {
+    background: rgba(22, 162, 184, 0.1);
+    color: #16a2b8;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  @media (max-width: 576px) {
+    .p-profile-modal-header {
+      flex-direction: column;
+      text-align: center;
+      gap: 15px;
+    }
+
+    .p-profile-modal-meta {
+      justify-content: center;
+    }
+
+    .p-profile-modal-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .p-profile-modal-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    .p-profile-modal-value {
+      text-align: left;
+    }
+  }
+</style>
+
+<div class="p-consult-wrapper">
+  <!-- Sidebar -->
+  <div class="p-consult-sidebar" id="p-consultSidebar">
+    <div class="p-consult-doctor-profile">
+      <div class="p-consult-doctor-avatar">
+        {% if appointment.doctor.user.doctor_profile.profile_pic %}
+        <img
+          src="{{ url_for('static', filename='uploads/' + appointment.doctor.user.doctor_profile.profile_pic) }}"
+          alt="Doctor"
+          style="
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+          "
+        />
+        {% else %} {{ appointment.doctor.user.name.split() | map('first') |
+        join('') | upper }} {% endif %}
+      </div>
+      <div class="p-consult-doctor-details">
+        <div class="p-consult-doctor-name">
+          Dr. {{ appointment.doctor.user.name }}
+        </div>
+        <div class="p-consult-doctor-title">
+          {{ appointment.doctor.specialization }}
+        </div>
+      </div>
+    </div>
+
+    <div class="p-consult-search-box">
+      <div class="p-consult-search-wrapper">
+        <i class="fas fa-search p-consult-search-icon"></i>
+        <input
+          type="text"
+          class="p-consult-search-input"
+          placeholder="Search..."
+        />
+      </div>
+    </div>
+
+    <div class="p-consult-patient-list">
+      {% for appt in doctor_appointments %}
+      <a
+        href="{{ url_for('patient.consultation', appointment_id=appt.id) }}"
+        class="p-consult-patient-item {% if appt.id == appointment.id %}p-consult-active{% endif %}"
+      >
+        <div class="p-consult-patient-avatar">
+          {% if appt.doctor.user.doctor_profile.profile_pic %}
+          <img
+            src="{{ url_for('static', filename='uploads/' + appt.doctor.user.doctor_profile.profile_pic) }}"
+            alt="Doctor"
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 50%;
+            "
+          />
+          {% else %} {{ appt.doctor.user.name.split() | map('first') | join('') | upper }} {% endif %} {% if appt.status == 'confirmed' %}
+          <div class="p-consult-online-indicator"></div>
+          {% endif %}
+        </div>
+        <div class="p-consult-patient-info">
+          <div class="p-consult-patient-header">
+            <span class="p-consult-patient-name"
+              >Dr. {{ appt.doctor.user.name }}</span
+            >
+            <span class="p-consult-patient-time"
+              >{{ appt.date }} {{ appt.time }}</span
+            >
+          </div>
+          <div class="p-consult-patient-preview">
+            {{ appt.consultation_type }} - {{ appt.status|capitalize }}
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Main Chat Area -->
+  <div class="p-consult-main">
+    <div class="p-consult-chat-header">
+      <div class="p-consult-current-patient">
+        <div class="p-consult-current-avatar">
+          {% if appointment.doctor.user.doctor_profile.profile_pic %}
+          <img
+            src="{{ url_for('static', filename='uploads/' + appointment.doctor.user.doctor_profile.profile_pic) }}"
+            alt="Doctor"
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 50%;
+            "
+          />
+          {% else %} {{ appointment.doctor.user.name.split() | map('first') | join('') | upper }} {% endif %}
+        </div>
+        <div class="p-consult-current-info">
+          <div class="p-consult-current-name">
+            Dr. {{ appointment.doctor.user.name }}
+          </div>
+          <div class="p-consult-status">
+            <span class="p-consult-status-dot"></span>
+            {{ appointment.status|capitalize }}
+          </div>
+        </div>
+      </div>
+      <div class="p-consult-header-actions">
+        <div class="p-consult-action-icon" onclick="startVideoCall()">
+          <i class="fas fa-video"></i>
+        </div>
+        <div class="p-consult-action-icon" onclick="startPhoneCall()">
+          <i class="fas fa-phone"></i>
+        </div>
+        <div class="p-consult-action-icon" onclick="showDoctorProfile()">
+          <i class="fas fa-info-circle"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-consult-messages" id="p-consultMessages">
+      {% for message in messages %}
+      <div
+        class="p-consult-message {% if message.sender_id == current_user.id %}p-consult-sent{% endif %}"
+      >
+        <div class="p-consult-message-avatar">
+          {% if message.sender_id == current_user.id %} {% if
+          current_user.patient_profile.profile_pic %}
+          <img
+            src="{{ url_for('static', filename='uploads/' + current_user.patient_profile.profile_pic) }}"
+            alt="You"
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 50%;
+            "
+          />
+          {% else %} {{ current_user.name.split() | map('first') | join('') | upper }} {% endif %} {% else %} {% if appointment.doctor.user.doctor_profile.profile_pic %}
+          <img
+            src="{{ url_for('static', filename='uploads/' + appointment.doctor.user.doctor_profile.profile_pic) }}"
+            alt="Doctor"
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 50%;
+            "
+          />
+          {% else %} {{ appointment.doctor.user.name.split() | map('first', ) | join('') | upper }} {% endif %} {% endif %}
+        </div>
+        <div class="p-consult-message-content">
+          <div class="p-consult-message-header">
+            <span class="p-consult-message-sender">
+              {% if message.sender_id == current_user.id %} {{ current_user.name }} {% else %} Dr. {{ appointment.doctor.user.name }} {% endif %}
+            </span>
+            <span class="p-consult-message-time"
+              >{{ message.timestamp.strftime('%I:%M %p') }}</span
+            >
+          </div>
+          <div class="p-consult-message-bubble">{{ message.content }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="p-consult-input-area">
+      <div class="p-consult-input-wrapper">
+        <button class="p-consult-attach-btn">
+          <i class="fas fa-paperclip"></i>
+        </button>
+        <input
+          type="text"
+          class="p-consult-input-field"
+          placeholder="Type your message here..."
+          id="p-consultInput"
+        />
+        <button class="p-consult-send-btn" id="p-consultSendBtn">Send</button>
+      </div>
+      <div class="p-consult-encryption">
+        <i class="fas fa-lock p-consult-lock-icon"></i>
+        This chat is end-to-end encrypted
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Doctor Profile Modal -->
+<div class="modal fade" id="doctorProfileModal" tabindex="-1" aria-labelledby="doctorProfileModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="doctorProfileModalLabel">Doctor Profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="p-profile-modal-content">
+          <!-- Doctor Header -->
+          <div class="p-profile-modal-header">
+            <div class="p-profile-modal-avatar">
+              {% if appointment.doctor.user.doctor_profile.profile_pic %}
+              <img src="{{ url_for('static', filename='uploads/' + appointment.doctor.user.doctor_profile.profile_pic) }}" alt="Dr. {{ appointment.doctor.user.name }}">
+              {% else %}
+              <div class="p-profile-modal-avatar-placeholder">
+                {{ appointment.doctor.user.name.split() | map('first') | join('') | upper }}
+              </div>
+              {% endif %}
+            </div>
+            <div class="p-profile-modal-info">
+              <h4 class="p-profile-modal-name">Dr. {{ appointment.doctor.user.name }}</h4>
+              <p class="p-profile-modal-specialty">{{ appointment.doctor.specialization or "General Physician" }}</p>
+              <div class="p-profile-modal-meta">
+                <span class="p-profile-modal-experience">
+                  <i class="fas fa-briefcase"></i> {{ appointment.doctor.experience }} Years Experience
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Doctor Details -->
+          <div class="p-profile-modal-details">
+            <div class="p-profile-modal-section">
+              <h6 class="p-profile-modal-section-title">
+                <i class="fas fa-user-md"></i> About
+              </h6>
+              <p class="p-profile-modal-text">{{ appointment.doctor.about or "No description provided." }}</p>
+            </div>
+
+            <div class="p-profile-modal-section">
+              <h6 class="p-profile-modal-section-title">
+                <i class="fas fa-graduation-cap"></i> Education & Qualifications
+              </h6>
+              <div class="p-profile-modal-grid">
+                <div class="p-profile-modal-item">
+                  <span class="p-profile-modal-label">Medical School:</span>
+                  <span class="p-profile-modal-value">{{ appointment.doctor.medical_school or "Not specified" }}</span>
+                </div>
+                <div class="p-profile-modal-item">
+                  <span class="p-profile-modal-label">Degree:</span>
+                  <span class="p-profile-modal-value">{{ appointment.doctor.medical_degree or "Not specified" }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-profile-modal-section">
+              <h6 class="p-profile-modal-section-title">
+                <i class="fas fa-clinic-medical"></i> Clinic Information
+              </h6>
+              <div class="p-profile-modal-grid">
+                <div class="p-profile-modal-item">
+                  <span class="p-profile-modal-label">Clinic Name:</span>
+                  <span class="p-profile-modal-value">{{ appointment.doctor.clinic_name or "Not specified" }}</span>
+                </div>
+                <div class="p-profile-modal-item">
+                  <span class="p-profile-modal-label">Address:</span>
+                  <span class="p-profile-modal-value">
+                    {{ appointment.doctor.clinic_address or "" }}, {{ appointment.doctor.clinic_city or "" }}, {{ appointment.doctor.clinic_state or "" }}
+                  </span>
+                </div>
+                <div class="p-profile-modal-item">
+                  <span class="p-profile-modal-label">Consultation Fee:</span>
+                  <span class="p-profile-modal-value">₹{{ appointment.doctor.fees }}</span>
+                </div>
+              </div>
+            </div>
+
+            {% if appointment.doctor.areas_of_expertise %}
+            <div class="p-profile-modal-section">
+              <h6 class="p-profile-modal-section-title">
+                <i class="fas fa-tags"></i> Areas of Expertise
+              </h6>
+              <div class="p-profile-modal-tags">
+                {% for tag in appointment.doctor.areas_of_expertise.split(',') %}
+                <span class="p-profile-modal-tag">{{ tag.strip() }}</span>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <a href="{{ url_for('patient.doctor_preview', id=appointment.doctor.id) }}" class="btn btn-primary" style="background-color: #16a2b8;">
+          <i class="fas fa-external-link-alt"></i> View Full Profile
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Video Call Modal -->
+<div class="modal fade" id="videoCallModal" tabindex="-1" aria-labelledby="videoCallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="videoCallModalLabel">
+          <i class="fas fa-video text-primary"></i> Video Call with Dr. {{ appointment.doctor.user.doctor_profile.name }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center p-4">
+          <div class="mb-3">
+            <i class="fas fa-video fa-3x text-primary mb-3"></i>
+            <h4>Starting Video Call...</h4>
+            <p class="text-muted">Please wait while we connect you to your doctor.</p>
+          </div>
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <strong>Note:</strong> Video calling feature is currently under development.
+            For immediate consultation, please use the chat feature or call directly.
+          </div>
+          <div class="mt-3">
+            <button type="button" class="btn btn-success me-2" disabled>
+              <i class="fas fa-video"></i> Join Call
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="fas fa-times"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Phone Call Modal -->
+<div class="modal fade" id="phoneCallModal" tabindex="-1" aria-labelledby="phoneCallModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="phoneCallModalLabel">
+          <i class="fas fa-phone text-success"></i> Call Dr. {{ appointment.doctor.user.doctor_profile.name }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center p-4">
+          <div class="mb-3">
+            <i class="fas fa-phone fa-3x text-success mb-3"></i>
+            <h4>Ready to Call</h4>
+            <p class="text-muted">Click the button below to call your doctor directly.</p>
+          </div>
+          <div class="alert alert-success">
+            <i class="fas fa-mobile-alt"></i>
+            <strong>Doctor's Contact:</strong> {{ appointment.doctor.user.doctor_profile.phone or 'Contact information not available' }}
+          </div>
+          <div class="mt-3">
+            <a href="tel:{{ appointment.doctor.user.doctor_profile.phone }}" class="btn btn-success me-2">
+              <i class="fas fa-phone"></i> Call Now
+            </a>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="fas fa-times"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+  const socket = io();
+  const appointmentId = {{ appointment.id }};
+  const senderId = {{ current_user.id }};
+  const messagesContainer = document.getElementById("p-consultMessages");
+
+  socket.emit('join', { appointment_id: appointmentId });
+
+  // Patient selection
+  const patientItems = document.querySelectorAll(".p-consult-patient-item");
+  patientItems.forEach((item) => {
+    item.addEventListener("click", function () {
+      patientItems.forEach((p) => p.classList.remove("p-consult-active"));
+      this.classList.add("p-consult-active");
+    });
+  });
+
+  // Send message
+  const sendBtn = document.getElementById("p-consultSendBtn");
+  const inputField = document.getElementById("p-consultInput");
+
+  if (sendBtn && inputField) {
+    function sendMessage() {
+      const message = inputField.value.trim();
+      if (message) {
+        socket.emit('send_message', {
+          appointment_id: appointmentId,
+          sender_id: senderId,
+          content: message
+        });
+        inputField.value = "";
+      }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    inputField.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+  }
+
+  socket.on('receive_message', function(data) {
+    const isSent = data.sender_id == senderId;
+    const messageHTML = `
+      <div class="p-consult-message ${isSent ? 'p-consult-sent' : ''}">
+        <div class="p-consult-message-avatar">
+          ${data.sender_initials}
+        </div>
+        <div class="p-consult-message-content">
+          <div class="p-consult-message-header">
+            <span class="p-consult-message-sender">${data.sender_name}</span>
+            <span class="p-consult-message-time">${data.timestamp}</span>
+          </div>
+          <div class="p-consult-message-bubble">${data.content}</div>
+        </div>
+      </div>
+    `;
+    messagesContainer.insertAdjacentHTML("beforeend", messageHTML);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  });
+
+  // Search functionality
+  const searchInput = document.querySelector(".p-consult-search-input");
+  searchInput.addEventListener("input", function () {
+    const searchTerm = this.value.toLowerCase();
+    patientItems.forEach((item) => {
+      const patientName = item
+        .querySelector(".p-consult-patient-name")
+        .textContent.toLowerCase();
+      if (patientName.includes(searchTerm)) {
+        item.style.display = "flex";
+      } else {
+        item.style.display = "none";
+      }
+    });
+  });
+
+  // Auto scroll to bottom
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+  // Doctor profile modal
+  function showDoctorProfile() {
+    const modal = new bootstrap.Modal(document.getElementById('doctorProfileModal'));
+    modal.show();
+  }
+
+  // Video call function
+  function startVideoCall() {
+    const modal = new bootstrap.Modal(document.getElementById('videoCallModal'));
+    modal.show();
+  }
+
+  // Phone call function
+  function startPhoneCall() {
+    const modal = new bootstrap.Modal(document.getElementById('phoneCallModal'));
+    modal.show();
+  }
+</script>
+
+{% endblock content %}

@@ -137,6 +137,17 @@ class Review(db.Model):
     patient = db.relationship("PatientProfile", backref="reviews")
 
 
+### Message ###
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    appointment_id = db.Column(db.Integer, db.ForeignKey('appointment.id'))
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    content = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    appointment = db.relationship("Appointment", backref="messages")
+    sender = db.relationship("User", backref="messages")
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))

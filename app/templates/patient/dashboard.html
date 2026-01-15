@@ -1,0 +1,627 @@
+{% extends "base.html" %} 
+{% block title %}Patient Dashboard{% endblock %} 
+{% block content %}
+
+<style>
+  /* Dashboard Layout */
+  .p-dash-container {
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 0 40px;
+  }
+
+  .p-dash-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+  }
+
+  /* Sidebar */
+  .p-dash-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .p-dash-profile-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    text-align: center;
+  }
+
+  .p-dash-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #d4f1f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #16a2b8;
+    margin: 0 auto 1.5rem;
+  }
+
+  .p-dash-profile-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2c2c2c;
+    margin-bottom: 0.25rem;
+  }
+
+  .p-dash-profile-id {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+  }
+
+  .p-dash-emergency-card {
+    background: linear-gradient(135deg, #16a2b8 0%, #138496 100%);
+    border-radius: 12px;
+    padding: 2rem;
+    color: white;
+    box-shadow: 0 4px 12px rgba(22, 162, 184, 0.25);
+  }
+
+  .p-dash-emergency-title {
+    font-size: 1.375rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  .p-dash-emergency-text {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    opacity: 0.95;
+  }
+
+  .p-dash-emergency-btn {
+    width: 100%;
+    padding: 0.875rem;
+    background: white;
+    color: #16a2b8;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .p-dash-emergency-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Main Content */
+  .p-dash-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .p-dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .p-dash-header-text h1 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: #2c2c2c;
+    margin-bottom: 0.25rem;
+  }
+
+  .p-dash-header-text p {
+    font-size: 0.9375rem;
+    color: #6c757d;
+    margin: 0;
+  }
+
+  .p-dash-book-btn {
+    padding: 0.75rem 1.5rem;
+    background: #16a2b8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(22, 162, 184, 0.25);
+    text-decoration: none;
+  }
+
+  .p-dash-book-btn:hover {
+    background: #138496;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(22, 162, 184, 0.3);
+  }
+
+  /* Stats Grid */
+  .p-dash-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+
+  .p-dash-stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .p-dash-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .p-dash-stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin: 0 auto 1rem;
+  }
+
+  .p-dash-icon-green {
+    background: #e6fff0;
+    color: #27ae60;
+  }
+
+  .p-dash-icon-blue {
+    background: #e7f3ff;
+    color: #4a90e2;
+  }
+
+  .p-dash-icon-purple {
+    background: #f3e6ff;
+    color: #9b59b6;
+  }
+
+  .p-dash-icon-orange {
+    background: #fff3e6;
+    color: #ff8c42;
+  }
+
+  .p-dash-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-bottom: 0.25rem;
+  }
+
+  .p-dash-stat-label {
+    font-size: 0.8125rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+
+  /* Appointments Section */
+  .p-dash-appointments {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .p-dash-tabs {
+    display: flex;
+    gap: 2rem;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 2rem;
+  }
+
+  .p-dash-tab {
+    padding: 0.75rem 0;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #6c757d;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    bottom: -1px;
+  }
+
+  .p-dash-tab.p-dash-active {
+    color: #16a2b8;
+    border-bottom-color: #16a2b8;
+  }
+
+  .p-dash-appointment-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    transition: all 0.2s;
+  }
+
+  .p-dash-appointment-card:hover {
+    border-color: #16a2b8;
+    box-shadow: 0 2px 8px rgba(22, 162, 184, 0.1);
+  }
+
+  .p-dash-doctor-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .p-dash-doctor-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .p-dash-appointment-info {
+    flex: 1;
+  }
+
+  .p-dash-doctor-name {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: #2c2c2c;
+    margin-bottom: 0.25rem;
+  }
+
+  .p-dash-doctor-specialty {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 0.75rem;
+  }
+
+  .p-dash-appointment-details {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.875rem;
+    color: #495057;
+  }
+
+  .p-dash-appointment-details span {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .p-dash-appointment-details i {
+    color: #6c757d;
+  }
+
+  .p-dash-appointment-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-end;
+  }
+
+  .p-dash-status-badge {
+    padding: 0.375rem 0.875rem;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+
+  .p-dash-badge-upcoming {
+    background: #e6f7f9;
+    color: #16a2b8;
+  }
+
+  .p-dash-badge-confirmed {
+    background: #e6fff0;
+    color: #27ae60;
+  }
+
+  .p-dash-action-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .p-dash-btn-action {
+    padding: 0.5rem 1rem;
+    border: 1.5px solid #dee2e6;
+    background: white;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .p-dash-btn-primary {
+    background: #e7f3ff;
+    border-color: #4a90e2;
+    color: #4a90e2;
+  }
+
+  .p-dash-btn-primary:hover {
+    background: #4a90e2;
+    color: white;
+  }
+
+  .p-dash-btn-cancel {
+    color: #dc3545;
+    border-color: #dee2e6;
+  }
+
+  .p-dash-btn-cancel:hover {
+    background: #fff5f5;
+    border-color: #dc3545;
+  }
+
+  /* Mobile Menu */
+  .p-dash-mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #495057;
+    cursor: pointer;
+  }
+
+  /* Responsive */
+  @media (max-width: 1200px) {
+    .p-dash-stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 992px) {
+    .p-dash-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .p-dash-sidebar {
+      display: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .p-dash-stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .p-dash-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .p-dash-book-btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .p-dash-appointment-card {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .p-dash-appointment-actions {
+      align-items: center;
+      width: 100%;
+    }
+
+    .p-dash-action-buttons {
+      width: 100%;
+    }
+
+    .p-dash-btn-action {
+      flex: 1;
+    }
+
+    .p-dash-tabs {
+      gap: 1rem;
+      overflow-x: auto;
+    }
+
+    .p-dash-tab {
+      white-space: nowrap;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .p-dash-container {
+      padding: 1.5rem 1rem;
+    }
+
+    .p-dash-appointments {
+      padding: 1.5rem 1rem;
+    }
+
+    .p-dash-appointment-details {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+</style>
+
+<div class="p-dash-container">
+  <div class="p-dash-layout">
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="p-dash-sidebar">
+      <!-- Profile Card -->
+      <div class="p-dash-profile-card">
+        <div class="p-dash-avatar">
+          {% if current_user.patient_profile.profile_pic %}
+          <img
+            src="{{ url_for('static', filename='uploads/' + current_user.patient_profile.profile_pic) }}"
+            alt="Profile"
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 50%;
+            "
+          />
+          {% else %} {{ current_user.name[:2]|upper }} {% endif %}
+        </div>
+
+        <div class="p-dash-profile-name">{{ current_user.name }}</div>
+
+        <div class="p-dash-profile-id">
+          Patient ID: #{{ current_user.patient_profile.id }}
+        </div>
+      </div>
+
+      <!-- Emergency Card -->
+      <div class="p-dash-emergency-card">
+        <h3 class="p-dash-emergency-title">Emergency?</h3>
+        <p class="p-dash-emergency-text">
+          Find nearest hospitals or call ambulance immediately.
+        </p>
+        <button
+          class="p-dash-emergency-btn"
+          onclick="window.location.href='tel:911'"
+        >
+          Call 911
+        </button>
+      </div>
+    </aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="p-dash-main">
+      <!-- Header -->
+      <div class="p-dash-header">
+        <div class="p-dash-header-text">
+          <h1>Dashboard</h1>
+          <p>Welcome back, here’s your health overview.</p>
+        </div>
+
+        <a href="{{ url_for('patient.find_doctor') }}" class="p-dash-book-btn">
+          <i class="fas fa-plus"></i>
+          Book Appointment
+        </a>
+      </div>
+
+      <!-- ================= STATS GRID ================= -->
+      <div class="p-dash-stats-grid">
+        <div class="p-dash-stat-card">
+          <div class="p-dash-stat-icon p-dash-icon-green">
+            <i class="fas fa-heartbeat"></i>
+          </div>
+          <div class="p-dash-stat-value">{{ total_consultations }}</div>
+          <div class="p-dash-stat-label">Consultations</div>
+        </div>
+
+        <div class="p-dash-stat-card">
+          <div class="p-dash-stat-icon p-dash-icon-blue">
+            <i class="far fa-calendar"></i>
+          </div>
+          <div class="p-dash-stat-value">{{ upcoming_count }}</div>
+          <div class="p-dash-stat-label">Upcoming</div>
+        </div>
+
+        <div class="p-dash-stat-card">
+          <div class="p-dash-stat-icon p-dash-icon-purple">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <div class="p-dash-stat-value">{{ total_doctors }}</div>
+          <div class="p-dash-stat-label">Doctors</div>
+        </div>
+
+        <div class="p-dash-stat-card">
+          <div class="p-dash-stat-icon p-dash-icon-orange">
+            <i class="fas fa-video"></i>
+          </div>
+          <div class="p-dash-stat-value">{{ upcoming|length }}</div>
+          <div class="p-dash-stat-label">Sessions</div>
+        </div>
+      </div>
+
+      <!-- ================= APPOINTMENTS ================= -->
+      <div class="p-dash-appointments">
+        <div class="p-dash-tabs" style="font-weight: bold">
+          Upcoming Appointments
+        </div>
+
+        {% if upcoming %} {% for appt in upcoming %}
+        <div class="p-dash-appointment-card">
+          <div class="p-dash-doctor-avatar">
+            {% if appt.doctor.user.doctor_profile.profile_pic %}
+              <img src="{{ url_for('static', filename='uploads/' + appt.doctor.user.doctor_profile.profile_pic) }}" alt="Dr. {{ appt.doctor.user.name }}">
+            {% else %}
+              <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 700;">
+                {{ appt.doctor.user.name.split() | map('first') | join('') | upper }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="p-dash-appointment-info">
+            <div class="p-dash-doctor-name">
+              Dr. {{ appt.doctor.user.name }}
+            </div>
+
+            <div class="p-dash-doctor-specialty">
+              {{ appt.doctor.specialization or "General Physician" }}
+            </div>
+
+            <div class="p-dash-appointment-details">
+              <span>
+                <i class="far fa-calendar"></i>
+                {{ appt.date }} at {{ appt.time }}
+              </span>
+              <span>
+                <i class="fas fa-video"></i>
+                Online Consultation
+              </span>
+            </div>
+          </div>
+
+          <div class="p-dash-appointment-actions">
+            <span class="p-dash-status-badge p-dash-badge-upcoming">
+              {{ appt.status|capitalize }}
+            </span>
+
+            <div class="p-dash-action-buttons">
+              <a
+                href="{{ url_for('patient.consultation', appointment_id=appt.id) }}"
+                class="p-dash-btn-action p-dash-btn-primary"
+                style="text-decoration: none"
+              >
+                Consult
+              </a>
+              <a
+                href="{{ url_for('patient.cancel_appointment', appointment_id=appt.id) }}"
+                class="p-dash-btn-action p-dash-btn-cancel"
+                style="text-decoration: none"
+                onclick="return confirm('Are you sure you want to cancel this appointment?')"
+              >
+                Cancel
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <p class="text-muted">No upcoming appointments.</p>
+        {% endif %}
+      </div>
+    </main>
+  </div>
+</div>
+
+{% endblock %}

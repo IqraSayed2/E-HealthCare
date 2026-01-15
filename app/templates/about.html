@@ -1,0 +1,192 @@
+{% extends "base.html" %} 
+{% block title %}About Us {% endblock %} 
+{% block content %}
+
+<!-- Hero Section -->
+<section class="ehome-hero">
+  <div class="container">
+    <div class="ehome-hero-content">
+      <div class="ehome-hero-text">
+        <div class="ehome-tagline">
+          <i class="fas fa-heartbeat"></i>
+          <span>About E-HealthCare</span>
+        </div>
+
+        <h1 class="ehome-hero-title">
+          Revolutionizing Healthcare<br />
+          <span class="ehome-hero-title-accent">Through Technology</span>
+        </h1>
+
+        <p class="ehome-hero-description">
+          We're committed to making quality healthcare accessible to everyone
+          through innovative digital solutions, connecting patients with
+          healthcare professionals seamlessly.
+        </p>
+
+        <div class="ehome-hero-buttons">
+          <a href="{{ url_for('auth.login_signup') }}" class="ehome-btn-primary"
+            >Join Our Community</a
+          >
+          <a href="#mission" class="ehome-btn-secondary">Learn More</a>
+        </div>
+      </div>
+
+      <div class="ehome-hero-image">
+        <img
+          src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&h=600&fit=crop"
+          class="ehome-hero-img"
+          alt="Healthcare professionals collaborating"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Mission Section -->
+<section id="mission" class="ehome-features" style="padding: 2.5rem 0">
+  <div class="container">
+    <div class="ehome-section-header">
+      <h2 class="ehome-section-title">Our Mission</h2>
+      <p class="ehome-section-subtitle">
+        Bridging the gap between patients and healthcare providers
+      </p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="ehome-feature-card" style="height: 100%">
+          <div class="ehome-feature-icon ehome-icon-teal">
+            <i class="fas fa-bullseye"></i>
+          </div>
+          <h3>Accessible Healthcare</h3>
+          <p>
+            We believe that quality healthcare should be accessible to everyone,
+            regardless of location or time constraints. Our platform breaks down
+            geographical barriers and brings expert medical care to your
+            fingertips.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="ehome-feature-card" style="height: 100%">
+          <div class="ehome-feature-icon ehome-icon-blue">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>Secure & Private</h3>
+          <p>
+            Patient privacy and data security are our top priorities. We employ
+            industry-leading encryption and security measures to ensure that all
+            medical information remains confidential and protected.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="ehome-features" style="padding: 2.5rem 0">
+  <div class="container">
+    <div class="ehome-section-header">
+      <h2 class="ehome-section-title">Why Choose E-HealthCare?</h2>
+      <p class="ehome-section-subtitle">
+        What sets us apart in the digital healthcare landscape
+      </p>
+    </div>
+
+    <div class="row g-4 shadow rounded p-3 mb-3">
+      <div class="col-lg-4">
+        <div class="text-center">
+          <div
+            class="ehome-feature-icon ehome-icon-teal"
+            style="width: 80px; height: 80px; margin: 0 auto 1rem"
+          >
+            <i class="fas fa-user-md" style="font-size: 2rem"></i>
+          </div>
+          <h4 style="color: #16a2b8; margin-bottom: 1rem">Expert Doctors</h4>
+          <p>
+            Our platform features verified, licensed healthcare professionals
+            with years of experience across various specialties.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="text-center">
+          <div
+            class="ehome-feature-icon ehome-icon-blue"
+            style="width: 80px; height: 80px; margin: 0 auto 1rem"
+          >
+            <i class="fas fa-clock" style="font-size: 2rem"></i>
+          </div>
+          <h4 style="color: #16a2b8; margin-bottom: 1rem">Convenient Timing</h4>
+          <p>
+            Access healthcare services 24/7, eliminating the need to wait for
+            office hours or take time off work.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="text-center">
+          <div
+            class="ehome-feature-icon ehome-icon-orange"
+            style="width: 80px; height: 80px; margin: 0 auto 1rem"
+          >
+            <i class="fas fa-lock" style="font-size: 2rem"></i>
+          </div>
+          <h4 style="color: #16a2b8; margin-bottom: 1rem">Data Security</h4>
+          <p>
+            Your medical information is protected with bank-level security and
+            complies with all healthcare privacy regulations.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Our Team Section -->
+<section class="ehome-features" style="padding-top: 1rem">
+  <div class="container">
+    <div class="ehome-section-header" style="margin: 0 auto 1rem">
+      <h2 class="ehome-section-title">Our Vision</h2>
+      <p class="ehome-section-subtitle">
+        Building the future of healthcare technology
+      </p>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div
+          class="ehome-feature-card text-center"
+          style="
+            background: linear-gradient(135deg, #16a2b8 0%, #138496 100%);
+            color: white;
+          "
+        >
+          <h3 style="color: white; margin-bottom: 1.5rem">
+            Transforming Healthcare Delivery
+          </h3>
+          <p style="font-size: 1.1rem; line-height: 1.6; color: white">
+            We envision a world where geographical boundaries don't limit access
+            to quality healthcare. Through innovative technology and
+            compassionate care, we're creating a healthcare ecosystem that
+            prioritizes patient needs, empowers healthcare providers, and
+            leverages the power of digital transformation to improve health
+            outcomes for everyone.
+          </p>
+          <div style="margin-top: 2rem">
+            <strong
+              >"Healthcare should be as simple as a conversation, as accessible
+              as the internet, and as personal as a handshake."</strong
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
