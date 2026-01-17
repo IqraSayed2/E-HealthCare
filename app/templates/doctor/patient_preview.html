@@ -3,26 +3,16 @@
 {% block content %}
 
     <style>
-      :root {
-        --ehc-primary: #16a2b8;
-        --ehc-primary-dark: #138496;
-        --ehc-secondary: #6c757d;
-        --ehc-success: #28a745;
-        --ehc-warning: #ffc107;
-        --ehc-light: #f8f9fa;
-        --ehc-dark: #212529;
-      }
-
-      .ehc-profile-wrapper {
+      .dr-pp-profile-wrapper {
         max-width: 1200px;
         margin: 0 auto;
         padding: 2rem;
       }
 
-      .ehc-back-button {
+      .dr-pp-back-button {
         background: white;
         border: 2px solid #e5e7eb;
-        color: var(--ehc-dark);
+        color: #212529;
         padding: 0.6rem 1.2rem;
         border-radius: 8px;
         font-weight: 600;
@@ -34,12 +24,12 @@
         transition: all 0.3s ease;
       }
 
-      .ehc-back-button:hover {
-        border-color: var(--ehc-primary);
-        color: var(--ehc-primary);
+      .dr-pp-back-button:hover {
+        border-color: #16a2b8;
+        color: #16a2b8;
       }
 
-      .ehc-profile-header {
+      .dr-pp-profile-header {
         background: white;
         border-radius: 16px;
         padding: 2.5rem;
@@ -47,14 +37,14 @@
         margin-bottom: 2rem;
       }
 
-      .ehc-profile-top {
+      .dr-pp-profile-top {
         display: flex;
         gap: 2rem;
         align-items: flex-start;
         margin-bottom: 2rem;
       }
 
-      .ehc-patient-image {
+      .dr-pp-patient-image {
         width: 150px;
         height: 150px;
         border-radius: 20px;
@@ -68,11 +58,11 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
 
-      .ehc-patient-main-info {
+      .dr-pp-patient-main-info {
         flex: 1;
       }
 
-      .ehc-verified-badge {
+      .dr-pp-verified-badge {
         display: inline-flex;
         align-items: center;
         gap: 0.3rem;
@@ -85,47 +75,47 @@
         margin-bottom: 0.8rem;
       }
 
-      .ehc-patient-name {
+      .dr-pp-patient-name {
         font-size: 2rem;
         font-weight: 700;
-        color: var(--ehc-dark);
+        color: #212529;
         margin-bottom: 0.5rem;
       }
 
-      .ehc-patient-role {
+      .dr-pp-patient-role {
         font-size: 1.1rem;
-        color: var(--ehc-primary);
+        color: #16a2b8;
         font-weight: 600;
         margin-bottom: 1rem;
       }
 
-      .ehc-patient-meta {
+      .dr-pp-patient-meta {
         display: flex;
         gap: 2rem;
         flex-wrap: wrap;
         margin-bottom: 1.5rem;
       }
 
-      .ehc-meta-item {
+      .dr-pp-meta-item {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        color: var(--ehc-secondary);
+        color: #6c757d;
         font-size: 0.95rem;
       }
 
-      .ehc-meta-item i {
-        color: var(--ehc-primary);
+      .dr-pp-meta-item i {
+        color: #16a2b8;
         font-size: 1.1rem;
       }
 
-      .ehc-profile-grid {
+      .dr-pp-profile-grid {
         display: grid;
         grid-template-columns: 1fr;
         gap: 2rem;
       }
 
-      .ehc-profile-section {
+      .dr-pp-profile-section {
         background: white;
         border-radius: 16px;
         padding: 2rem;
@@ -133,67 +123,67 @@
         margin-bottom: 2rem;
       }
 
-      .ehc-section-title {
+      .dr-pp-section-title {
         font-size: 1.4rem;
         font-weight: 700;
-        color: var(--ehc-dark);
+        color: #212529;
         margin-bottom: 1.5rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
       }
 
-      .ehc-section-title i {
-        color: var(--ehc-primary);
+      .dr-pp-section-title i {
+        color: #16a2b8;
       }
 
-      .ehc-info-grid {
+      .dr-pp-info-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
       }
 
-      .ehc-info-item {
+      .dr-pp-info-item {
         padding: 1rem;
-        background: var(--ehc-light);
+        background: #f8f9fa;
         border-radius: 10px;
       }
 
-      .ehc-info-label {
+      .dr-pp-info-label {
         font-size: 0.85rem;
-        color: var(--ehc-secondary);
+        color: #6c757d;
         margin-bottom: 0.3rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
       }
 
-      .ehc-info-value {
+      .dr-pp-info-value {
         font-size: 1.1rem;
         font-weight: 600;
-        color: var(--ehc-dark);
+        color: #212529;
       }
 
-      .ehc-appointment-card {
+      .dr-pp-appointment-card {
         padding: 1.5rem;
         border: 2px solid #e5e7eb;
         border-radius: 12px;
         margin-bottom: 1rem;
       }
 
-      .ehc-appointment-header {
+      .dr-pp-appointment-header {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         margin-bottom: 1rem;
       }
 
-      .ehc-appointment-info {
+      .dr-pp-appointment-info {
         display: flex;
         align-items: center;
         gap: 1rem;
       }
 
-      .ehc-appointment-avatar {
+      .dr-pp-appointment-avatar {
         width: 50px;
         height: 50px;
         border-radius: 50%;
@@ -205,83 +195,83 @@
         font-size: 1.3rem;
       }
 
-      .ehc-appointment-details {
+      .dr-pp-appointment-details {
         font-weight: 600;
-        color: var(--ehc-dark);
+        color: #212529;
         margin-bottom: 0.2rem;
       }
 
-      .ehc-appointment-date {
+      .dr-pp-appointment-date {
         font-size: 0.85rem;
-        color: var(--ehc-secondary);
+        color: #6c757d;
       }
 
-      .ehc-appointment-status {
+      .dr-pp-appointment-status {
         padding: 0.3rem 0.8rem;
         border-radius: 20px;
         font-size: 0.85rem;
         font-weight: 600;
       }
 
-      .ehc-status-confirmed {
+      .dr-pp-status-confirmed {
         background: rgba(16, 185, 129, 0.1);
         color: #10b981;
       }
 
-      .ehc-status-pending {
+      .dr-pp-status-pending {
         background: rgba(251, 191, 36, 0.1);
         color: #d97706;
       }
 
-      .ehc-status-completed {
+      .dr-pp-status-completed {
         background: rgba(59, 130, 246, 0.1);
         color: #2563eb;
       }
 
-      .ehc-sticky-sidebar {
+      .dr-pp-sticky-sidebar {
         position: sticky;
         top: 2rem;
       }
 
       @media (max-width: 992px) {
-        .ehc-profile-grid {
+        .dr-pp-profile-grid {
           grid-template-columns: 1fr;
         }
 
-        .ehc-sticky-sidebar {
+        .dr-pp-sticky-sidebar {
           position: static;
         }
 
-        .ehc-profile-top {
+        .dr-pp-profile-top {
           flex-direction: column;
           align-items: center;
           text-align: center;
         }
 
-        .ehc-patient-meta {
+        .dr-pp-patient-meta {
           justify-content: center;
         }
 
-        .ehc-info-grid {
+        .dr-pp-info-grid {
           grid-template-columns: 1fr;
         }
       }
 
       @media (max-width: 576px) {
-        .ehc-profile-wrapper {
+        .dr-pp-profile-wrapper {
           padding: 1rem;
         }
 
-        .ehc-profile-header,
-        .ehc-profile-section {
+        .dr-pp-profile-header,
+        .dr-pp-profile-section {
           padding: 1.5rem;
         }
 
-        .ehc-patient-name {
+        .dr-pp-patient-name {
           font-size: 1.5rem;
         }
 
-        .ehc-patient-image {
+        .dr-pp-patient-image {
           width: 120px;
           height: 120px;
           font-size: 3rem;
@@ -289,18 +279,18 @@
       }
     </style>
 
-<div class="ehc-profile-wrapper">
+<div class="dr-pp-profile-wrapper">
 
   <!-- Back Button -->
-  <button class="ehc-back-button" onclick="history.back()">
+  <button class="dr-pp-back-button" onclick="history.back()">
     <i class="fas fa-arrow-left"></i> Back to Appointments
   </button>
 
   <!-- ================= PROFILE HEADER ================= -->
-  <div class="ehc-profile-header">
-    <div class="ehc-profile-top">
+  <div class="dr-pp-profile-header">
+    <div class="dr-pp-profile-top">
 
-      <div class="ehc-patient-image">
+      <div class="dr-pp-patient-image">
         {% if patient.user.patient_profile.profile_pic %}
           <img src="{{ url_for('static', filename='uploads/' + patient.user.patient_profile.profile_pic) }}" alt="Patient" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
         {% else %}
@@ -308,29 +298,29 @@
         {% endif %}
       </div>
 
-      <div class="ehc-patient-main-info">
-        <div class="ehc-verified-badge">
+      <div class="dr-pp-patient-main-info">
+        <div class="dr-pp-verified-badge">
           <i class="fas fa-check-circle"></i> Patient Profile
         </div>
 
-        <h1 class="ehc-patient-name">
+        <h1 class="dr-pp-patient-name">
           {{ patient.user.name }}
         </h1>
 
-        <div class="ehc-patient-role">
+        <div class="dr-pp-patient-role">
           Patient
         </div>
 
-        <div class="ehc-patient-meta">
-          <div class="ehc-meta-item">
+        <div class="dr-pp-patient-meta">
+          <div class="dr-pp-meta-item">
             <i class="fas fa-envelope"></i>
             <span>{{ patient.user.email }}</span>
           </div>
-          <div class="ehc-meta-item">
+          <div class="dr-pp-meta-item">
             <i class="fas fa-phone"></i>
             <span>{{ patient.phone or 'Not provided' }}</span>
           </div>
-          <div class="ehc-meta-item">
+          <div class="dr-pp-meta-item">
             <i class="fas fa-birthday-cake"></i>
             <span>{{ patient.date_of_birth | calculate_age }} years old</span>
           </div>
@@ -340,87 +330,87 @@
   </div>
 
   <!-- ================= GRID ================= -->
-  <div class="ehc-profile-grid">
+  <div class="dr-pp-profile-grid">
 
     <!-- LEFT -->
     <div>
 
       <!-- PERSONAL INFORMATION -->
-      <div class="ehc-profile-section">
-        <h2 class="ehc-section-title">
+      <div class="dr-pp-profile-section">
+        <h2 class="dr-pp-section-title">
           <i class="fas fa-user"></i> Personal Information
         </h2>
 
-        <div class="ehc-info-grid">
-          <div class="ehc-info-item">
-            <div class="ehc-info-label">Full Name</div>
-            <div class="ehc-info-value">{{ patient.user.name }}</div>
+        <div class="dr-pp-info-grid">
+          <div class="dr-pp-info-item">
+            <div class="dr-pp-info-label">Full Name</div>
+            <div class="dr-pp-info-value">{{ patient.user.name }}</div>
           </div>
-          <div class="ehc-info-item">
-            <div class="ehc-info-label">Email</div>
-            <div class="ehc-info-value">{{ patient.user.email }}</div>
+          <div class="dr-pp-info-item">
+            <div class="dr-pp-info-label">Email</div>
+            <div class="dr-pp-info-value">{{ patient.user.email }}</div>
           </div>
-          <div class="ehc-info-item">
-            <div class="ehc-info-label">Phone</div>
-            <div class="ehc-info-value">{{ patient.phone or 'Not provided' }}</div>
+          <div class="dr-pp-info-item">
+            <div class="dr-pp-info-label">Phone</div>
+            <div class="dr-pp-info-value">{{ patient.phone or 'Not provided' }}</div>
           </div>
-          <div class="ehc-info-item">
-            <div class="ehc-info-label">Date of Birth</div>
-            <div class="ehc-info-value">{{ patient.date_of_birth or 'Not provided' }}</div>
+          <div class="dr-pp-info-item">
+            <div class="dr-pp-info-label">Date of Birth</div>
+            <div class="dr-pp-info-value">{{ patient.date_of_birth or 'Not provided' }}</div>
           </div>
-          <div class="ehc-info-item">
-            <div class="ehc-info-label">Age</div>
-            <div class="ehc-info-value">{{ patient.date_of_birth | calculate_age }} years</div>
+          <div class="dr-pp-info-item">
+            <div class="dr-pp-info-label">Age</div>
+            <div class="dr-pp-info-value">{{ patient.date_of_birth | calculate_age }} years</div>
           </div>
-          <div class="ehc-info-item">
-            <div class="ehc-info-label">Gender</div>
-            <div class="ehc-info-value">{{ patient.gender or 'Not provided' }}</div>
+          <div class="dr-pp-info-item">
+            <div class="dr-pp-info-label">Gender</div>
+            <div class="dr-pp-info-value">{{ patient.gender or 'Not provided' }}</div>
           </div>
-          <div class="ehc-info-item">
-            <div class="ehc-info-label">Blood Group</div>
-            <div class="ehc-info-value">{{ patient.blood_group or 'Not provided' }}</div>
+          <div class="dr-pp-info-item">
+            <div class="dr-pp-info-label">Blood Group</div>
+            <div class="dr-pp-info-value">{{ patient.blood_group or 'Not provided' }}</div>
           </div>
         </div>
       </div>
 
       <!-- MEDICAL HISTORY -->
-      <div class="ehc-profile-section">
-        <h2 class="ehc-section-title">
+      <div class="dr-pp-profile-section">
+        <h2 class="dr-pp-section-title">
           <i class="fas fa-briefcase-medical"></i> Medical History
         </h2>
 
-        <div class="ehc-info-grid">
-          <div class="ehc-info-item">
-            <div class="ehc-info-label">Allergies</div>
-            <div class="ehc-info-value">{{ patient.allergies or 'None' }}</div>
+        <div class="dr-pp-info-grid">
+          <div class="dr-pp-info-item">
+            <div class="dr-pp-info-label">Allergies</div>
+            <div class="dr-pp-info-value">{{ patient.allergies or 'None' }}</div>
           </div>
-          <div class="ehc-info-item">
-            <div class="ehc-info-label">Current Medications</div>
-            <div class="ehc-info-value">{{ patient.current_medications or 'None' }}</div>
+          <div class="dr-pp-info-item">
+            <div class="dr-pp-info-label">Current Medications</div>
+            <div class="dr-pp-info-value">{{ patient.current_medications or 'None' }}</div>
           </div>
-          <div class="ehc-info-item">
-            <div class="ehc-info-label">Chronic Conditions</div>
-            <div class="ehc-info-value">{{ patient.conditions or 'None' }}</div>
+          <div class="dr-pp-info-item">
+            <div class="dr-pp-info-label">Chronic Conditions</div>
+            <div class="dr-pp-info-value">{{ patient.conditions or 'None' }}</div>
           </div>
-          <div class="ehc-info-item">
-            <div class="ehc-info-label">Previous Conditions</div>
-            <div class="ehc-info-value">{{ patient.previous_conditions or 'None' }}</div>
+          <div class="dr-pp-info-item">
+            <div class="dr-pp-info-label">Previous Conditions</div>
+            <div class="dr-pp-info-value">{{ patient.previous_conditions or 'None' }}</div>
           </div>
-          <div class="ehc-info-item">
-            <div class="ehc-info-label">Surgeries</div>
-            <div class="ehc-info-value">{{ patient.surgeries or 'None' }}</div>
+          <div class="dr-pp-info-item">
+            <div class="dr-pp-info-label">Surgeries</div>
+            <div class="dr-pp-info-value">{{ patient.surgeries or 'None' }}</div>
           </div>
-          <div class="ehc-info-item">
-            <div class="ehc-info-label">Family History</div>
-            <div class="ehc-info-value">{{ patient.family_history or 'None' }}</div>
+          <div class="dr-pp-info-item">
+            <div class="dr-pp-info-label">Family History</div>
+            <div class="dr-pp-info-value">{{ patient.family_history or 'None' }}</div>
           </div>
-          <div class="ehc-info-item">
-            <div class="ehc-info-label">Father's History</div>
-            <div class="ehc-info-value">{{ patient.father_history or 'None' }}</div>
+          <div class="dr-pp-info-item">
+            <div class="dr-pp-info-label">Father's History</div>
+            <div class="dr-pp-info-value">{{ patient.father_history or 'None' }}</div>
           </div>
-          <div class="ehc-info-item">
-            <div class="ehc-info-label">Mother's History</div>
-            <div class="ehc-info-value">{{ patient.mother_history or 'None' }}</div>
+          <div class="dr-pp-info-item">
+            <div class="dr-pp-info-label">Mother's History</div>
+            <div class="dr-pp-info-value">{{ patient.mother_history or 'None' }}</div>
           </div>
         </div>
       </div>

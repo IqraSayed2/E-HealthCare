@@ -3,24 +3,13 @@
 {% block content %}
 
     <style>
-        :root {
-            --ehc-primary: #16a2b8;
-            --ehc-primary-dark: #138496;
-            --ehc-secondary: #6c757d;
-            --ehc-success: #28a745;
-            --ehc-warning: #ffc107;
-            --ehc-danger: #dc3545;
-            --ehc-light: #f8f9fa;
-            --ehc-dark: #212529;
-        }
-
-        .ehc-appointment-wrapper {
+        .dr-apt-wrapper {
             max-width: 1400px;
             margin: 40px auto;
             padding: 0 40px;
         }
 
-        .ehc-page-header {
+        .dr-apt-page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -29,20 +18,20 @@
             gap: 1rem;
         }
 
-        .ehc-page-title {
+        .dr-apt-page-title {
             font-size: 2rem;
             font-weight: 700;
-            color: var(--ehc-dark);
+            color: #212529;
         }
 
-        .ehc-header-actions {
+        .dr-apt-header-actions {
             display: flex;
             gap: 1rem;
         }
 
-        .ehc-btn-primary {
+        .dr-apt-btn-primary {
             padding: 0.7rem 1.5rem;
-            background: var(--ehc-primary);
+            background: #16a2b8;
             color: white;
             border: none;
             border-radius: 10px;
@@ -54,15 +43,15 @@
             gap: 0.5rem;
         }
 
-        .ehc-btn-primary:hover {
-            background: var(--ehc-primary-dark);
+        .dr-apt-btn-primary:hover {
+            background: #138496;
             transform: translateY(-2px);
         }
 
-        .ehc-btn-secondary {
+        .dr-apt-btn-secondary {
             padding: 0.7rem 1.5rem;
             background: white;
-            color: var(--ehc-dark);
+            color: #212529;
             border: 2px solid #e5e7eb;
             border-radius: 10px;
             font-weight: 600;
@@ -73,12 +62,12 @@
             gap: 0.5rem;
         }
 
-        .ehc-btn-secondary:hover {
-            border-color: var(--ehc-primary);
-            color: var(--ehc-primary);
+        .dr-apt-btn-secondary:hover {
+            border-color: #16a2b8;
+            color: #16a2b8;
         }
 
-        .ehc-filter-section {
+        .dr-apt-filter-section {
             background: white;
             border-radius: 16px;
             padding: 1.5rem;
@@ -86,27 +75,27 @@
             margin-bottom: 2rem;
         }
 
-        .ehc-filter-grid {
+        .dr-apt-filter-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             align-items: end;
         }
 
-        .ehc-filter-group {
+        .dr-apt-filter-group {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
         }
 
-        .ehc-filter-label {
+        .dr-apt-filter-label {
             font-size: 0.9rem;
             font-weight: 600;
-            color: var(--ehc-dark);
+            color: #212529;
         }
 
-        .ehc-filter-input,
-        .ehc-filter-select {
+        .dr-apt-filter-input,
+        .dr-apt-filter-select {
             padding: 0.7rem;
             border: 2px solid #e5e7eb;
             border-radius: 8px;
@@ -114,32 +103,32 @@
             transition: all 0.3s ease;
         }
 
-        .ehc-filter-input:focus,
-        .ehc-filter-select:focus {
+        .dr-apt-filter-input:focus,
+        .dr-apt-filter-select:focus {
             outline: none;
-            border-color: var(--ehc-primary);
+            border-color: #16a2b8;
         }
 
-        .ehc-tabs-section {
+        .dr-apt-tabs-section {
             background: white;
             border-radius: 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             overflow: hidden;
         }
 
-        .ehc-tabs-header {
+        .dr-apt-tabs-header {
             display: flex;
             border-bottom: 2px solid #e5e7eb;
-            background: var(--ehc-light);
+            background: #f8f9fa;
         }
 
-        .ehc-tab-btn {
+        .dr-apt-tab-btn {
             flex: 1;
             padding: 1.2rem;
             background: transparent;
             border: none;
             font-weight: 600;
-            color: var(--ehc-secondary);
+            color: #6c757d;
             cursor: pointer;
             transition: all 0.3s ease;
             border-bottom: 3px solid transparent;
@@ -149,41 +138,41 @@
             gap: 0.5rem;
         }
 
-        .ehc-tab-btn:hover {
-            color: var(--ehc-primary);
+        .dr-apt-tab-btn:hover {
+            color: #16a2b8;
             background: rgba(22, 162, 184, 0.05);
         }
 
-        .ehc-tab-btn.active {
-            color: var(--ehc-primary);
-            border-bottom-color: var(--ehc-primary);
+        .dr-apt-tab-btn.active {
+            color: #16a2b8;
+            border-bottom-color: #16a2b8;
             background: white;
         }
 
-        .ehc-tab-badge {
-            background: var(--ehc-danger);
+        .dr-apt-tab-badge {
+            background: #dc3545;
             color: white;
             padding: 0.2rem 0.6rem;
             border-radius: 12px;
             font-size: 0.75rem;
         }
 
-        .ehc-tab-content {
+        .dr-apt-tab-content {
             display: none;
             padding: 2rem;
         }
 
-        .ehc-tab-content.active {
+        .dr-apt-tab-content.active {
             display: block;
         }
 
-        .ehc-appointment-list {
+        .dr-apt-appointment-list {
             display: flex;
             flex-direction: column;
             gap: 1rem;
         }
 
-        .ehc-appointment-item {
+        .dr-apt-appointment-item {
             display: flex;
             gap: 1.5rem;
             padding: 1.5rem;
@@ -193,52 +182,52 @@
             align-items: center;
         }
 
-        .ehc-appointment-item:hover {
-            border-color: var(--ehc-primary);
+        .dr-apt-appointment-item:hover {
+            border-color: #16a2b8;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
-        .ehc-appointment-date {
+        .dr-apt-appointment-date {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-width: 90px;
             padding: 1rem;
-            background: var(--ehc-light);
+            background: #f8f9fa;
             border-radius: 12px;
         }
 
-        .ehc-date-day {
+        .dr-apt-date-day {
             font-size: 0.8rem;
-            color: var(--ehc-secondary);
+            color: #6c757d;
             text-transform: uppercase;
         }
 
-        .ehc-date-number {
+        .dr-apt-date-number {
             font-size: 2rem;
             font-weight: 700;
-            color: var(--ehc-dark);
+            color: #212529;
             line-height: 1;
         }
 
-        .ehc-date-month {
+        .dr-apt-date-month {
             font-size: 0.85rem;
-            color: var(--ehc-secondary);
+            color: #6c757d;
         }
 
-        .ehc-appointment-details {
+        .dr-apt-appointment-details {
             flex: 1;
         }
 
-        .ehc-patient-info {
+        .dr-apt-patient-info {
             display: flex;
             align-items: center;
             gap: 1rem;
             margin-bottom: 0.8rem;
         }
 
-        .ehc-patient-avatar {
+        .dr-apt-patient-avatar {
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -250,40 +239,40 @@
             font-size: 1.3rem;
         }
 
-        .ehc-patient-name {
+        .dr-apt-patient-name {
             font-size: 1.1rem;
             font-weight: 700;
-            color: var(--ehc-dark);
+            color: #212529;
             margin-bottom: 0.2rem;
         }
 
-        .ehc-patient-age {
+        .dr-apt-patient-age {
             font-size: 0.85rem;
-            color: var(--ehc-secondary);
+            color: #6c757d;
         }
 
-        .ehc-appointment-info {
+        .dr-apt-appointment-info {
             display: flex;
             gap: 1.5rem;
             flex-wrap: wrap;
             margin-bottom: 0.8rem;
         }
 
-        .ehc-info-item {
+        .dr-apt-info-item {
             display: flex;
             align-items: center;
             gap: 0.4rem;
-            color: var(--ehc-secondary);
+            color: #6c757d;
             font-size: 0.9rem;
         }
 
-        .ehc-info-item i {
-            color: var(--ehc-primary);
+        .dr-apt-info-item i {
+            color: #16a2b8;
         }
 
-        .ehc-appointment-reason {
+        .dr-apt-appointment-reason {
             background: rgba(22, 162, 184, 0.1);
-            color: var(--ehc-primary);
+            color: #16a2b8;
             padding: 0.4rem 0.8rem;
             border-radius: 6px;
             font-size: 0.85rem;
@@ -292,19 +281,19 @@
             margin-bottom: 0.5rem;
         }
 
-        .ehc-appointment-notes {
-            color: var(--ehc-secondary);
+        .dr-apt-appointment-notes {
+            color: #6c757d;
             font-size: 0.9rem;
             font-style: italic;
         }
 
-        .ehc-appointment-actions {
+        .dr-apt-appointment-actions {
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
         }
 
-        .ehc-status-badge {
+        .dr-apt-status-badge {
             padding: 0.5rem 1rem;
             border-radius: 20px;
             font-size: 0.85rem;
@@ -313,33 +302,33 @@
             white-space: nowrap;
         }
 
-        .ehc-status-badge.accepted {
+        .dr-apt-status-badge.accepted {
             background: rgba(34, 197, 94, 0.1);
             color: #22c55e;
         }
 
-        .ehc-status-badge.pending {
+        .dr-apt-status-badge.pending {
             background: rgba(251, 146, 60, 0.1);
             color: #fb923c;
         }
 
-        .ehc-status-badge.completed {
+        .dr-apt-status-badge.completed {
             background: rgba(16, 185, 129, 0.1);
             color: #10b981;
         }
 
-        .ehc-status-badge.cancelled {
+        .dr-apt-status-badge.cancelled {
             background: rgba(239, 68, 68, 0.1);
             color: #ef4444;
         }
 
-        .ehc-action-buttons {
+        .dr-apt-action-buttons {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
         }
 
-        .ehc-action-btn {
+        .dr-apt-action-btn {
             padding: 0.6rem 1rem;
             border-radius: 8px;
             border: none;
@@ -350,69 +339,69 @@
             white-space: nowrap;
         }
 
-        .ehc-action-btn.primary {
-            background: var(--ehc-primary);
+        .dr-apt-action-btn.primary {
+            background: #16a2b8;
             color: white;
             text-decoration: none;
         }
 
-        .ehc-action-btn.primary:hover {
-            background: var(--ehc-primary-dark);
+        .dr-apt-action-btn.primary:hover {
+            background: #138496;
             text-decoration: none;
         }
 
-        .ehc-action-btn.success {
-            background: var(--ehc-success);
+        .dr-apt-action-btn.success {
+            background: #28a745;
             color: white;
             text-decoration: none;
         }
 
-        .ehc-action-btn.success:hover {
+        .dr-apt-action-btn.success:hover {
             background: #218838;
         }
 
-        .ehc-action-btn.danger {
-            background: var(--ehc-danger);
+        .dr-apt-action-btn.danger {
+            background: #dc3545;
             color: white;
             text-decoration: none;
         }
 
-        .ehc-action-btn.danger:hover {
+        .dr-apt-action-btn.danger:hover {
             background: #c82333;
         }
 
-        .ehc-action-btn.secondary {
+        .dr-apt-action-btn.secondary {
             background: #e5e7eb;
-            color: var(--ehc-dark);
+            color: #212529;
         }
 
-        .ehc-action-btn.secondary:hover {
+        .dr-apt-action-btn.secondary:hover {
             background: #d1d5db;
         }
 
-        .ehc-empty-state {
+        .dr-apt-empty-state {
             text-align: center;
             padding: 4rem 2rem;
-            color: var(--ehc-secondary);
+            color: #6c757d;
         }
 
-        .ehc-empty-icon {
+        .dr-apt-empty-icon {
             font-size: 4rem;
             margin-bottom: 1rem;
             opacity: 0.3;
         }
 
-        .ehc-empty-text {
+        .dr-apt-empty-text {
             font-size: 1.1rem;
             margin-bottom: 0.5rem;
         }
 
-        .ehc-empty-subtext {
+        .dr-apt-empty-subtext {
             font-size: 0.9rem;
         }
 
         /* Modal Styles */
-        .ehc-modal-overlay {
+        .dr-apt-modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -426,11 +415,11 @@
             padding: 1rem;
         }
 
-        .ehc-modal-overlay.show {
+        .dr-apt-modal-overlay.show {
             display: flex;
         }
 
-        .ehc-modal-content {
+        .dr-apt-modal-content {
             background: white;
             border-radius: 16px;
             padding: 2rem;
@@ -440,77 +429,77 @@
             overflow-y: auto;
         }
 
-        .ehc-modal-header {
+        .dr-apt-modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
         }
 
-        .ehc-modal-title {
+        .dr-apt-modal-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--ehc-dark);
+            color: #212529;
         }
 
-        .ehc-modal-close {
+        .dr-apt-modal-close {
             width: 35px;
             height: 35px;
             border-radius: 50%;
             border: none;
-            background: var(--ehc-light);
-            color: var(--ehc-dark);
+            background: #f8f9fa;
+            color: #212529;
             font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .ehc-modal-close:hover {
+        .dr-apt-modal-close:hover {
             background: #d1d5db;
         }
 
-        .ehc-modal-section {
+        .dr-apt-modal-section {
             margin-bottom: 1.5rem;
         }
 
-        .ehc-modal-section-title {
+        .dr-apt-modal-section-title {
             font-size: 0.9rem;
             font-weight: 600;
-            color: var(--ehc-secondary);
+            color: #6c757d;
             margin-bottom: 0.5rem;
             text-transform: uppercase;
         }
 
-        .ehc-modal-info-grid {
+        .dr-apt-modal-info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
         }
 
-        .ehc-modal-info-item {
+        .dr-apt-modal-info-item {
             padding: 0.8rem;
-            background: var(--ehc-light);
+            background: #f8f9fa;
             border-radius: 8px;
         }
 
-        .ehc-modal-info-label {
+        .dr-apt-modal-info-label {
             font-size: 0.8rem;
-            color: var(--ehc-secondary);
+            color: #6c757d;
             margin-bottom: 0.3rem;
         }
 
-        .ehc-modal-info-value {
+        .dr-apt-modal-info-value {
             font-weight: 600;
-            color: var(--ehc-dark);
+            color: #212529;
         }
 
-        .ehc-modal-buttons {
+        .dr-apt-modal-buttons {
             display: flex;
             gap: 1rem;
             margin-top: 2rem;
         }
 
-        .ehc-modal-btn {
+        .dr-apt-modal-btn {
             flex: 1;
             padding: 0.9rem;
             border: none;
@@ -521,83 +510,83 @@
         }
 
         @media (max-width: 1024px) {
-            .ehc-appointment-item {
+            .dr-apt-appointment-item {
                 flex-direction: column;
                 align-items: flex-start;
             }
 
-            .ehc-appointment-actions {
+            .dr-apt-appointment-actions {
                 width: 100%;
                 flex-direction: row;
                 justify-content: space-between;
             }
 
-            .ehc-action-buttons {
+            .dr-apt-action-buttons {
                 flex-direction: row;
                 width: auto;
             }
         }
 
         @media (max-width: 768px) {
-            .ehc-appointment-wrapper {
+            .dr-apt-wrapper {
                 padding: 1rem;
             }
 
-            .ehc-page-title {
+            .dr-apt-page-title {
                 font-size: 1.5rem;
             }
 
-            .ehc-tabs-header {
+            .dr-apt-tabs-header {
                 flex-direction: column;
             }
 
-            .ehc-tab-btn {
+            .dr-apt-tab-btn {
                 justify-content: flex-start;
                 padding: 1rem;
             }
 
-            .ehc-filter-grid {
+            .dr-apt-filter-grid {
                 grid-template-columns: 1fr;
             }
 
-            .ehc-modal-info-grid {
+            .dr-apt-modal-info-grid {
                 grid-template-columns: 1fr;
             }
 
-            .ehc-action-buttons {
+            .dr-apt-action-buttons {
                 flex-direction: column;
                 width: 100%;
             }
         }
     </style>
 
-<div class="ehc-appointment-wrapper">
+<div class="dr-apt-wrapper">
 
   <!-- ================= HEADER ================= -->
-  <div class="ehc-page-header">
-    <h1 class="ehc-page-title">Appointment Management</h1>
-    <div class="ehc-header-actions">
-      <button class="ehc-btn-secondary" onclick="history.back()">
+  <div class="dr-apt-page-header">
+    <h1 class="dr-apt-page-title">Appointment Management</h1>
+    <div class="dr-apt-header-actions">
+      <button class="dr-apt-btn-secondary" onclick="history.back()">
         <i class="fas fa-arrow-left"></i> Back
       </button>
     </div>
   </div>
 
   <!-- ================= FILTERS (EXACT SAME UI) ================= -->
-  <form method="GET" class="ehc-filter-section">
-    <div class="ehc-filter-grid">
+  <form method="GET" class="dr-apt-filter-section">
+    <div class="dr-apt-filter-grid">
 
-      <div class="ehc-filter-group">
-        <label class="ehc-filter-label">Date Range</label>
+      <div class="dr-apt-filter-group">
+        <label class="dr-apt-filter-label">Date Range</label>
         <input type="date"
                name="date"
-               class="ehc-filter-input"
+               class="dr-apt-filter-input"
                value="{{ date_filter or '' }}">
       </div>
 
-      <div class="ehc-filter-group">
-        <label class="ehc-filter-label">Status</label>
-        <select name="status" class="ehc-filter-select">
+      <div class="dr-apt-filter-group">
+        <label class="dr-apt-filter-label">Status</label>
+        <select name="status" class="dr-apt-filter-select">
           <option value="all">All Status</option>
           <option value="pending" {% if status_filter=='pending' %}selected{% endif %}>Pending</option>
           <option value="accepted" {% if status_filter=='accepted' %}selected{% endif %}>Accepted</option>
@@ -607,9 +596,9 @@
         </select>
       </div>
 
-      <div class="ehc-filter-group">
-        <label class="ehc-filter-label">Consultation Type</label>
-        <select name="consultation_type" class="ehc-filter-select">
+      <div class="dr-apt-filter-group">
+        <label class="dr-apt-filter-label">Consultation Type</label>
+        <select name="consultation_type" class="dr-apt-filter-select">
           <option value="All Type" {% if consultation_type_filter == 'All Type' or not consultation_type_filter %}selected{% endif %}>All Type</option>
           <option value="Chat Consultation" {% if consultation_type_filter == 'Chat Consultation' %}selected{% endif %}>Chat Consultation</option>
           <option value="Video Consultation" {% if consultation_type_filter == 'Video Consultation' %}selected{% endif %}>Video Consultation</option>
@@ -617,17 +606,17 @@
         </select>
       </div>
 
-      <div class="ehc-filter-group">
-        <label class="ehc-filter-label">Search Patient</label>
+      <div class="dr-apt-filter-group">
+        <label class="dr-apt-filter-label">Search Patient</label>
         <input type="text"
                name="search"
                value="{{ search or '' }}"
-               class="ehc-filter-input"
+               class="dr-apt-filter-input"
                placeholder="Search by name...">
       </div>
 
-      <div class="ehc-filter-group">
-        <button class="ehc-btn-primary mt-4">
+      <div class="dr-apt-filter-group">
+        <button class="dr-apt-btn-primary mt-4">
           <i class="fas fa-filter"></i> Apply
         </button>
       </div>
@@ -636,22 +625,22 @@
   </form>
 
   <!-- ================= TABS ================= -->
-  <div class="ehc-tabs-section">
+  <div class="dr-apt-tabs-section">
 
-    <div class="ehc-tabs-header">
-      <button class="ehc-tab-btn active" onclick="switchTab('upcoming')">
-        Upcoming <span class="ehc-tab-badge">{{ upcoming|length }}</span>
+    <div class="dr-apt-tabs-header">
+      <button class="dr-apt-tab-btn active" onclick="switchTab('upcoming')">
+        Upcoming <span class="dr-apt-tab-badge">{{ upcoming|length }}</span>
       </button>
-      <button class="ehc-tab-btn" onclick="switchTab('accepted')">
-        Accepted <span class="ehc-tab-badge">{{ accepted|length }}</span>
+      <button class="dr-apt-tab-btn" onclick="switchTab('accepted')">
+        Accepted <span class="dr-apt-tab-badge">{{ accepted|length }}</span>
       </button>
-      <button class="ehc-tab-btn" onclick="switchTab('pending')">
-        Pending <span class="ehc-tab-badge">{{ pending|length }}</span>
+      <button class="dr-apt-tab-btn" onclick="switchTab('pending')">
+        Pending <span class="dr-apt-tab-badge">{{ pending|length }}</span>
       </button>
-      <button class="ehc-tab-btn" onclick="switchTab('completed')">
+      <button class="dr-apt-tab-btn" onclick="switchTab('completed')">
         Completed
       </button>
-      <button class="ehc-tab-btn" onclick="switchTab('cancelled')">
+      <button class="dr-apt-tab-btn" onclick="switchTab('cancelled')">
         Cancelled
       </button>
     </div>
@@ -664,45 +653,45 @@
         ('completed', completed, 'completed'),
         ('cancelled', cancelled, 'cancelled')
     ] %}
-    <div class="ehc-tab-content {% if loop.first %}active{% endif %}"
+    <div class="dr-apt-tab-content {% if loop.first %}active{% endif %}"
          id="{{ name }}-content">
 
       {% if items %}
         {% for appt in items %}
-        <div class="ehc-appointment-item">
+        <div class="dr-apt-appointment-item">
 
-          <div class="ehc-appointment-details">
-            <div class="ehc-patient-name">
+          <div class="dr-apt-appointment-details">
+            <div class="dr-apt-patient-name">
               {{ appt.patient.user.name }}
             </div>
 
-            <div class="ehc-appointment-info">
+            <div class="dr-apt-appointment-info">
               <span><i class="far fa-calendar"></i> {{ appt.date }}</span>
               <span><i class="far fa-clock"></i> {{ appt.time }}</span>
             </div>
           </div>
 
-          <div class="ehc-appointment-actions">
-            <span class="ehc-status-badge {{ badge }}">
+          <div class="dr-apt-appointment-actions">
+            <span class="dr-apt-status-badge {{ badge }}">
               {{ appt.status|capitalize }}
             </span>
 
             <a href="{{ url_for('doctor.patient_preview', patient_id=appt.patient.id) }}"
-               class="ehc-action-btn primary">View Patient</a>
+               class="dr-apt-action-btn primary">View Patient</a>
 
-            <div class="ehc-action-buttons">
+            <div class="dr-apt-action-buttons">
 
               {% if appt.status == 'pending' %}
                 <a href="{{ url_for('doctor.accept_appointment', id=appt.id) }}"
-                   class="ehc-action-btn success">Accept</a>
+                   class="dr-apt-action-btn success">Accept</a>
                 <a href="{{ url_for('doctor.cancel_appointment', id=appt.id) }}"
-                   class="ehc-action-btn danger">Decline</a>
+                   class="dr-apt-action-btn danger">Decline</a>
 
               {% elif appt.status in ['accepted', 'paid'] %}
                 <a href="{{ url_for('doctor.complete_appointment', id=appt.id) }}"
-                   class="ehc-action-btn success">Complete</a>
+                   class="dr-apt-action-btn success">Complete</a>
                 <a href="{{ url_for('doctor.cancel_appointment', id=appt.id) }}"
-                   class="ehc-action-btn danger">Cancel</a>
+                   class="dr-apt-action-btn danger">Cancel</a>
               {% endif %}
 
             </div>
@@ -711,8 +700,8 @@
         </div>
         {% endfor %}
       {% else %}
-        <div class="ehc-empty-state">
-          <div class="ehc-empty-icon">
+        <div class="dr-apt-empty-state">
+          <div class="dr-apt-empty-icon">
             <i class="far fa-calendar-times"></i>
           </div>
           <p>No appointments found</p>
@@ -726,8 +715,8 @@
 
 <script>
 function switchTab(tab) {
-  document.querySelectorAll('.ehc-tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.ehc-tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.dr-apt-tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.dr-apt-tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById(tab + '-content').classList.add('active');
 }
 </script>

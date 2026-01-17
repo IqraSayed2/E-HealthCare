@@ -3,28 +3,17 @@
 {% block content %}
 
   <style>
-      :root {
-        --ehc-primary: #16a2b8;
-        --ehc-primary-dark: #138496;
-        --ehc-secondary: #6c757d;
-        --ehc-success: #28a745;
-        --ehc-warning: #ffc107;
-        --ehc-danger: #dc3545;
-        --ehc-light: #f8f9fa;
-        --ehc-dark: #212529;
-      }
-
-       .ehc-dashboard-wrapper {
+       .d-dash-wrapper {
         max-width: 1400px;
         margin: 40px auto;
         padding: 0 40px;
       }
 
-      .ehc-welcome-section {
+      .d-dash-welcome-section {
         background: linear-gradient(
           135deg,
-          var(--ehc-primary) 0%,
-          var(--ehc-primary-dark) 100%
+          #16a2b8 0%,
+          #138496 100%
         );
         color: white;
         border-radius: 16px;
@@ -33,7 +22,7 @@
         box-shadow: 0 4px 12px rgba(22, 162, 184, 0.2);
       }
 
-      .ehc-welcome-header {
+      .d-dash-welcome-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -41,23 +30,23 @@
         gap: 1rem;
       }
 
-      .ehc-welcome-info h1 {
+      .d-dash-welcome-info h1 {
         font-size: 2rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
       }
 
-      .ehc-welcome-info p {
+      .d-dash-welcome-info p {
         opacity: 0.9;
         font-size: 1rem;
       }
 
-      .ehc-welcome-actions {
+      .d-dash-welcome-actions {
         display: flex;
         gap: 1rem;
       }
 
-      .ehc-welcome-btn {
+      .d-dash-welcome-btn {
         padding: 0.7rem 1.5rem;
         border: 2px solid white;
         border-radius: 10px;
@@ -72,19 +61,19 @@
         text-decoration: none;
       }
 
-      .ehc-welcome-btn:hover {
+      .d-dash-welcome-btn:hover {
         background: white;
-        color: var(--ehc-primary);
+        color: #16a2b8;
       }
 
-      .ehc-stats-grid {
+      .d-dash-stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 1.5rem;
         margin-bottom: 2rem;
       }
 
-      .ehc-stat-card {
+      .d-dash-stat-card {
         background: white;
         border-radius: 16px;
         padding: 1.8rem;
@@ -94,29 +83,29 @@
         overflow: hidden;
       }
 
-      .ehc-stat-card::before {
+      .d-dash-stat-card::before {
         content: "";
         position: absolute;
         top: 0;
         left: 0;
         width: 4px;
         height: 100%;
-        background: var(--ehc-primary);
+        background: #16a2b8;
       }
 
-      .ehc-stat-card:hover {
+      .d-dash-stat-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       }
 
-      .ehc-stat-header {
+      .d-dash-stat-header {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         margin-bottom: 1rem;
       }
 
-      .ehc-stat-icon {
+      .d-dash-stat-icon {
         width: 55px;
         height: 55px;
         border-radius: 12px;
@@ -126,27 +115,27 @@
         font-size: 1.5rem;
       }
 
-      .ehc-stat-icon.appointments {
+      .d-dash-stat-icon.appointments {
         background: rgba(59, 130, 246, 0.1);
         color: #3b82f6;
       }
 
-      .ehc-stat-icon.pending {
+      .d-dash-stat-icon.pending {
         background: rgba(251, 146, 60, 0.1);
         color: #fb923c;
       }
 
-      .ehc-stat-icon.earnings {
+      .d-dash-stat-icon.earnings {
         background: rgba(16, 185, 129, 0.1);
         color: #10b981;
       }
 
-      .ehc-stat-icon.patients {
+      .d-dash-stat-icon.patients {
         background: rgba(168, 85, 247, 0.1);
         color: #a855f7;
       }
 
-      .ehc-stat-trend {
+      .d-dash-stat-trend {
         display: flex;
         align-items: center;
         gap: 0.3rem;
@@ -156,18 +145,18 @@
         font-weight: 600;
       }
 
-      .ehc-stat-trend.up {
+      .d-dash-stat-trend.up {
         background: rgba(16, 185, 129, 0.1);
         color: #10b981;
       }
 
-      .ehc-stat-trend.down {
+      .d-dash-stat-trend.down {
         background: rgba(239, 68, 68, 0.1);
         color: #ef4444;
       }
 
-      .ehc-stat-label {
-        color: var(--ehc-secondary);
+      .d-dash-stat-label {
+        color: #6c757d;
         font-size: 0.9rem;
         margin-bottom: 0.5rem;
         text-transform: uppercase;
@@ -175,58 +164,58 @@
         font-weight: 600;
       }
 
-      .ehc-stat-value {
+      .d-dash-stat-value {
         font-size: 2rem;
         font-weight: 700;
-        color: var(--ehc-dark);
+        color: #212529;
       }
 
-      .ehc-content-grid {
+      .d-dash-content-grid {
         display: grid;
         grid-template-columns: 1.8fr 1fr;
         gap: 2rem;
       }
 
-      .ehc-content-card {
+      .d-dash-content-card {
         background: white;
         border-radius: 16px;
         padding: 2rem;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
       }
 
-      .ehc-card-header {
+      .d-dash-card-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 1.5rem;
       }
 
-      .ehc-card-title {
+      .d-dash-card-title {
         font-size: 1.3rem;
         font-weight: 700;
-        color: var(--ehc-dark);
+        color: #212529;
         display: flex;
         align-items: center;
         gap: 0.5rem;
       }
 
-      .ehc-card-title i {
-        color: var(--ehc-primary);
+      .d-dash-card-title i {
+        color: #16a2b8;
       }
 
-      .ehc-card-action {
-        color: var(--ehc-primary);
+      .d-dash-card-action {
+        color: #16a2b8;
         font-size: 0.9rem;
         font-weight: 600;
         cursor: pointer;
         text-decoration: none;
       }
 
-      .ehc-card-action:hover {
+      .d-dash-card-action:hover {
         text-decoration: underline;
       }
 
-      .ehc-appointment-card {
+      .d-dash-appointment-card {
         display: flex;
         gap: 1rem;
         padding: 1.2rem;
@@ -236,70 +225,70 @@
         transition: all 0.3s ease;
       }
 
-      .ehc-appointment-card:hover {
-        border-color: var(--ehc-primary);
+      .d-dash-appointment-card:hover {
+        border-color: #16a2b8;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       }
 
-      .ehc-appointment-time {
+      .d-dash-appointment-time {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         min-width: 70px;
         padding: 0.8rem;
-        background: var(--ehc-light);
+        background: #f8f9fa;
         border-radius: 10px;
       }
 
-      .ehc-time-hour {
+      .d-dash-time-hour {
         font-size: 1.3rem;
         font-weight: 700;
-        color: var(--ehc-dark);
+        color: #212529;
       }
 
-      .ehc-time-period {
+      .d-dash-time-period {
         font-size: 0.8rem;
-        color: var(--ehc-secondary);
+        color: #6c757d;
       }
 
-      .ehc-appointment-info {
+      .d-dash-appointment-info {
         flex: 1;
       }
 
-      .ehc-patient-name {
+      .d-dash-patient-name {
         font-size: 1rem;
         font-weight: 700;
-        color: var(--ehc-dark);
+        color: #212529;
         margin-bottom: 0.3rem;
       }
 
-      .ehc-appointment-meta {
+      .d-dash-appointment-meta {
         display: flex;
         gap: 1rem;
         flex-wrap: wrap;
         margin-bottom: 0.5rem;
       }
 
-      .ehc-meta-tag {
+      .d-dash-meta-tag {
         display: flex;
         align-items: center;
         gap: 0.3rem;
-        color: var(--ehc-secondary);
+        color: #6c757d;
         font-size: 0.85rem;
       }
 
-      .ehc-meta-tag i {
-        color: var(--ehc-primary);
+      .d-dash-meta-tag i {
+        color: #16a2b8;
       }
 
-      .ehc-appointment-actions {
+      .d-dash-appointment-actions {
         display: flex;
         gap: 0.5rem;
         margin-top: 0.8rem;
       }
 
-      .ehc-action-btn {
+      .d-dash-action-btn {
         padding: 0.5rem 1rem;
         border-radius: 8px;
         border: none;
@@ -309,47 +298,47 @@
         transition: all 0.3s ease;
       }
 
-      .ehc-action-btn.primary {
-        background: var(--ehc-primary);
+      .d-dash-action-btn.primary {
+        background: #16a2b8;
         color: white;
       }
 
-      .ehc-action-btn.primary:hover {
-        background: var(--ehc-primary-dark);
+      .d-dash-action-btn.primary:hover {
+        background: #138496;
       }
 
-      .ehc-action-btn.secondary {
+      .d-dash-action-btn.secondary {
         background: #e5e7eb;
-        color: var(--ehc-dark);
+        color: #212529;
       }
 
-      .ehc-action-btn.secondary:hover {
+      .d-dash-action-btn.secondary:hover {
         background: #d1d5db;
       }
 
-      .ehc-status-badge {
+      .d-dash-status-badge {
         padding: 0.3rem 0.8rem;
         border-radius: 20px;
         font-size: 0.8rem;
         font-weight: 600;
       }
 
-      .ehc-status-badge.upcoming {
+      .d-dash-status-badge.upcoming {
         background: rgba(59, 130, 246, 0.1);
         color: #3b82f6;
       }
 
-      .ehc-status-badge.pending {
+      .d-dash-status-badge.pending {
         background: rgba(251, 146, 60, 0.1);
         color: #fb923c;
       }
 
-      .ehc-status-badge.completed {
+      .d-dash-status-badge.completed {
         background: rgba(16, 185, 129, 0.1);
         color: #10b981;
       }
 
-      .ehc-earnings-card {
+      .d-dash-earnings-card {
         background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         color: white;
         border-radius: 12px;
@@ -357,49 +346,49 @@
         margin-bottom: 1.5rem;
       }
 
-      .ehc-earnings-label {
+      .d-dash-earnings-label {
         font-size: 0.9rem;
         opacity: 0.9;
         margin-bottom: 0.5rem;
       }
 
-      .ehc-earnings-amount {
+      .d-dash-earnings-amount {
         font-size: 2.5rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
       }
 
-      .ehc-earnings-period {
+      .d-dash-earnings-period {
         font-size: 0.85rem;
         opacity: 0.8;
       }
 
-      .ehc-earnings-breakdown {
+      .d-dash-earnings-breakdown {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1rem;
         margin-top: 1.5rem;
       }
 
-      .ehc-breakdown-item {
+      .d-dash-breakdown-item {
         padding: 1rem;
         background: white;
         border-radius: 10px;
       }
 
-      .ehc-breakdown-label {
+      .d-dash-breakdown-label {
         font-size: 0.8rem;
-        color: var(--ehc-secondary);
+        color: #6c757d;
         margin-bottom: 0.3rem;
       }
 
-      .ehc-breakdown-value {
+      .d-dash-breakdown-value {
         font-size: 1.3rem;
         font-weight: 700;
-        color: var(--ehc-dark);
+        color: #212529;
       }
 
-      .ehc-message-item {
+      .d-dash-message-item {
         display: flex;
         gap: 1rem;
         padding: 1rem;
@@ -409,16 +398,16 @@
         transition: all 0.3s ease;
       }
 
-      .ehc-message-item:hover {
-        background: var(--ehc-light);
+      .d-dash-message-item:hover {
+        background: #f8f9fa;
       }
 
-      .ehc-message-item.unread {
+      .d-dash-message-item.unread {
         background: rgba(22, 162, 184, 0.05);
-        border-left: 3px solid var(--ehc-primary);
+        border-left: 3px solid #16a2b8;
       }
 
-      .ehc-message-avatar {
+      .d-dash-message-avatar {
         width: 45px;
         height: 45px;
         border-radius: 50%;
@@ -431,39 +420,39 @@
         flex-shrink: 0;
       }
 
-      .ehc-message-content {
+      .d-dash-message-content {
         flex: 1;
       }
 
-      .ehc-message-header {
+      .d-dash-message-header {
         display: flex;
         justify-content: space-between;
         margin-bottom: 0.3rem;
       }
 
-      .ehc-message-name {
+      .d-dash-message-name {
         font-weight: 700;
-        color: var(--ehc-dark);
+        color: #212529;
       }
 
-      .ehc-message-time {
+      .d-dash-message-time {
         font-size: 0.8rem;
-        color: var(--ehc-secondary);
+        color: #6c757d;
       }
 
-      .ehc-message-text {
+      .d-dash-message-text {
         font-size: 0.9rem;
-        color: var(--ehc-secondary);
+        color: #6c757d;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
       }
 
-      .ehc-unread-badge {
+      .d-dash-unread-badge {
         width: 20px;
         height: 20px;
-        background: var(--ehc-danger);
+        background: #dc3545;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -473,73 +462,73 @@
         font-weight: 700;
       }
 
-      .ehc-empty-state {
+      .d-dash-empty-state {
         text-align: center;
         padding: 3rem 1rem;
-        color: var(--ehc-secondary);
+        color: #6c757d;
       }
 
-      .ehc-empty-icon {
+      .d-dash-empty-icon {
         font-size: 3rem;
         margin-bottom: 1rem;
         opacity: 0.3;
       }
 
       @media (max-width: 1200px) {
-        .ehc-content-grid {
+        .d-dash-content-grid {
           grid-template-columns: 1fr;
         }
       }
 
       @media (max-width: 768px) {
-        .ehc-dashboard-wrapper {
+        .d-dash-wrapper {
           padding: 1rem;
         }
 
-        .ehc-welcome-section {
+        .d-dash-welcome-section {
           padding: 1.5rem;
         }
 
-        .ehc-welcome-info h1 {
+        .d-dash-welcome-info h1 {
           font-size: 1.5rem;
         }
 
-        .ehc-stats-grid {
+        .d-dash-stats-grid {
           grid-template-columns: 1fr;
         }
 
-        .ehc-content-card {
+        .d-dash-content-card {
           padding: 1.5rem;
         }
 
-        .ehc-appointment-card {
+        .d-dash-appointment-card {
           flex-direction: column;
         }
 
-        .ehc-earnings-breakdown {
+        .d-dash-earnings-breakdown {
           grid-template-columns: 1fr;
         }
       }
     </style>
 
-<div class="ehc-dashboard-wrapper">
+<div class="d-dash-wrapper">
 
   <!-- Welcome Section -->
-  <div class="ehc-welcome-section">
-    <div class="ehc-welcome-header">
-      <div class="ehc-welcome-info">
+  <div class="d-dash-welcome-section">
+    <div class="d-dash-welcome-header">
+      <div class="d-dash-welcome-info">
         <h1>Welcome back, Dr. {{ current_user.name }}</h1>
         <p>
           {{ today_appointments|length }} appointments scheduled today
         </p>
       </div>
 
-      <div class="ehc-welcome-actions">
-        <a href="{{ url_for('doctor.availability') }}" class="ehc-welcome-btn">
+      <div class="d-dash-welcome-actions">
+        <a href="{{ url_for('doctor.availability') }}" class="d-dash-welcome-btn">
           <i class="fas fa-calendar-plus"></i>
           Add Availability
         </a>
-        <a href="#" class="ehc-welcome-btn">
+        <a href="{{ url_for('doctor.profile') }}" class="d-dash-welcome-btn">
           <i class="fas fa-user"></i>
           My Profile
         </a>
@@ -548,50 +537,50 @@
   </div>
 
   <!-- Stats Grid -->
-  <div class="ehc-stats-grid">
+  <div class="d-dash-stats-grid">
 
-    <div class="ehc-stat-card">
-      <div class="ehc-stat-header">
-        <div class="ehc-stat-icon appointments">
+    <div class="d-dash-stat-card">
+      <div class="d-dash-stat-header">
+        <div class="d-dash-stat-icon appointments">
           <i class="far fa-calendar-check"></i>
         </div>
       </div>
-      <div class="ehc-stat-label">Total Appointments</div>
-      <div class="ehc-stat-value">{{ total_appointments }}</div>
+      <div class="d-dash-stat-label">Total Appointments</div>
+      <div class="d-dash-stat-value">{{ total_appointments }}</div>
     </div>
 
-    <div class="ehc-stat-card">
-      <div class="ehc-stat-header">
-        <div class="ehc-stat-icon pending">
+    <div class="d-dash-stat-card">
+      <div class="d-dash-stat-header">
+        <div class="d-dash-stat-icon pending">
           <i class="fas fa-clock"></i>
         </div>
       </div>
-      <div class="ehc-stat-label">Pending Requests</div>
-      <div class="ehc-stat-value">{{ pending_appointments }}</div>
+      <div class="d-dash-stat-label">Pending Requests</div>
+      <div class="d-dash-stat-value">{{ pending_appointments }}</div>
     </div>
 
-    <div class="ehc-stat-card">
-      <div class="ehc-stat-header">
-        <div class="ehc-stat-icon earnings">
+    <div class="d-dash-stat-card">
+      <div class="d-dash-stat-header">
+        <div class="d-dash-stat-icon earnings">
           <i class="fas fa-check-circle"></i>
         </div>
       </div>
-      <div class="ehc-stat-label">Completed</div>
-      <div class="ehc-stat-value">{{ completed_appointments }}</div>
+      <div class="d-dash-stat-label">Completed</div>
+      <div class="d-dash-stat-value">{{ completed_appointments }}</div>
     </div>
 
   </div>
 
   <!-- Main Content Grid -->
-  <div class="ehc-content-grid">
+  <div class="d-dash-content-grid">
 
     <!-- LEFT COLUMN -->
     <div>
 
       <!-- Today's Appointments -->
-      <div class="ehc-content-card mb-4">
-        <div class="ehc-card-header">
-          <h2 class="ehc-card-title">
+      <div class="d-dash-content-card mb-4">
+        <div class="d-dash-card-header">
+          <h2 class="d-dash-card-title">
             <i class="fas fa-calendar-day"></i>
             Today's Appointments
           </h2>
@@ -599,31 +588,31 @@
 
         {% if today_appointments %}
           {% for appt in today_appointments %}
-          <div class="ehc-appointment-card">
-            <div class="ehc-appointment-time">
-              <div class="ehc-time-hour">{{ appt.time }}</div>
+          <div class="d-dash-appointment-card">
+            <div class="d-dash-appointment-time">
+              <div class="d-dash-time-hour">{{ appt.time }}</div>
             </div>
 
-            <div class="ehc-appointment-info">
-              <div class="ehc-patient-name">
+            <div class="d-dash-appointment-info">
+              <div class="d-dash-patient-name">
                 {{ appt.patient.user.name }}
               </div>
 
-              <div class="ehc-appointment-meta">
-                <span class="ehc-meta-tag">
+              <div class="d-dash-appointment-meta">
+                <span class="d-dash-meta-tag">
                   <i class="fas fa-calendar"></i>
                   {{ appt.date }}
                 </span>
 
-                <span class="ehc-status-badge {{ appt.status }}">
+                <span class="d-dash-status-badge {{ appt.status }}">
                   {{ appt.status|capitalize }}
                 </span>
               </div>
 
-              <div class="ehc-appointment-actions">
+              <div class="d-dash-appointment-actions">
                 {% if appt.status == "pending" %}
                   <a href="{{ url_for('doctor.accept', id=appt.id) }}"
-                     class="ehc-action-btn primary">
+                     class="d-dash-action-btn primary">
                     <i class="fas fa-check"></i> Accept
                   </a>
                 {% endif %}
@@ -632,8 +621,8 @@
           </div>
           {% endfor %}
         {% else %}
-          <div class="ehc-empty-state">
-            <div class="ehc-empty-icon">
+          <div class="d-dash-empty-state">
+            <div class="d-dash-empty-icon">
               <i class="far fa-calendar-times"></i>
             </div>
             <p>No appointments today</p>
@@ -647,9 +636,9 @@
     <div>
 
       <!-- Summary Card -->
-      <div class="ehc-content-card">
-        <div class="ehc-card-header">
-          <h2 class="ehc-card-title">
+      <div class="d-dash-content-card">
+        <div class="d-dash-card-header">
+          <h2 class="d-dash-card-title">
             <i class="fas fa-info-circle"></i>
             Quick Summary
           </h2>

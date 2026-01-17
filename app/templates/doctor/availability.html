@@ -4,32 +4,32 @@
 
    <style>
       /* Main Container */
-      .avail-container {
+      .d-avail-container {
         max-width: 1400px;
         margin: 40px auto;
         padding: 0 40px;
       }
 
-      .avail-page-header {
+      .d-avail-page-header {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         margin-bottom: 40px;
       }
 
-      .avail-title-section h1 {
+      .d-avail-title-section h1 {
         font-size: 2rem;
         font-weight: 700;
         color: #1a1a1a;
         margin-bottom: 8px;
       }
 
-      .avail-subtitle {
+      .d-avail-subtitle {
         color: #6c757d;
         font-size: 0.95rem;
       }
 
-      .avail-save-btn {
+      .d-avail-save-btn {
         padding: 12px 28px;
         background: #16a2b8;
         color: white;
@@ -40,34 +40,34 @@
         transition: all 0.3s ease;
       }
 
-      .avail-save-btn:hover {
+      .d-avail-save-btn:hover {
         background: #16a2b8;
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
       }
 
-      .avail-content-grid {
+      .d-avail-content-grid {
         display: grid;
         grid-template-columns: 1fr 400px;
         gap: 30px;
       }
 
       /* Weekly Hours Section */
-      .avail-card {
+      .d-avail-card {
         background: white;
         border-radius: 12px;
         padding: 30px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
       }
 
-      .avail-card-title {
+      .d-avail-card-title {
         font-size: 1.3rem;
         font-weight: 700;
         color: #1a1a1a;
         margin-bottom: 25px;
       }
 
-      .avail-day-row {
+      .d-avail-day-row {
         display: flex;
         align-items: center;
         padding: 18px;
@@ -77,52 +77,52 @@
         transition: all 0.3s ease;
       }
 
-      .avail-day-row:hover {
+      .d-avail-day-row:hover {
         border-color: #d0d5dd;
       }
 
-      .avail-day-row.avail-disabled {
+      .d-avail-day-row.d-avail-disabled {
         background: #f8f9fa;
       }
 
-      .avail-checkbox {
+      .d-avail-checkbox {
         width: 20px;
         height: 20px;
         cursor: pointer;
-        accent-color: #4285f4;
+        accent-color: #16a2b8;
       }
 
-      .avail-day-label {
+      .d-avail-day-label {
         font-weight: 600;
         color: #1a1a1a;
         min-width: 100px;
         margin-left: 12px;
       }
 
-      .avail-day-label.avail-unavailable {
+      .d-avail-day-label.d-avail-unavailable {
         color: #6c757d;
       }
 
-      .avail-unavailable-text {
+      .d-avail-unavailable-text {
         font-size: 0.9rem;
         color: #6c757d;
         font-style: italic;
       }
 
-      .avail-time-inputs {
+      .d-avail-time-inputs {
         display: flex;
         align-items: center;
         gap: 10px;
         flex: 1;
       }
 
-      .avail-time-wrapper {
+      .d-avail-time-wrapper {
         position: relative;
         display: flex;
         align-items: center;
       }
 
-      .avail-time-input {
+      .d-avail-time-input {
         padding: 8px 35px 8px 12px;
         border: 1px solid #d0d5dd;
         border-radius: 6px;
@@ -131,12 +131,12 @@
         cursor: pointer;
       }
 
-      .avail-time-input:focus {
+      .d-avail-time-input:focus {
         outline: none;
-        border-color: #4285f4;
+        border-color: #16a2b8;
       }
 
-      .avail-clock-icon {
+      .d-avail-clock-icon {
         position: absolute;
         right: 10px;
         color: #6c757d;
@@ -144,16 +144,16 @@
         pointer-events: none;
       }
 
-      .avail-time-separator {
+      .d-avail-time-separator {
         color: #6c757d;
         font-weight: 500;
       }
 
-      .avail-add-btn {
+      .d-avail-add-btn {
         width: 32px;
         height: 32px;
         border-radius: 50%;
-        background: #4285f4;
+        background: #16a2b8;
         border: none;
         color: white;
         cursor: pointer;
@@ -163,11 +163,11 @@
         transition: all 0.3s ease;
       }
 
-      .avail-add-btn:hover {
+      .d-avail-add-btn:hover {
         background: #16a2b8;
       }
 
-      .avail-hours-display {
+      .d-avail-hours-display {
         color: #6c757d;
         font-size: 0.9rem;
         font-weight: 500;
@@ -176,32 +176,32 @@
       }
 
       /* Calendar Section */
-      .avail-calendar-card {
+      .d-avail-calendar-card {
         background: white;
         border-radius: 12px;
         padding: 25px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
       }
 
-      .avail-calendar-header {
+      .d-avail-calendar-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
       }
 
-      .avail-calendar-title {
+      .d-avail-calendar-title {
         font-size: 1.1rem;
         font-weight: 700;
         color: #1a1a1a;
       }
 
-      .avail-calendar-nav {
+      .d-avail-calendar-nav {
         display: flex;
         gap: 10px;
       }
 
-      .avail-nav-btn {
+      .d-avail-nav-btn {
         width: 32px;
         height: 32px;
         border: 1px solid #d0d5dd;
@@ -214,19 +214,19 @@
         transition: all 0.3s ease;
       }
 
-      .avail-nav-btn:hover {
+      .d-avail-nav-btn:hover {
         background: #f8f9fa;
         border-color: #adb5bd;
       }
 
-      .avail-calendar-grid {
+      .d-avail-calendar-grid {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         gap: 8px;
         margin-bottom: 20px;
       }
 
-      .avail-calendar-day-header {
+      .d-avail-calendar-day-header {
         text-align: center;
         font-size: 0.8rem;
         font-weight: 600;
@@ -234,7 +234,7 @@
         padding: 8px 0;
       }
 
-      .avail-calendar-day {
+      .d-avail-calendar-day {
         aspect-ratio: 1;
         display: flex;
         flex-direction: column;
@@ -248,26 +248,26 @@
         position: relative;
       }
 
-      .avail-calendar-day:hover {
+      .d-avail-calendar-day:hover {
         background: #f8f9fa;
       }
 
-      .avail-calendar-day.avail-disabled {
+      .d-avail-calendar-day.d-avail-disabled {
         color: #d0d5dd;
         cursor: default;
       }
 
-      .avail-calendar-day.avail-today {
-        background: #4285f4;
+      .d-avail-calendar-day.d-avail-today {
+        background: #16a2b8;
         color: white;
       }
 
-      .avail-calendar-day.avail-selected {
+      .d-avail-calendar-day.d-avail-selected {
         background: #e8f0fe;
         color: #16a2b8;
       }
 
-      .avail-day-indicator {
+      .d-avail-day-indicator {
         width: 4px;
         height: 4px;
         border-radius: 50%;
@@ -275,86 +275,86 @@
         bottom: 4px;
       }
 
-      .avail-indicator-available {
-        background: #4285f4;
+      .d-avail-indicator-d-available {
+        background: #16a2b8;
       }
 
-      .avail-indicator-override {
+      .d-avail-indicator-override {
         background: #fbbc04;
       }
 
-      .avail-indicator-booked {
+      .d-avail-indicator-booked {
         background: #ea4335;
       }
 
-      .avail-indicator-unavailable {
+      .d-avail-indicator-unavailable {
         background: #d0d5dd;
       }
 
-      .avail-legend {
+      .d-avail-legend {
         display: flex;
         flex-direction: column;
         gap: 10px;
       }
 
-      .avail-legend-item {
+      .d-avail-legend-item {
         display: flex;
         align-items: center;
         gap: 8px;
         font-size: 0.85rem;
       }
 
-      .avail-legend-dot {
+      .d-avail-legend-dot {
         width: 10px;
         height: 10px;
         border-radius: 50%;
       }
 
-      .avail-legend-available {
-        background: #4285f4;
+      .d-avail-legend-d-available {
+        background: #16a2b8;
       }
-      .avail-legend-override {
+      .d-avail-legend-override {
         background: #fbbc04;
       }
-      .avail-legend-booked {
+      .d-avail-legend-booked {
         background: #ea4335;
       }
-      .avail-legend-unavailable {
+      .d-avail-legend-unavailable {
         background: #d0d5dd;
       }
 
       /* Override Section */
-      .avail-override-section {
+      .d-avail-override-section {
         margin-top: 30px;
       }
 
-      .avail-override-title {
+      .d-avail-override-title {
         font-size: 1.3rem;
         font-weight: 700;
         color: #1a1a1a;
         margin-bottom: 10px;
       }
 
-      .avail-override-subtitle {
+      .d-avail-override-subtitle {
         color: #6c757d;
         font-size: 0.9rem;
         margin-bottom: 20px;
       }
 
-      .avail-date-select-label {
+      .d-avail-date-select-label {
         font-weight: 600;
         color: #495057;
         margin-bottom: 8px;
         display: block;
       }
 
-      .avail-date-input-wrapper {
+      .d-avail-date-input-wrapper {
         display: flex;
         gap: 15px;
         margin-bottom: 20px;
       }
 
-      .avail-date-input {
+      .d-avail-date-input {
         flex: 1;
         padding: 12px 15px;
         border: 1px solid #d0d5dd;
@@ -362,12 +362,12 @@
         font-size: 0.95rem;
       }
 
-      .avail-date-input:focus {
+      .d-avail-date-input:focus {
         outline: none;
-        border-color: #4285f4;
+        border-color: #16a2b8;
       }
 
-      .avail-block-btn {
+      .d-avail-block-btn {
         padding: 12px 24px;
         background: #f8f9fa;
         border: 1px solid #d0d5dd;
@@ -378,11 +378,11 @@
         transition: all 0.3s ease;
       }
 
-      .avail-block-btn:hover {
+      .d-avail-block-btn:hover {
         background: #e9ecef;
       }
 
-      .avail-upcoming-title {
+      .d-avail-upcoming-title {
         font-size: 1.1rem;
         font-weight: 700;
         color: #1a1a1a;
@@ -390,7 +390,7 @@
         margin-bottom: 15px;
       }
 
-      .avail-override-item {
+      .d-avail-override-item {
         padding: 18px;
         border: 1px solid #e9ecef;
         border-radius: 10px;
@@ -400,22 +400,22 @@
         align-items: center;
       }
 
-      .avail-override-date {
+      .d-avail-override-date {
         font-weight: 600;
         color: #1a1a1a;
         margin-bottom: 4px;
       }
 
-      .avail-override-label {
+      .d-avail-override-label {
         font-size: 0.85rem;
         color: #fbbc04;
       }
 
-      .avail-override-vacation {
-        color: #4285f4;
+      .d-avail-override-vacation {
+        color: #16a2b8;
       }
 
-      .avail-delete-btn {
+      .d-avail-delete-btn {
         width: 36px;
         height: 36px;
         border: none;
@@ -426,198 +426,198 @@
         transition: all 0.3s ease;
       }
 
-      .avail-delete-btn:hover {
+      .d-avail-delete-btn:hover {
         background: #fee;
         color: #dc3545;
       }
 
       /* Mobile Responsive */
       @media (max-width: 1024px) {
-        .avail-content-grid {
+        .d-avail-content-grid {
           grid-template-columns: 1fr;
         }
 
-        .avail-calendar-card {
+        .d-avail-calendar-card {
           max-width: 500px;
           margin: 0 auto;
         }
       }
 
       @media (max-width: 768px) {
-        .avail-header {
+        .d-avail-header {
           padding: 12px 20px;
         }
 
-        .avail-nav {
+        .d-avail-nav {
           display: none;
         }
 
-        .avail-container {
+        .d-avail-container {
           margin: 25px auto;
           padding: 0 20px;
         }
 
-        .avail-page-header {
+        .d-avail-page-header {
           flex-direction: column;
           gap: 20px;
         }
 
-        .avail-save-btn {
+        .d-avail-save-btn {
           width: 100%;
         }
 
-        .avail-card {
+        .d-avail-card {
           padding: 20px;
         }
 
-        .avail-day-row {
+        .d-avail-day-row {
           flex-wrap: wrap;
           gap: 10px;
         }
 
-        .avail-day-label {
+        .d-avail-day-label {
           min-width: auto;
           width: 100%;
         }
 
-        .avail-time-inputs {
+        .d-avail-time-inputs {
           width: 100%;
         }
 
-        .avail-calendar-grid {
+        .d-avail-calendar-grid {
           gap: 4px;
         }
 
-        .avail-calendar-day {
+        .d-avail-calendar-day {
           font-size: 0.85rem;
         }
       }
 
       @media (max-width: 576px) {
-        .avail-page-header h1 {
+        .d-avail-page-header h1 {
           font-size: 1.5rem;
         }
 
-        .avail-card-title {
+        .d-avail-card-title {
           font-size: 1.1rem;
         }
 
-        .avail-time-input {
+        .d-avail-time-input {
           width: 100px;
         }
 
-        .avail-date-input-wrapper {
+        .d-avail-date-input-wrapper {
           flex-direction: column;
         }
 
-        .avail-block-btn {
+        .d-avail-block-btn {
           width: 100%;
         }
       }
     </style>
 
-<div class="avail-container">
+<div class="d-avail-container">
 <form method="POST">
 
   <!-- ================= PAGE HEADER ================= -->
-  <div class="avail-page-header">
-    <div class="avail-title-section">
+  <div class="d-avail-page-header">
+    <div class="d-avail-title-section">
       <h1>Availability Setup</h1>
-      <p class="avail-subtitle">
+      <p class="d-avail-subtitle">
         Manage your consultation schedule and block out time for personal events.
       </p>
     </div>
-    <button class="avail-save-btn" type="submit">Save Changes</button>
+    <button class="d-avail-save-btn" type="submit">Save Changes</button>
   </div>
 
-  <div class="avail-content-grid">
+  <div class="d-avail-content-grid">
 
     <!-- ================= LEFT COLUMN ================= -->
     <div>
 
       <!-- ===== WEEKLY HOURS ===== -->
-      <div class="avail-card">
-        <h2 class="avail-card-title">Set Your Weekly Hours</h2>
+      <div class="d-avail-card">
+        <h2 class="d-avail-card-title">Set Your Weekly Hours</h2>
 
         {% for day in ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"] %}
         {% set d = weekly.get(day) %}
-        <div class="avail-day-row {% if not d %}avail-disabled{% endif %}">
+        <div class="d-avail-day-row {% if not d %}d-avail-disabled{% endif %}">
 
           <input type="checkbox"
-                 class="avail-checkbox"
+                 class="d-avail-checkbox"
                  name="{{ day }}_enabled"
                  {% if d %}checked{% endif %}>
 
-          <label class="avail-day-label {% if not d %}avail-unavailable{% endif %}">
+          <label class="d-avail-day-label {% if not d %}d-avail-unavailable{% endif %}">
             {{ day }}
           </label>
 
-          <div class="avail-time-inputs" {% if not d %}style="display: none;"{% endif %}>
-            <div class="avail-time-wrapper">
+          <div class="d-avail-time-inputs" {% if not d %}style="display: none;"{% endif %}>
+            <div class="d-avail-time-wrapper">
               <input type="time"
                      name="{{ day }}_start"
-                     class="avail-time-input"
+                     class="d-avail-time-input"
                      value="{{ d.start_time if d else '09:00' }}">
-              <i class="far fa-clock avail-clock-icon"></i>
+              <i class="far fa-clock d-avail-clock-icon"></i>
             </div>
 
-            <span class="avail-time-separator">-</span>
+            <span class="d-avail-time-separator">-</span>
 
-            <div class="avail-time-wrapper">
+            <div class="d-avail-time-wrapper">
               <input type="time"
                      name="{{ day }}_end"
-                     class="avail-time-input"
+                     class="d-avail-time-input"
                      value="{{ d.end_time if d else '17:00' }}">
-              <i class="far fa-clock avail-clock-icon"></i>
+              <i class="far fa-clock d-avail-clock-icon"></i>
             </div>
           </div>
 
-          <span class="avail-hours-display" {% if not d %}style="display: none;"{% endif %}>
+          <span class="d-avail-hours-display" {% if not d %}style="display: none;"{% endif %}>
             {% if d %}{{ ((d.end_time[:2]|int - d.start_time[:2]|int)) }} hours{% else %}8 hours{% endif %}
           </span>
 
           {% if not d %}
-            <span class="avail-unavailable-text">Unavailable</span>
+            <span class="d-avail-unavailable-text">Unavailable</span>
           {% endif %}
         </div>
         {% endfor %}
       </div>
 
       <!-- ===== ADD DATE OVERRIDE ===== -->
-      <div class="avail-override-section">
-        <div class="avail-card">
+      <div class="d-avail-override-section">
+        <div class="d-avail-card">
 
-          <h2 class="avail-override-title">Add a Date Override</h2>
-          <p class="avail-override-subtitle">
+          <h2 class="d-avail-override-title">Add a Date Override</h2>
+          <p class="d-avail-override-subtitle">
             Block out holidays, vacations, or set custom hours for a specific date.
           </p>
 
-          <label class="avail-date-select-label">Select a date</label>
-          <div class="avail-date-input-wrapper">
+          <label class="d-avail-date-select-label">Select a date</label>
+          <div class="d-avail-date-input-wrapper">
             <input type="date"
                    name="override_date"
-                   class="avail-date-input">
+                   class="d-avail-date-input">
 
             <input type="text"
                    name="override_label"
-                   class="avail-date-input"
+                   class="d-avail-date-input"
                    placeholder="Label (e.g., Holiday, Vacation)">
 
-            <button type="submit" class="avail-block-btn">
+            <button type="submit" class="d-avail-block-btn">
               Block Date
             </button>
           </div>
 
-          <h3 class="avail-upcoming-title">Upcoming Overrides</h3>
+          <h3 class="d-avail-upcoming-title">Upcoming Overrides</h3>
 
           {% if overrides %}
             {% for o in overrides %}
-            <div class="avail-override-item">
+            <div class="d-avail-override-item">
               <div>
-                <div class="avail-override-date">{{ o.date }}</div>
-                <div class="avail-override-label">{{ o.label }}</div>
+                <div class="d-avail-override-date">{{ o.date }}</div>
+                <div class="d-avail-override-label">{{ o.label }}</div>
               </div>
-              <button type="button" class="avail-delete-btn" onclick="deleteOverride({{ o.id }})">
+              <button type="button" class="d-avail-delete-btn" onclick="deleteOverride({{ o.id }})">
                 <i class="far fa-trash-alt"></i>
               </button>
             </div>
@@ -634,46 +634,46 @@
     <!-- ================= RIGHT COLUMN : CALENDAR ================= -->
     <div>
       <!-- Dynamic Calendar -->
-      <div class="avail-calendar-card">
+      <div class="d-avail-calendar-card">
 
-        <div class="avail-calendar-header">
-          <h3 class="avail-calendar-title" id="calendar-title"></h3>
-          <div class="avail-calendar-nav">
-            <button type="button" class="avail-nav-btn" id="prev-month">
+        <div class="d-avail-calendar-header">
+          <h3 class="d-avail-calendar-title" id="calendar-title"></h3>
+          <div class="d-avail-calendar-nav">
+            <button type="button" class="d-avail-nav-btn" id="prev-month">
               <i class="fas fa-chevron-left"></i>
             </button>
-            <button type="button" class="avail-nav-btn" id="next-month">
+            <button type="button" class="d-avail-nav-btn" id="next-month">
               <i class="fas fa-chevron-right"></i>
             </button>
           </div>
         </div>
 
-        <div class="avail-calendar-grid" id="calendar-grid">
-          <div class="avail-calendar-day-header">S</div>
-          <div class="avail-calendar-day-header">M</div>
-          <div class="avail-calendar-day-header">T</div>
-          <div class="avail-calendar-day-header">W</div>
-          <div class="avail-calendar-day-header">T</div>
-          <div class="avail-calendar-day-header">F</div>
-          <div class="avail-calendar-day-header">S</div>
+        <div class="d-avail-calendar-grid" id="calendar-grid">
+          <div class="d-avail-calendar-day-header">S</div>
+          <div class="d-avail-calendar-day-header">M</div>
+          <div class="d-avail-calendar-day-header">T</div>
+          <div class="d-avail-calendar-day-header">W</div>
+          <div class="d-avail-calendar-day-header">T</div>
+          <div class="d-avail-calendar-day-header">F</div>
+          <div class="d-avail-calendar-day-header">S</div>
           <!-- Days will be generated by JS -->
         </div>
 
-        <div class="avail-legend">
-          <div class="avail-legend-item">
-            <div class="avail-legend-dot avail-legend-available"></div>
+        <div class="d-avail-legend">
+          <div class="d-avail-legend-item">
+            <div class="d-avail-legend-dot d-avail-legend-d-available"></div>
             <span>Available</span>
           </div>
-          <div class="avail-legend-item">
-            <div class="avail-legend-dot avail-legend-override"></div>
+          <div class="d-avail-legend-item">
+            <div class="d-avail-legend-dot d-avail-legend-override"></div>
             <span>Override Days</span>
           </div>
-          <div class="avail-legend-item">
-            <div class="avail-legend-dot avail-legend-booked"></div>
+          <div class="d-avail-legend-item">
+            <div class="d-avail-legend-dot d-avail-legend-booked"></div>
             <span>Booked</span>
           </div>
-          <div class="avail-legend-item">
-            <div class="avail-legend-dot avail-legend-unavailable"></div>
+          <div class="d-avail-legend-item">
+            <div class="d-avail-legend-dot d-avail-legend-unavailable"></div>
             <span>Unavailable</span>
           </div>
         </div>
@@ -687,21 +687,21 @@
 
 <script>
   // Handle checkbox toggle
-  const checkboxes = document.querySelectorAll(".avail-checkbox");
+  const checkboxes = document.querySelectorAll(".d-avail-checkbox");
   checkboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", function () {
-      const row = this.closest(".avail-day-row");
-      const timeInputs = row.querySelector(".avail-time-inputs");
-      const hoursDisplay = row.querySelector(".avail-hours-display");
-      const unavailableText = row.querySelector(".avail-unavailable-text");
+      const row = this.closest(".d-avail-day-row");
+      const timeInputs = row.querySelector(".d-avail-time-inputs");
+      const hoursDisplay = row.querySelector(".d-avail-hours-display");
+      const unavailableText = row.querySelector(".d-avail-unavailable-text");
 
       if (this.checked) {
-        row.classList.remove("avail-disabled");
+        row.classList.remove("d-avail-disabled");
         if (timeInputs) timeInputs.style.display = "flex";
         if (hoursDisplay) hoursDisplay.style.display = "block";
         if (unavailableText) unavailableText.style.display = "none";
       } else {
-        row.classList.add("avail-disabled");
+        row.classList.add("d-avail-disabled");
         if (timeInputs) timeInputs.style.display = "none";
         if (hoursDisplay) hoursDisplay.style.display = "none";
         if (unavailableText) unavailableText.style.display = "inline";
@@ -718,14 +718,14 @@
   }
 
   // Update hours display when time changes
-  const timeInputs = document.querySelectorAll(".avail-time-input");
+  const timeInputs = document.querySelectorAll(".d-avail-time-input");
   timeInputs.forEach((input) => {
     input.addEventListener("change", function () {
-      const row = this.closest(".avail-day-row");
-      const inputs = row.querySelectorAll(".avail-time-input");
+      const row = this.closest(".d-avail-day-row");
+      const inputs = row.querySelectorAll(".d-avail-time-input");
       if (inputs.length === 2) {
         const hours = calculateHours(inputs[0].value, inputs[1].value);
-        const display = row.querySelector(".avail-hours-display");
+        const display = row.querySelector(".d-avail-hours-display");
         if (display) {
           display.textContent = hours + " hours";
         }
@@ -736,13 +736,13 @@
   // Delete override
   function deleteOverride(id) {
     if (confirm("Are you sure you want to delete this override?")) {
-      fetch(`/doctor/availability/delete/${id}`)
+      fetch(`/doctor/d-availability/delete/${id}`)
         .then(response => {
           if (response.ok) {
             // Remove the item from DOM
             const deleteBtn = document.querySelector(`button[onclick="deleteOverride(${id})"]`);
             if (deleteBtn) {
-              const item = deleteBtn.closest('.avail-override-item');
+              const item = deleteBtn.closest('.d-avail-override-item');
               item.remove();
             }
           } else {
@@ -757,7 +757,7 @@
   }
 
   // Add time interval
-  const addButtons = document.querySelectorAll(".avail-add-btn");
+  const addButtons = document.querySelectorAll(".d-avail-add-btn");
   addButtons.forEach((btn) => {
     btn.addEventListener("click", function () {
       alert("Add additional time interval functionality would open here");
@@ -765,7 +765,7 @@
   });
 
   // Block date button
-  const blockBtn = document.querySelector(".avail-block-btn");
+  const blockBtn = document.querySelector(".d-avail-block-btn");
   blockBtn?.addEventListener("click", function () {
     const dateInput = document.querySelector("input[name='override_date']");
     if (dateInput.value) {
@@ -776,12 +776,12 @@
   });
 
   // Save changes
-  const saveBtn = document.querySelector(".avail-save-btn");
+  const saveBtn = document.querySelector(".d-avail-save-btn");
   saveBtn?.addEventListener("click", function () {
     // The form will submit
   });
 
-  // Availability data from backend
+  // d-availability data from backend
   const weeklyData = {{ weekly_js|tojson }};
   const overridesData = {{ overrides_js|tojson }};
   const bookedDates = {{ booked_dates|tojson }};
@@ -808,7 +808,7 @@
     const title = document.getElementById('calendar-title');
 
     // Clear existing days (keep headers)
-    const headers = calendarGrid.querySelectorAll('.avail-calendar-day-header');
+    const headers = calendarGrid.querySelectorAll('.d-avail-calendar-day-header');
     calendarGrid.innerHTML = '';
     headers.forEach(header => calendarGrid.appendChild(header));
 
@@ -835,7 +835,7 @@
       dayDate.setDate(startDate.getDate() + i);
 
       const dayDiv = document.createElement('div');
-      dayDiv.className = 'avail-calendar-day';
+      dayDiv.className = 'd-avail-calendar-day';
       dayDiv.textContent = dayDate.getDate();
 
       // Check if disabled
@@ -843,41 +843,41 @@
       const isCurrentMonth = dayDate.getMonth() === date.getMonth();
 
       if (!isCurrentMonth || isPast) {
-        dayDiv.classList.add('avail-disabled');
+        dayDiv.classList.add('d-avail-disabled');
       }
 
       // Mark today
       if (dayDate.toDateString() === today.toDateString()) {
-        dayDiv.classList.add('avail-today');
+        dayDiv.classList.add('d-avail-today');
       }
 
       // Determine indicator
-      if (!dayDiv.classList.contains('avail-disabled') || dayDiv.classList.contains('avail-today')) {
+      if (!dayDiv.classList.contains('d-avail-disabled') || dayDiv.classList.contains('d-avail-today')) {
         const dateStr = formatDate(dayDate);
         const dayName = getDayName(dayDate);
 
         // Check for booked
         if (bookedDates.includes(dateStr)) {
           const indicator = document.createElement('div');
-          indicator.className = 'avail-day-indicator avail-indicator-booked';
+          indicator.className = 'd-avail-day-indicator d-avail-indicator-booked';
           dayDiv.appendChild(indicator);
         }
         // Check for override
         else if (overridesData.find(o => o.date === dateStr)) {
           const indicator = document.createElement('div');
-          indicator.className = 'avail-day-indicator avail-indicator-override';
+          indicator.className = 'd-avail-day-indicator d-avail-indicator-override';
           dayDiv.appendChild(indicator);
         }
-        // Check for weekly availability
+        // Check for weekly d-availability
         else if (weeklyData[dayName]) {
           const indicator = document.createElement('div');
-          indicator.className = 'avail-day-indicator avail-indicator-available';
+          indicator.className = 'd-avail-day-indicator d-avail-indicator-d-available';
           dayDiv.appendChild(indicator);
         }
         // Default unavailable
         else {
           const indicator = document.createElement('div');
-          indicator.className = 'avail-day-indicator avail-indicator-unavailable';
+          indicator.className = 'd-avail-day-indicator d-avail-indicator-unavailable';
           dayDiv.appendChild(indicator);
         }
       }
@@ -902,9 +902,9 @@
 
   // Calendar day selection (only for current month and future)
   document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('avail-calendar-day') && !e.target.classList.contains('avail-disabled')) {
-      document.querySelectorAll('.avail-calendar-day').forEach(day => day.classList.remove('avail-selected'));
-      e.target.classList.add('avail-selected');
+    if (e.target.classList.contains('d-avail-calendar-day') && !e.target.classList.contains('d-avail-disabled')) {
+      document.querySelectorAll('.d-avail-calendar-day').forEach(day => day.classList.remove('d-avail-selected'));
+      e.target.classList.add('d-avail-selected');
     }
   });
 </script>
