@@ -133,7 +133,7 @@ The application uses the following main models:
 - Appointment: Consultation bookings
 - Availability: Doctor schedules
 - Message: Chat messages
-- Review: Doctor ratings
+- Review: Doctor ratings 
 
 ## File Structure
 
